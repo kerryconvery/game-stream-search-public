@@ -1,0 +1,15 @@
+{
+  "name": "game_stream_search",
+  "version": "1.0.0",
+  "description": "Game stream search",
+  "main": "index.js",
+  "author": "kerry convery",
+  "license": "ISC",
+  "scripts": {
+    "start:service": "docker-compose up db web",
+    "stop:service": "docker-compose down"
+  },
+  "devDependencies": {
+    "lerna": "3.22.1"
+  }
+}

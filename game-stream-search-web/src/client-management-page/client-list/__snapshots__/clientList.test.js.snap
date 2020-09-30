@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`When displaying a list of clients should display a list of clients when there are clients 1`] = `
+<WithStyles(ForwardRef(TableContainer))>
+  <WithStyles(ForwardRef(Table))>
+    <WithStyles(ForwardRef(TableHead))>
+      <WithStyles(ForwardRef(TableRow))>
+        <WithStyles(ForwardRef(TableCell))>
+          Title
+        </WithStyles(ForwardRef(TableCell))>
+        <WithStyles(ForwardRef(TableCell))>
+          First name
+        </WithStyles(ForwardRef(TableCell))>
+        <WithStyles(ForwardRef(TableCell))>
+          Last name
+        </WithStyles(ForwardRef(TableCell))>
+        <WithStyles(ForwardRef(TableCell))>
+          Phone number
+        </WithStyles(ForwardRef(TableCell))>
+      </WithStyles(ForwardRef(TableRow))>
+    </WithStyles(ForwardRef(TableHead))>
+    <WithStyles(ForwardRef(TableBody))>
+      <WithStyles(ForwardRef(TableRow))
+        key="0"
+      >
+        <WithStyles(ForwardRef(TableCell))>
+          Mr
+        </WithStyles(ForwardRef(TableCell))>
+        <WithStyles(ForwardRef(TableCell))>
+          Client
+        </WithStyles(ForwardRef(TableCell))>
+        <WithStyles(ForwardRef(TableCell))>
+          One
+        </WithStyles(ForwardRef(TableCell))>
+        <WithStyles(ForwardRef(TableCell))>
+          12122
+        </WithStyles(ForwardRef(TableCell))>
+      </WithStyles(ForwardRef(TableRow))>
+    </WithStyles(ForwardRef(TableBody))>
+  </WithStyles(ForwardRef(Table))>
+</WithStyles(ForwardRef(TableContainer))>
+`;
+
+exports[`When displaying a list of clients should display a skeleton when there are no clients 1`] = `
+<WithStyles(ForwardRef(Grid))
+  container={true}
+  spacing={3}
+>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    xs={3}
+  >
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    xs={3}
+  >
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    xs={3}
+  >
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    xs={3}
+  >
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    xs={12}
+  >
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+    <WithStyles(ForwardRef(Skeleton))
+      animation={false}
+      variant="text"
+    />
+  </WithStyles(ForwardRef(Grid))>
+</WithStyles(ForwardRef(Grid))>
+`;
