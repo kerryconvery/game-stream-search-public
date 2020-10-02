@@ -1,7 +1,7 @@
 {
   "env": {
     "local": {
-      "streamSearchServiceUrl": "http://localhost:5000/api"
+      "streamSearchServiceUrl": "http://localhost:46836/api"
     }
   }
 }

@@ -1,21 +1,17 @@
 import React, { createContext, useContext } from 'react';
-import { node } from 'prop-types';
-import _get from 'lodash/get';
+import { node, object } from 'prop-types';
 
 const ConfigurationContext = createContext({});
 
-export const ConfigurationProvider = ({ children }) => (
-  <ConfigurationContext.Provider>
+export const ConfigurationProvider = ({ configuration, children }) => (
+  <ConfigurationContext.Provider value={ configuration }>
     {children}
   </ConfigurationContext.Provider>
 );
 
 ConfigurationProvider.propTypes = {
+  configuration: object.isRequired,
   children: node.isRequired,
 }
 
-export const useConfiguration = (path) => {
-  const configuration = useContext(ConfigurationProvider);
-
-  return _get(configuration, path);
-}
+export const useConfiguration = () => useContext(ConfigurationContext);

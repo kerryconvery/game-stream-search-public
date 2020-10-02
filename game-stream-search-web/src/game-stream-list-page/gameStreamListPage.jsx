@@ -5,7 +5,7 @@ import GameStreamList from './gameStreamList';
 import streamSelector from './gameStreamListSelectors';
 
 const GameStreamListPage = () => {
-  const [ gameName, setGameName ] = useState();
+  const [ gameName, setGameName ] = useState('dark souls');
   const [ streams, setStreams ] = useState();
 
   const searchForStream = useGameStreamStreamApi(streamSearchRequest);
@@ -17,6 +17,7 @@ const GameStreamListPage = () => {
     })
   }, [gameName]);
   
+  console.log('streams:', streams);
   return (
     <StandardPageTemplate
       title='Stream Machine'

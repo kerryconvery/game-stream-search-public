@@ -25,12 +25,12 @@ const GameStreamListSkeleton = () => (
   </Grid>
 )
 
-const toClientRow = ({ title, firstName, lastName, phoneNumber }, key) => (
+const toClientRow = ({ gameName, islive, platformName, viewerCount }, key) => (
   <TableRow key={key}>
-    <TableCell>{title}</TableCell>
-    <TableCell>{firstName}</TableCell>
-    <TableCell>{lastName}</TableCell>
-    <TableCell>{phoneNumber}</TableCell>
+    <TableCell>{gameName}</TableCell>
+    <TableCell>{islive}</TableCell>
+    <TableCell>{platformName}</TableCell>
+    <TableCell>{viewerCount}</TableCell>
   </TableRow>
 );
 
@@ -46,7 +46,7 @@ const GameStreamList = (streams) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {clients.map(toClientRow)}
+        {streams.map(toClientRow)}
       </TableBody>
     </Table>
   </TableContainer>

@@ -5,14 +5,14 @@ export const streamSearchRequest = (baseUrl) => gameName => (
   axios({
     url: `${baseUrl}/streams`,
     method: 'GET',
-    query: {
-      gameName
+    params: {
+      game: gameName
     },
-  })
+  }).then(res => res.data)
 );
 
 export const useGameStreamStreamApi = (request) => {
-  const streamSearchServiceUrl = useConfiguration('streamSearchServiceUrl');
+  const { streamSearchServiceUrl } = useConfiguration();
 
   return request(streamSearchServiceUrl);
 }
