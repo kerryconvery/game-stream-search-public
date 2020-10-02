@@ -1,5 +1,5 @@
 ﻿using System;
-namespace GameStreamSearch.StreamProviders.Dto
+namespace GameStreamSearch.StreamProviders.Twitch.Dto.Helix
 {
     public class TwitchPaginationDto
     {

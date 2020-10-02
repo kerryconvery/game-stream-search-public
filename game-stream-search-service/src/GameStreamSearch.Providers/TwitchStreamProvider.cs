@@ -3,27 +3,55 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Services.Dto;
 using GameStreamSearch.Services.Interfaces;
-using GameStreamSearch.StreamProviders.StreamApi.Interfaces;
+using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces;
 
 namespace GameStreamSearch.Providers
 {
     public class TwitchStreamProvider : IStreamProvider
     {
-        private readonly ITwitchStreamApi twitchStreamApi;
+        private readonly ITwitchKrakenApi twitchStreamApi;
 
-        public TwitchStreamProvider(ITwitchStreamApi twitchStreamApi)
+        public TwitchStreamProvider(ITwitchKrakenApi twitchStreamApi)
         {
             this.twitchStreamApi = twitchStreamApi;
         }
 
         public async Task<IEnumerable<GameStreamDto>> GetStreams(string gameName)
         {
-            var categories = await twitchStreamApi.SearchCategories(gameName);
+            var searchStreamRequest = twitchStreamApi.SearchStreams(gameName);
+            var topVideosRequest = twitchStreamApi.GetTopGameVideos(gameName);
 
-            return categories.data.Select(c => new GameStreamDto {
-                GameName = c.name,
-                ThumbnailUrl = c.box_art_url,
+            var searchStreamResult = await searchStreamRequest;
+            var topVideosResult = await topVideosRequest;
+
+
+            var liveStreams = searchStreamResult?.streams.Select(s => new GameStreamDto
+            {
+                GameName = s.game,
+                ImageUrl = s.preview.large,
+                ViewerCount = s.viewers,
+                PlatformName = "Twitch",
+                StreamUrl = s.channel.url,
+                IsLive = true
             }).ToList();
+
+            var videoStreams = topVideosResult?.vods.Select(v => new GameStreamDto
+            {
+                GameName = v.game,
+                ImageUrl = v.preview.medium,
+                ViewerCount = v.views,
+                PlatformName = "Twitch",
+                StreamUrl = v.url,
+                IsLive = false,
+                Properties = new { Title = v.title }
+            });
+
+            var gameStreams = new List<GameStreamDto>();
+
+            gameStreams.AddRange(liveStreams);
+            gameStreams.AddRange(videoStreams);
+
+            return gameStreams;
         }
     }
 }

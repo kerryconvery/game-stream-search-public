@@ -1,22 +1,11 @@
 import React from 'react';
-import { object } from 'prop-types';
-import { Router } from "@reach/router";
-import ApplicationTemplate from './application-template/applicationTemplate';
-import ClientManagementPage from './client-management-page/clientManagementPage';
-import ClientRegistrationPage from './client-registration-page/clientRegistrationPage';
-import { routes } from './navigation';
+import ApplicationTemplate from './templates/applicationTemplate';
+import GameStreamListPage from './game-stream-list-page/gameStreamListPage';
 
-const App = ({ api }) => (
+const App = () => (
   <ApplicationTemplate>
-    <Router>
-      <ClientManagementPage path={routes.clientManagement} getClients={api.getClientsRequest} />
-      <ClientRegistrationPage path={routes.clientRegistration} registerClient={api.registerClientRequest} />
-    </Router>
+      <GameStreamListPage />
   </ApplicationTemplate>
 )
-
-App.propTypes = {
-  api: object.isRequired,
-}
 
 export default App;

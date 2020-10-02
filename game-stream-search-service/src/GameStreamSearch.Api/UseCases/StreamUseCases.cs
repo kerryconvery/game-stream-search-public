@@ -1,4 +1,5 @@
-﻿using GameStreamSearch.Services.Interfaces;
+﻿using System.Threading.Tasks;
+using GameStreamSearch.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStreamSearch.UseCases
@@ -16,9 +17,9 @@ namespace GameStreamSearch.UseCases
 
         [HttpGet]
         [Route("streams")]
-        public IActionResult GetStreams([FromQuery(Name = "game")] string game)
+        public async Task<IActionResult> GetStreams([FromQuery(Name = "game")] string game)
         {
-            var streams = streamCollectorService.CollectStreams(game);
+            var streams = await streamCollectorService.CollectStreams(game);
 
             return Ok(streams);
         }

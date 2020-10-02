@@ -1,7 +1,7 @@
 using GameStreamSearch.Providers;
 using GameStreamSearch.Services;
 using GameStreamSearch.Services.Interfaces;
-using GameStreamSearch.StreamProviders.StreamApi;
+using GameStreamSearch.StreamProviders.ProviderApi.Twitch;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,10 +37,7 @@ namespace GameStreamSearch.Api
             {
                 return new StreamCollectorService()
                     .RegisterStreamProvider(new TwitchStreamProvider(
-                        new TwitchStreamApi(
-                            Configuration["Twitch:Url"],
-                            Configuration["Twitch:ClientId"],
-                            Configuration["Twitch:ClientSecret"])
+                        new TwitchKrakenApi(Configuration["Twitch:Url"], Configuration["Twitch:ClientId"])
                     ));
             });
         }

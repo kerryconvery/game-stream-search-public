@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace GameStreamSearch.Services.Dto
 {
     public class GameStreamDto
     {
         public string GameName { get; set; }
-        public string ThumbnailUrl { get; set; }
+        public string ImageUrl { get; set; }
+        public int ViewerCount { get; set; }
+        public string PlatformName { get; set; }
+        public string StreamUrl { get; set; }
+        public bool IsLive { get; set; }
+        public dynamic Properties { get; set; }
     }
 }

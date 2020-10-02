@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import { arrayOf, shape, string, bool } from 'prop-types';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
 
-const ClientListSkeleton = () => (
+const GameStreamListSkeleton = () => (
   <Grid container spacing={3}>
     <Grid item xs={3}><Skeleton variant='text' animation={false} /></Grid>
     <Grid item xs={3}><Skeleton variant='text' animation={false} /></Grid>
@@ -34,7 +34,7 @@ const toClientRow = ({ title, firstName, lastName, phoneNumber }, key) => (
   </TableRow>
 );
 
-const ClientList = (clients) => (
+const GameStreamList = (streams) => (
   <TableContainer>
     <Table>
       <TableHead>
@@ -52,8 +52,8 @@ const ClientList = (clients) => (
   </TableContainer>
 );
 
-ClientList.propTypes = {
-  clients: arrayOf(shape({
+GameStreamList.propTypes = {
+  gameStreams: arrayOf(shape({
     title: string.isRequired,
     firstName: string.isRequired,
     lastName: string.isRequired,
@@ -61,8 +61,8 @@ ClientList.propTypes = {
   }))
 }
 
-ClientList.defaultProps = {
-  clients: undefined
+GameStreamList.defaultProps = {
+  gameStreams: null
 }
 
-export default ({ clients }) => clients ? ClientList(clients) : ClientListSkeleton();
+export default ({ gameStreams }) => gameStreams ? GameStreamList(gameStreams) : GameStreamListSkeleton();

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GameStreamSearch.StreamProviders.Dto
+namespace GameStreamSearch.StreamProviders.Twitch.Dto.Helix
 {
     public class TwitchCategoryDto
     {
