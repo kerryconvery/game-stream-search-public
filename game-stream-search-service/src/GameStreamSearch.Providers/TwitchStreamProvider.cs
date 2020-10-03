@@ -29,7 +29,6 @@ namespace GameStreamSearch.Providers
             {
                 GameName = s.game,
                 ImageUrl = s.preview.large,
-                ViewerCount = s.viewers,
                 PlatformName = "Twitch",
                 StreamUrl = s.channel.url,
                 IsLive = true
@@ -39,7 +38,6 @@ namespace GameStreamSearch.Providers
             {
                 GameName = v.game,
                 ImageUrl = v.preview.medium,
-                ViewerCount = v.views,
                 PlatformName = "Twitch",
                 StreamUrl = v.url,
                 IsLive = false,

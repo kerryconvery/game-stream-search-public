@@ -1,7 +1,9 @@
 using GameStreamSearch.Providers;
 using GameStreamSearch.Services;
 using GameStreamSearch.Services.Interfaces;
+using GameStreamSearch.StreamProviders;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch;
+using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +40,9 @@ namespace GameStreamSearch.Api
                 return new StreamCollectorService()
                     .RegisterStreamProvider(new TwitchStreamProvider(
                         new TwitchKrakenApi(Configuration["Twitch:Url"], Configuration["Twitch:ClientId"])
+                    ))
+                    .RegisterStreamProvider(new YouTubeStreamProvider(
+                        new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"])
                     ));
             });
         }

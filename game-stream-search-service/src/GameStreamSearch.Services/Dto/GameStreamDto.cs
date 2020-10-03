@@ -7,7 +7,6 @@ namespace GameStreamSearch.Services.Dto
     {
         public string GameName { get; set; }
         public string ImageUrl { get; set; }
-        public int ViewerCount { get; set; }
         public string PlatformName { get; set; }
         public string StreamUrl { get; set; }
         public bool IsLive { get; set; }
