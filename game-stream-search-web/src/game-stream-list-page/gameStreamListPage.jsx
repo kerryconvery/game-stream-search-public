@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useGameStreamStreamApi, streamSearchRequest } from '../api/gameStreamSearchApi';
-import StandardPageTemplate from '../templates/standardPageTemplate';
-import GameStreamList from './gameStreamList';
+import { useGameStreamApi } from '../api/gameStreamApi';
+import StandardPageTemplate from '../templates/StandardPageTemplate';
+import GameStreamSearchBar from './GameStreamSearchBar';
+import GameStreamList from './GameStreamList';
 import streamSelector from './gameStreamListSelectors';
 
 const GameStreamListPage = () => {
-  const [ gameName, setGameName ] = useState('dark souls');
+  const [ gameName, setGameName ] = useState('fortnite');
   const [ streams, setStreams ] = useState();
-
-  const searchForStream = useGameStreamStreamApi(streamSearchRequest);
+  const { getStreams } = useGameStreamApi();
 
   useEffect(() => {
-    searchForStream(gameName).then(data => {
-      const streams = streamSelector(data);
-      setStreams(streams);
-    })
+    getStreams(gameName).then(data => setStreams(streamSelector(data)))
   }, [gameName]);
   
-  console.log('streams:', streams);
   return (
-    <StandardPageTemplate
-      title='Stream Machine'
-    >
-      <GameStreamList gameStreams={streams} />
-    </StandardPageTemplate>
+    <>
+    <GameStreamSearchBar onGameChange={setGameName} />
+    <GameStreamList gameStreams={streams} />
+    </>
   )
 }
 

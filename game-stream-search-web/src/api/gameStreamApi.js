@@ -1,7 +1,7 @@
 import { useConfiguration } from '../providers/configurationProvider';
 import axios from 'axios';
 
-export const streamSearchRequest = (baseUrl) => gameName => (
+export const getStreamsRequest = (baseUrl) => gameName => (
   axios({
     url: `${baseUrl}/streams`,
     method: 'GET',
@@ -11,8 +11,10 @@ export const streamSearchRequest = (baseUrl) => gameName => (
   }).then(res => res.data)
 );
 
-export const useGameStreamStreamApi = (request) => {
+export const useGameStreamApi = () => {
   const { streamSearchServiceUrl } = useConfiguration();
 
-  return request(streamSearchServiceUrl);
+  return {
+    getStreams: getStreamsRequest(streamSearchServiceUrl)
+  }
 }
