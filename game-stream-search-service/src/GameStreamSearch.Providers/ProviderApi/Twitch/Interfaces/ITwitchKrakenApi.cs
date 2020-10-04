@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
 using GameStreamSearch.StreamProviders.Twitch.Dto;
@@ -10,5 +11,6 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces
     {
         Task<TwitchStreamSearchDto> SearchStreams(string searchTerm);
         Task<TwitchTopVideosDto> GetTopGameVideos(string gameName);
+        Task<IEnumerable<TwitchLiveStreamDto>> GetLiveStreamsByChannel(IEnumerable<string> channelIds);
     }
 }

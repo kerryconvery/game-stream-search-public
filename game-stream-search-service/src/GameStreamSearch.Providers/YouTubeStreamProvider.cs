@@ -37,6 +37,7 @@ namespace GameStreamSearch.StreamProviders
 
                 return new GameStreamDto
                 {
+                    Streamer = v.snippet.channelTitle,
                     GameName = v.snippet.title,
                     ImageUrl = v.snippet.thumbnails.high.url,
                     PlatformName = "YouTube",
@@ -51,6 +52,7 @@ namespace GameStreamSearch.StreamProviders
 
                 return new GameStreamDto
                 {
+                    Streamer = v.snippet.channelTitle,
                     GameName = v.snippet.title,
                     ImageUrl = v.snippet.thumbnails.high.url,
                     PlatformName = "YouTube",

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces;
@@ -16,6 +17,22 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
         {
             this.twitchApiUrl = twitchApiUrl;
             this.twitchClientId = twitchClientId;
+        }
+
+        public async Task<IEnumerable<TwitchLiveStreamDto>> GetLiveStreamsByChannel(IEnumerable<string> channelIds)
+        {
+            var client = new RestClient(this.twitchApiUrl);
+
+            var request = new RestRequest("/kraken/streams", Method.GET);
+
+            request.AddHeader("Accept", "application/vnd.twitchtv.v5+json");
+            request.AddHeader("Client-ID", twitchClientId);
+
+            request.AddParameter("channel", string.Join(",", channelIds));
+
+            var response = await client.ExecuteAsync<IEnumerable<TwitchLiveStreamDto>>(request);
+
+            return response.Data;
         }
 
         public async Task<TwitchTopVideosDto> GetTopGameVideos(string gameName)

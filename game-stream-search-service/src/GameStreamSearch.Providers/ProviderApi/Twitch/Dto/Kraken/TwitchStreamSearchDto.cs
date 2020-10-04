@@ -5,8 +5,10 @@ namespace GameStreamSearch.StreamProviders.Twitch.Dto.Kraken
 {
     public class TwitchChannelDto
     {
+        public string _id { get; set; }
         public string display_name { get; set; }
         public string url { get; set; }
+        public string status { get; set; }
     }
 
     public class TwitchStreamPreviewDto
@@ -17,6 +19,7 @@ namespace GameStreamSearch.StreamProviders.Twitch.Dto.Kraken
 
     public class TwitchStreamDto
     {
+        public string _id { get; set; }
         public TwitchChannelDto channel { get; set; }
         public string game { get; set; }
         public int viewers { get; set; }

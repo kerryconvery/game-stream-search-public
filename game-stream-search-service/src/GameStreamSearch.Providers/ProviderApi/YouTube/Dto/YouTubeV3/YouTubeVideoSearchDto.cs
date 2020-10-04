@@ -17,6 +17,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3
     {
         public string title { get; set; }
         public YouTubeVideoSearchSnippetThumbnails thumbnails { get; set; }
+        public string channelTitle { get; set; }
 
     }
 

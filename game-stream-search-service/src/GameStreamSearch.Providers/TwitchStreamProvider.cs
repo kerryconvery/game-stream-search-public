@@ -24,20 +24,22 @@ namespace GameStreamSearch.Providers
             var searchStreamResult = await searchStreamRequest;
             var topVideosResult = await topVideosRequest;
 
-
-            var liveStreams = searchStreamResult?.streams.Select(s => new GameStreamDto
-            {
-                GameName = s.game,
-                ImageUrl = s.preview.large,
-                PlatformName = "Twitch",
-                StreamUrl = s.channel.url,
-                IsLive = true,
-                Views = s.viewers,
-            }).ToList();
+            var liveStreams = searchStreamResult?.streams.Select(s =>
+                new GameStreamDto
+                {
+                    Streamer = s.channel.display_name,
+                    GameName = s.channel.status,
+                    ImageUrl = s.preview.large,
+                    PlatformName = "Twitch",
+                    StreamUrl = s.channel.url,
+                    IsLive = true,
+                    Views = s.viewers,
+                }).ToList();
 
             var videoStreams = topVideosResult?.vods.Select(v => new GameStreamDto
             {
-                GameName = v.game,
+                Streamer = v.channel.display_name,
+                GameName = v.title,
                 ImageUrl = v.preview.medium,
                 PlatformName = "Twitch",
                 StreamUrl = v.url,

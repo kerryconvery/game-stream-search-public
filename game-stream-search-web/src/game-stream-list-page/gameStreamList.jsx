@@ -22,21 +22,20 @@ const GameStreamListSkeleton = () => (
   </Grid>
 )
 
-const GameStreamDetails = ({ stream }) => (
-  <Grid container spacing={1}>
-    <Grid item xs={3}><span>watch it on {stream.platformName}</span></Grid>
-  </Grid>
-)
-
 const GameStreamGrid = ({ streams }) => (
   <GridList cols={4}>
     {streams.map(stream => (
       <GridListTile key={stream.imageUrl}>
-        <a href={stream.streamUrl} target="_blank" >
+        <a href={stream.streamUrl} target='_blank'>
           <img src={stream.imageUrl} />
           <GridListTileBar
+            titlePosition='top'
             title={stream.gameName}
-            subtitle={<GameStreamDetails stream={stream} />}
+            subtitle={stream.streamer}
+          />
+          <GridListTileBar
+            title={<span>watch it on {stream.platformName}</span>}
+            subtitle={<span>{stream.isLive ? `${stream.views} watching now` : `${stream.views} views` }</span>}
           />
         </a>
       </GridListTile>
@@ -61,11 +60,13 @@ const GameStreamList = (streams) => {
 
 GameStreamList.propTypes = {
   gameStreams: arrayOf(shape({
+    streamer: string.isRequired,
     gameName: string.isRequired,
     imageUrl: string.isRequired,
     platformName: string.isRequired,
     isLive: bool.isRequired,
-    streamUrl: string.isRequired
+    streamUrl: string.isRequired,
+    views: string.isRequired,
   }))
 }
 

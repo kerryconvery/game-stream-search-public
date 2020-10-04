@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Helix;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces;
-using GameStreamSearch.StreamProviders.Twitch.Dto.Helix;
 using RestSharp;
 using RestSharp.Authenticators;
 
@@ -55,6 +56,16 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
             var response = await client.ExecuteAsync<TwitchCategoriesDto>(request);
 
             return response.Data;
+        }
+
+        Task<TwitchCategoriesDto> ITwitchHelixApi.SearchCategories(string categoryName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TwitchStreamDto> GetStreamsByGameId(IEnumerable<string> gameIds)
+        {
+            throw new NotImplementedException();
         }
     }
 }

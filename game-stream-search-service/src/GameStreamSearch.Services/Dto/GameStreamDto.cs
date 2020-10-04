@@ -5,6 +5,7 @@ namespace GameStreamSearch.Services.Dto
 {
     public class GameStreamDto
     {
+        public string Streamer { get; set; }
         public string GameName { get; set; }
         public string ImageUrl { get; set; }
         public string PlatformName { get; set; }

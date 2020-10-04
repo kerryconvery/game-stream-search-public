@@ -1,5 +1,5 @@
 ﻿using System;
-namespace GameStreamSearch.StreamProviders.Twitch.Dto.Helix
+namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Helix
 {
     public class TwitchAuthenticationDto
     {
