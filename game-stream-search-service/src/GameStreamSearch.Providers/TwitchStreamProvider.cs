@@ -31,7 +31,8 @@ namespace GameStreamSearch.Providers
                 ImageUrl = s.preview.large,
                 PlatformName = "Twitch",
                 StreamUrl = s.channel.url,
-                IsLive = true
+                IsLive = true,
+                Views = s.viewers,
             }).ToList();
 
             var videoStreams = topVideosResult?.vods.Select(v => new GameStreamDto
@@ -41,7 +42,7 @@ namespace GameStreamSearch.Providers
                 PlatformName = "Twitch",
                 StreamUrl = v.url,
                 IsLive = false,
-                Properties = new { Title = v.title }
+                Views = v.views,
             });
 
             var gameStreams = new List<GameStreamDto>();

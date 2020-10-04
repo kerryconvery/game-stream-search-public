@@ -22,10 +22,12 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
         {
             var client = new RestClient(this.twitchApiUrl);
 
-            var request = new RestRequest(string.Format("/kraken/videos/top?game={0}", gameName), Method.GET);
+            var request = new RestRequest("/kraken/videos/top", Method.GET);
 
             request.AddHeader("Accept", "application/vnd.twitchtv.v5+json");
             request.AddHeader("Client-ID", twitchClientId);
+
+            request.AddParameter("game", gameName);
 
             var response = await client.ExecuteAsync<TwitchTopVideosDto>(request);
 

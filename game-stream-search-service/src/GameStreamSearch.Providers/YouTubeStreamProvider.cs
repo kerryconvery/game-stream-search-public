@@ -25,22 +25,39 @@ namespace GameStreamSearch.StreamProviders
             var liveVideos = await liveVideosRequest;
             var completedVideos = await completedVideosRequest;
 
-            var liveStreams = liveVideos.items.Select(v => new GameStreamDto
-            {
-                GameName = v.snippet.title,
-                ImageUrl = v.snippet.thumbnails.high.url,
-                PlatformName = "YouTube",
-                StreamUrl = string.Format("https://www.youtube.com/watch?v={0}", v.id.videoId),
-                IsLive = true,
+            var videoIds = new List<string>();
+
+            videoIds.AddRange(liveVideos.items.Select(v => v.id.videoId));
+            videoIds.AddRange(completedVideos.items.Select(v => v.id.videoId));
+
+            var statisticsPart = await youTubeV3Api.GetVideoStatisticsPart(videoIds);
+
+            var liveStreams = liveVideos.items.Select(v => {
+                var statistics = statisticsPart.items.FirstOrDefault(s => s.id == v.id.videoId)?.statistics;
+
+                return new GameStreamDto
+                {
+                    GameName = v.snippet.title,
+                    ImageUrl = v.snippet.thumbnails.high.url,
+                    PlatformName = "YouTube",
+                    StreamUrl = string.Format("https://www.youtube.com/watch?v={0}", v.id.videoId),
+                    IsLive = true,
+                    Views = statistics != null ? statistics.viewCount : 0,
+                };
             });
 
-            var completedStreams = completedVideos.items.Select(v => new GameStreamDto
-            {
-                GameName = v.snippet.title,
-                ImageUrl = v.snippet.thumbnails.high.url,
-                PlatformName = "YouTube",
-                StreamUrl = string.Format("https://www.youtube.com/watch?v={0}", v.id.videoId),
-                IsLive = false,
+            var completedStreams = completedVideos.items.Select(v => {
+                var statistics = statisticsPart.items.FirstOrDefault(s => s.id == v.id.videoId)?.statistics;
+
+                return new GameStreamDto
+                {
+                    GameName = v.snippet.title,
+                    ImageUrl = v.snippet.thumbnails.high.url,
+                    PlatformName = "YouTube",
+                    StreamUrl = string.Format("https://www.youtube.com/watch?v={0}", v.id.videoId),
+                    IsLive = false,
+                    Views = statistics != null ? statistics.viewCount : 0,
+                };
             });
 
             var gameStreams = new List<GameStreamDto>();

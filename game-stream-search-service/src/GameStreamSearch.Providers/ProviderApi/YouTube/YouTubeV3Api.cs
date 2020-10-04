@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces;
@@ -28,9 +28,8 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
         {
             var client = new RestClient(this.googleApiUrl);
 
-            var request = new RestRequest("/youtube/v3/search");
+            var request = new RestRequest("/youtube/v3/search", Method.GET);
 
-            request.Method = Method.GET;
             request.AddParameter("part", "snippet");
             request.AddParameter("eventType", eventType.ToString().ToLower());
             request.AddParameter("q", query);
@@ -38,10 +37,34 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             request.AddParameter("videoCategoryId", 20);
             request.AddParameter("key", googleApiKey);
 
-
             request.AddHeader("Accept", "application/json");
 
             var response = await client.ExecuteAsync<YouTubeVideoSearchDto>(request);
+
+            return response.Data;
+        }
+
+        public async Task<YouTubeVideoStatisticsPartDto> GetVideoStatisticsPart(IEnumerable<string> videoIds)
+        {
+
+            var client = new RestClient(this.googleApiUrl);
+
+            var request = new RestRequest("/youtube/v3/videos", Method.GET);
+
+
+            request.AddParameter("part", "id");
+            request.AddParameter("part", "statistics");
+
+            foreach (var id in videoIds)
+            {
+                request.AddParameter("id", id);
+            }
+
+            request.AddParameter("key", googleApiKey);
+
+            request.AddHeader("Accept", "application/json");
+
+            var response = await client.ExecuteAsync<YouTubeVideoStatisticsPartDto>(request);
 
             return response.Data;
         }

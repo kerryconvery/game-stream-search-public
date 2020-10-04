@@ -10,6 +10,6 @@ namespace GameStreamSearch.Services.Dto
         public string PlatformName { get; set; }
         public string StreamUrl { get; set; }
         public bool IsLive { get; set; }
-        public dynamic Properties { get; set; }
+        public int Views { get; set; }
     }
 }
