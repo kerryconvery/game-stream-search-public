@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using GameStreamSearch.Services.Dto;
 using GameStreamSearch.Services.Interfaces;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces;
+using GameStreamSearch.StreamProviders.Twitch.Dto.Kraken;
+using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
 
 namespace GameStreamSearch.Providers
 {
@@ -18,15 +20,9 @@ namespace GameStreamSearch.Providers
             this.twitchStreamApi = twitchStreamApi;
         }
 
-        public async Task<IEnumerable<GameStreamDto>> GetStreams(string gameName)
+        private IEnumerable<GameStreamDto> mapToGameStream(IEnumerable<TwitchStreamDto> liveStreams)
         {
-            var searchStreamRequest = twitchStreamApi.SearchStreams(gameName);
-            var topVideosRequest = twitchStreamApi.GetTopGameVideos(gameName);
-
-            var searchStreamResult = await searchStreamRequest;
-            var topVideosResult = await topVideosRequest;
-
-            var liveStreams = searchStreamResult?.streams.Select(s =>
+            return liveStreams.Select(s =>
                 new GameStreamDto
                 {
                     Streamer = s.channel.display_name,
@@ -37,8 +33,11 @@ namespace GameStreamSearch.Providers
                     IsLive = true,
                     Views = s.viewers,
                 }).ToList();
+        }
 
-            var videoStreams = topVideosResult?.vods.Select(v => new GameStreamDto
+        private IEnumerable<GameStreamDto> mapToGameStream(IEnumerable<TwitchTopVideoDto> topVideos)
+        {
+            return topVideos.Select(v => new GameStreamDto
             {
                 Streamer = v.channel.display_name,
                 GameName = v.title,
@@ -48,6 +47,18 @@ namespace GameStreamSearch.Providers
                 IsLive = false,
                 Views = v.views,
             });
+        }
+
+        public async Task<IEnumerable<GameStreamDto>> GetStreams(string gameName)
+        {
+            var searchStreamRequest = twitchStreamApi.SearchStreams(gameName);
+            var topVideosRequest = twitchStreamApi.GetTopGameVideos(gameName);
+
+            var searchStreamResult = await searchStreamRequest;
+            var topVideosResult = await topVideosRequest;
+
+            var liveStreams = mapToGameStream(searchStreamResult.streams);
+            var videoStreams = mapToGameStream(topVideosResult.vods);
 
             var gameStreams = new List<GameStreamDto>();
 

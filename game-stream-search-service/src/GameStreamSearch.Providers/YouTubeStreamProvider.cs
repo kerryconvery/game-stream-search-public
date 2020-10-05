@@ -21,7 +21,7 @@ namespace GameStreamSearch.StreamProviders
             this.streamUrl = streamUrl;
         }
 
-        private IEnumerable<GameStreamDto> mapToGameStreams(IEnumerable<YouTubeVideoSearchItemDto> videos, IEnumerable<YouTubeVideoStatisticsItemDto> videoStatistics, bool isLive)
+        private IEnumerable<GameStreamDto> mapToGameStream(IEnumerable<YouTubeVideoSearchItemDto> videos, IEnumerable<YouTubeVideoStatisticsItemDto> videoStatistics, bool isLive)
         {
 
             var gameStreams = videos.Select(v => {
@@ -41,6 +41,21 @@ namespace GameStreamSearch.StreamProviders
 
             return gameStreams;
         }
+
+        private async Task<IEnumerable<YouTubeVideoStatisticsItemDto>> GetVideoStatistics(
+            IEnumerable<YouTubeVideoSearchItemDto> liveVideos,
+            IEnumerable<YouTubeVideoSearchItemDto> completedVideos)
+        {
+            var videoIds = new List<string>();
+
+            videoIds.AddRange(liveVideos.Select(v => v.id.videoId));
+            videoIds.AddRange(completedVideos.Select(v => v.id.videoId));
+
+            var statistics = await youTubeV3Api.GetVideoStatisticsPart(videoIds);
+
+            return statistics.items;
+        }
+
         public async Task<IEnumerable<GameStreamDto>> GetStreams(string gameName)
         {
             var liveVideosRequest = youTubeV3Api.SearchVideos(gameName, VideoEventType.Live);
@@ -48,16 +63,10 @@ namespace GameStreamSearch.StreamProviders
 
             var liveVideos = await liveVideosRequest;
             var completedVideos = await completedVideosRequest;
+            var statistics = await GetVideoStatistics(liveVideos.items, completedVideos.items);
 
-            var videoIds = new List<string>();
-
-            videoIds.AddRange(liveVideos.items.Select(v => v.id.videoId));
-            videoIds.AddRange(completedVideos.items.Select(v => v.id.videoId));
-
-            var statistics = await youTubeV3Api.GetVideoStatisticsPart(videoIds);
-
-            var liveStreams = mapToGameStreams(liveVideos.items, statistics.items, true);
-            var completedStreams = mapToGameStreams(completedVideos.items, statistics.items, false);
+            var liveStreams = mapToGameStream(liveVideos.items, statistics, true);
+            var completedStreams = mapToGameStream(completedVideos.items, statistics, false);
 
             var gameStreams = new List<GameStreamDto>();
 
