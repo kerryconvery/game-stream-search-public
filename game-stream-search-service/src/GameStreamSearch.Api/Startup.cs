@@ -42,8 +42,9 @@ namespace GameStreamSearch.Api
                         new TwitchKrakenApi(Configuration["Twitch:Url"], Configuration["Twitch:ClientId"])
                     ))
                     .RegisterStreamProvider(new YouTubeStreamProvider(
-                        new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"])
-                    ));
+                        new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"]),
+                        Configuration["YouTube:StreamUrl"]
+                ));
             });
         }
 

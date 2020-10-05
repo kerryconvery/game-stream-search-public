@@ -9,6 +9,8 @@ namespace GameStreamSearch.Providers
 {
     public class TwitchStreamProvider : IStreamProvider
     {
+        private readonly string platformName = "Twitch";
+
         private readonly ITwitchKrakenApi twitchStreamApi;
 
         public TwitchStreamProvider(ITwitchKrakenApi twitchStreamApi)
@@ -30,7 +32,7 @@ namespace GameStreamSearch.Providers
                     Streamer = s.channel.display_name,
                     GameName = s.channel.status,
                     ImageUrl = s.preview.large,
-                    PlatformName = "Twitch",
+                    PlatformName = platformName,
                     StreamUrl = s.channel.url,
                     IsLive = true,
                     Views = s.viewers,
@@ -41,7 +43,7 @@ namespace GameStreamSearch.Providers
                 Streamer = v.channel.display_name,
                 GameName = v.title,
                 ImageUrl = v.preview.medium,
-                PlatformName = "Twitch",
+                PlatformName = platformName,
                 StreamUrl = v.url,
                 IsLive = false,
                 Views = v.views,
