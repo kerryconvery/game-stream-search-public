@@ -10,4 +10,4 @@ RUN dotnet publish -c Release -o release
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
 COPY --from=build-env /app/release .
-ENTRYPOINT ["dotnet", "GameStreamSearchApi.dll"]
+ENTRYPOINT ["dotnet", "GameStreamSearch.Api.dll"]

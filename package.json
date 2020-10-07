@@ -6,7 +6,7 @@
   "author": "kerry convery",
   "license": "ISC",
   "scripts": {
-    "start:service": "docker-compose up db web",
+    "start:service": "docker-compose up web",
     "stop:service": "docker-compose down"
   },
   "devDependencies": {
