@@ -1,0 +1,5 @@
+{
+  "env": {
+    "local": "http://localhost:5000/api"
+  }
+}
