@@ -12,6 +12,7 @@ const GameStreamListPage = () => {
   const { getStreams } = useGameStreamApi();
 
   const onSearch = (gameName) => {
+    setNextPageToken(null);
     setStreams({});
     setGameName(gameName);
   }

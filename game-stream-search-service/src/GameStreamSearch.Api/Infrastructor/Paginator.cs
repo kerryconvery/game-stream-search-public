@@ -31,6 +31,11 @@ namespace GameStreamSearch.Api.Infrastructor
 
         public string encode(Dictionary<string, string> paginations)
         {
+            if (!paginations.Any())
+            {
+                return null;
+            }
+
             var jsonTokens = JsonConvert.SerializeObject(paginations);
 
             var base64Encryptor = new Base64Encryptor(new ToBase64Transform());
