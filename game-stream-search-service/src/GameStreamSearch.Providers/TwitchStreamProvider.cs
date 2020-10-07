@@ -30,11 +30,16 @@ namespace GameStreamSearch.Providers
             return base64Decrypter.ReadInt32();
         }
 
-        private string GetPageToken(int pageOffset)
+        private string GetNextPageToken(bool hasStreams, int pageSize, int pageOffset)
         {
+            if (!hasStreams)
+            {
+                return null;
+            }
+
             var base64Encryptor = new Base64Encryptor(new ToBase64Transform());
 
-            base64Encryptor.Write(pageOffset);
+            base64Encryptor.Write(pageOffset + pageSize);
 
             return base64Encryptor.ToString();
         }
@@ -45,7 +50,7 @@ namespace GameStreamSearch.Providers
 
             var liveStreams = await twitchStreamApi.SearchStreams(gameName, pageSize, pageOffset);
 
-            var nextPageToken = GetPageToken(pageOffset + pageSize);
+            var nextPageToken = GetNextPageToken(liveStreams.streams.Any(), pageSize, pageOffset);
 
 
             return new GameStreamsDto

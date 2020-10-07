@@ -1,10 +1,10 @@
+import _get from 'lodash/get';
+
 const addStreams = (streams, newStreams) => {
-  if (!streams) {
-    return newStreams;
-  }
+  var items = _get(streams, 'items', []);
   
   return {
-    items: streams.items.concat(newStreams.items),
+    items: items.concat(newStreams.items),
     nextPageToken: newStreams.nextPageToken,
   }
 }

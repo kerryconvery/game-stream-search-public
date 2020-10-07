@@ -22,10 +22,10 @@ const GameStreamListSkeleton = () => (
   </Grid>
 )
 
-const GameStreamGrid = ({ streams }) => (
+const GameStreamGrid = (streams) => (
   <GridList cols={4}>
-    {streams.map(stream => (
-      <GridListTile key={stream.imageUrl}>
+    {streams.map((stream, index) => (
+      <GridListTile key={index}>
         <a href={stream.streamUrl} target='_blank'>
           <img src={stream.imageUrl} />
           <GridListTileBar
@@ -43,22 +43,7 @@ const GameStreamGrid = ({ streams }) => (
   </GridList>
 )
 
-const GameStreamList = (streams) => {
-  const liveStreams = streams.filter(s => s.isLive);
-  const recordedStreams = streams.filter(s => !s.isLive);
-
-  return (
-    <>
-      <span>Live</span>
-      <GameStreamGrid streams={liveStreams} />
-      <br/>
-      <span>On Demand</span>
-      <GameStreamGrid streams={recordedStreams} />
-    </>
-  )
-}
-
-GameStreamList.propTypes = {
+GameStreamGrid.propTypes = {
   gameStreams: arrayOf(shape({
     streamer: string.isRequired,
     gameName: string.isRequired,
@@ -70,8 +55,8 @@ GameStreamList.propTypes = {
   }))
 }
 
-GameStreamList.defaultProps = {
+GameStreamGrid.defaultProps = {
   gameStreams: null
 }
 
-export default ({ gameStreams }) => gameStreams ? GameStreamList(gameStreams) : GameStreamListSkeleton();
+export default ({ gameStreams }) => gameStreams ? GameStreamGrid(gameStreams) : GameStreamListSkeleton();

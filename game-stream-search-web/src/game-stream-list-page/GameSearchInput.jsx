@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { func } from 'prop-types';
+import _has from 'lodash/has';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
+import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -27,17 +29,25 @@ const GameStreamInput = ({ onGameChange }) => {
   
   const classes = useStyles();
 
-  const onInputChange = ({ target: { value } }) => {
-    setInput(value);
+  const onInputChange = (e) => {
+    if (_has(e, 'target.value')) {
+      setInput(e.target.value);
+    }
+  }
+  const onKeyPress = (e) => {
+    if(e.keyCode === 13 && _has(e, 'target.value')) {
+      onGameChange(e.target.value)
+    }
   }
 
   return (
-    <Paper component="form" className={classes.root}>
+    <Paper className={classes.root}>
       <InputBase
         className={classes.input}
         placeholder="Search games"
         inputProps={{ 'aria-label': 'search games' }}
         onChange={onInputChange}
+        onKeyDown={onKeyPress}
       />
       <IconButton className={classes.iconButton} aria-label="search" onClick={() => onGameChange(input)}>
         <SearchIcon />

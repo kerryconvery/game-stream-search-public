@@ -42,11 +42,11 @@ namespace GameStreamSearch.Api
                 return new StreamCollectorService(service.GetService<IPaginator>())
                     .RegisterStreamProvider(new TwitchStreamProvider(
                         new TwitchKrakenApi(Configuration["Twitch:Url"], Configuration["Twitch:ClientId"])
-                    ))
-                    .RegisterStreamProvider(new YouTubeStreamProvider(
-                        new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"]),
-                        Configuration["YouTube:StreamUrl"]
-                ));
+                    ));
+                    //.RegisterStreamProvider(new YouTubeStreamProvider(
+                    //    new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"]),
+                    //    Configuration["YouTube:StreamUrl"]
+                    //));
             });
         }
 
