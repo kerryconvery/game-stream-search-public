@@ -5,8 +5,8 @@ using GameStreamSearch.Services.Dto;
 
 namespace GameStreamSearch.Services.Interfaces
 {
-    public interface IStreamCollectorService
+    public interface IStreamService
     {
-        Task<GameStreamsDto> CollectLiveStreams(string gameName, string pagination);
+        Task<GameStreamsDto> GetStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pagination);
     }
 }

@@ -6,6 +6,7 @@ using GameStreamSearch.Services.Interfaces;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces;
 using Base64Url;
 using System.Security.Cryptography;
+using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
 
 namespace GameStreamSearch.Providers
 {
@@ -44,27 +45,46 @@ namespace GameStreamSearch.Providers
             return base64Encryptor.ToString();
         }
 
-        public async Task<GameStreamsDto> GetLiveStreamsByGameName(string gameName, int pageSize, string pageToken = null)
+        public IEnumerable<GameStreamDto> MapToGameStream(TwitchLiveStreamDto liveStreams)
+        {
+            return liveStreams.streams.Select(s => new GameStreamDto
+            {
+                Streamer = s.channel.display_name,
+                GameName = s.channel.status,
+                ImageUrl = s.preview.large,
+                PlatformName = ProviderName,
+                StreamUrl = s.channel.url,
+                IsLive = true,
+                Views = s.viewers,
+            });
+        }
+
+        public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null)
         {
             var pageOffset = GetPageOffset(pageToken);
 
-            var liveStreams = await twitchStreamApi.SearchStreams(gameName, pageSize, pageOffset);
+            TwitchLiveStreamDto liveStreams;
+
+            if (string.IsNullOrEmpty(filterOptions.GameName))
+            {
+                liveStreams = await twitchStreamApi.GetLiveStreams(pageSize, pageOffset);
+            }
+            else
+            {
+                liveStreams = await twitchStreamApi.SearchStreams(filterOptions.GameName, pageSize, pageOffset);
+            }
+
+            if (liveStreams.streams == null)
+            {
+                return GameStreamsDto.Empty();
+            }
 
             var nextPageToken = GetNextPageToken(liveStreams.streams.Any(), pageSize, pageOffset);
 
 
             return new GameStreamsDto
             {
-                Items = liveStreams.streams.Select(s => new GameStreamDto
-                {
-                    Streamer = s.channel.display_name,
-                    GameName = s.channel.status,
-                    ImageUrl = s.preview.large,
-                    PlatformName = ProviderName,
-                    StreamUrl = s.channel.url,
-                    IsLive = true,
-                    Views = s.viewers,
-                }),
+                Items = MapToGameStream(liveStreams),
                 NextPageToken = nextPageToken
             };
         }

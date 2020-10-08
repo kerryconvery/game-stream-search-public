@@ -6,7 +6,7 @@ import InfiniteGameStreamList from './InfiniteGameStreamList';
 import addStreams from './gameStreamListSelectors';
 
 const GameStreamListPage = () => {
-  const [ gameName, setGameName ] = useState('fortnite');
+  const [ gameName, setGameName ] = useState();
   const [ nextPageToken, setNextPageToken ] = useState();
   const [ streams, setStreams ] = useState({});
   const { getStreams } = useGameStreamApi();

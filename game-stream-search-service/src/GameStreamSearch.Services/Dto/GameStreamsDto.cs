@@ -18,5 +18,15 @@ namespace GameStreamSearch.Services.Dto
     {
         public IEnumerable<GameStreamDto> Items { get; set; }
         public string NextPageToken { get; set; }
+
+        public static GameStreamsDto Empty()
+        {
+            return new GameStreamsDto
+            {
+                Items = new List<GameStreamDto>(),
+                NextPageToken = null,
+            };
+        }
+
     }
 }

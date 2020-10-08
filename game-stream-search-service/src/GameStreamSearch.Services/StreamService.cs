@@ -6,12 +6,12 @@ using GameStreamSearch.Services.Interfaces;
 
 namespace GameStreamSearch.Services
 {
-    public class StreamCollectorService : IStreamCollectorService
+    public class StreamService : IStreamService
     {
         private readonly IPaginator paginator;
         private List<IStreamProvider> streamProviders;
 
-        public StreamCollectorService(IPaginator paginator)
+        public StreamService(IPaginator paginator)
         {
             streamProviders = new List<IStreamProvider>();
             this.paginator = paginator;
@@ -32,27 +32,30 @@ namespace GameStreamSearch.Services
             return paginator.encode(paginations);
         }
 
-        public async Task<GameStreamsDto> CollectLiveStreams(string gameName, string pagination)
+        public async Task<GameStreamsDto> GetStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pagination)
         {
             var paginationTokens = paginator.decode(pagination);
 
             var tasks = streamProviders.Select(p => {
-                return p.GetLiveStreamsByGameName(gameName, 25, paginator.getToken(paginationTokens, p.ProviderName));
+                return p.GetLiveStreams(filterOptions, pageSize, paginator.getToken(paginationTokens, p.ProviderName));
             });
 
             var results = await Task.WhenAll(tasks);
 
             var nextPageToken = AggregateNextPageTokens(results);
 
+            var sortedItems = results
+                .SelectMany(s => s.Items)
+                .OrderByDescending(s => s.Views);
+
             return new GameStreamsDto()
             {
-                Items = results.SelectMany(s => s.Items),
+                Items = sortedItems,
                 NextPageToken = nextPageToken
             };
-
         }
 
-        public StreamCollectorService RegisterStreamProvider(IStreamProvider streamProvider)
+        public StreamService RegisterStreamProvider(IStreamProvider streamProvider)
         {
             streamProviders.Add(streamProvider);
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces;
-using GameStreamSearch.StreamProviders.Twitch.Dto.Kraken;
 using RestSharp;
 
 namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
@@ -19,7 +18,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
             this.twitchClientId = twitchClientId;
         }
 
-        public async Task<IEnumerable<TwitchLiveStreamDto>> GetLiveStreamsByChannel(IEnumerable<string> channelIds)
+        public async Task<TwitchLiveStreamDto> GetLiveStreams(int pageSize, int pageOffset)
         {
             var client = new RestClient(this.twitchApiUrl);
 
@@ -28,9 +27,10 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
             request.AddHeader("Accept", "application/vnd.twitchtv.v5+json");
             request.AddHeader("Client-ID", twitchClientId);
 
-            request.AddParameter("channel", string.Join(",", channelIds));
+            request.AddParameter("limit", pageSize);
+            request.AddParameter("offset", pageOffset);
 
-            var response = await client.ExecuteAsync<IEnumerable<TwitchLiveStreamDto>>(request);
+            var response = await client.ExecuteAsync<TwitchLiveStreamDto>(request);
 
             return response.Data;
         }
@@ -51,7 +51,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
             return response.Data;
         }
 
-        public async Task<TwitchStreamSearchDto> SearchStreams(string searchTerm, int pageSize, int pageOffset)
+        public async Task<TwitchLiveStreamDto> SearchStreams(string searchTerm, int pageSize, int pageOffset)
         {
             var client = new RestClient(this.twitchApiUrl);
 
@@ -64,7 +64,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
             request.AddParameter("limit", pageSize);
             request.AddParameter("offset", pageOffset);
 
-            var response = await client.ExecuteAsync<TwitchStreamSearchDto>(request);
+            var response = await client.ExecuteAsync<TwitchLiveStreamDto>(request);
 
             return response.Data;
         }

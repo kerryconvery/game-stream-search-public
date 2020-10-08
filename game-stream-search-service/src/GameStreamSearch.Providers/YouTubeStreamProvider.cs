@@ -52,9 +52,9 @@ namespace GameStreamSearch.StreamProviders
             return statistics.items;
         }
 
-        public async Task<GameStreamsDto> GetLiveStreamsByGameName(string gameName, int pageSize, string pageToken = null)
+        public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null)
         {
-            var liveVideos = await youTubeV3Api.SearchVideos(gameName, VideoEventType.Live, pageToken);
+            var liveVideos = await youTubeV3Api.SearchVideos(filterOptions.GameName, VideoEventType.Live, pageToken);
 
             var statistics = await GetStreamStatistics(liveVideos.items);
 
@@ -68,6 +68,11 @@ namespace GameStreamSearch.StreamProviders
         public async Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName)
         {
             var completedVideos = await youTubeV3Api.SearchVideos(gameName, VideoEventType.Completed, null);
+
+            if (completedVideos.items == null)
+            {
+                return GameStreamsDto.Empty();
+            }
 
             var statistics = await GetStreamStatistics(completedVideos.items);
 

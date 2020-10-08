@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using GameStreamSearch.Services.Dto;
 using GameStreamSearch.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,18 +9,26 @@ namespace GameStreamSearch.UseCases
     [Route("api")]
     public class StreamUseCases : ControllerBase
     {
-        private readonly IStreamCollectorService streamCollectorService;
+        private readonly IStreamService streamService;
 
-        public StreamUseCases(IStreamCollectorService streamCollectorService)
+        public StreamUseCases(IStreamService streamService)
         {
-            this.streamCollectorService = streamCollectorService;
+            this.streamService = streamService;
         }
 
         [HttpGet]
         [Route("streams")]
-        public async Task<IActionResult> GetStreams([FromQuery(Name = "game")] string game, [FromQuery(Name = "pageToken")] string pageToken)
+        public async Task<IActionResult> GetStreams(
+            [FromQuery(Name = "game")] string gameName,
+            [FromQuery(Name = "pageToken")] string pageToken,
+            [FromQuery(Name = "pageSize")] int pageSize = 25)
         {
-            var streams = await streamCollectorService.CollectLiveStreams(game, pageToken);
+            var filterOptions = new StreamFilterOptionsDto
+            {
+                GameName = gameName
+            };
+
+            var streams = await streamService.GetStreams(filterOptions, pageSize, pageToken);
 
             return Ok(streams);
         }

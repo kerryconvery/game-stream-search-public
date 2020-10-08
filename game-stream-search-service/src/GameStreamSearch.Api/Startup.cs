@@ -37,16 +37,16 @@ namespace GameStreamSearch.Api
 
             services.AddControllers();
             services.AddScoped<IPaginator, Paginator>();
-            services.AddScoped<IStreamCollectorService>(service =>
+            services.AddScoped<IStreamService>(service =>
             {
-                return new StreamCollectorService(service.GetService<IPaginator>())
+                return new StreamService(service.GetService<IPaginator>())
                     .RegisterStreamProvider(new TwitchStreamProvider(
                         new TwitchKrakenApi(Configuration["Twitch:Url"], Configuration["Twitch:ClientId"])
+                    ))
+                    .RegisterStreamProvider(new YouTubeStreamProvider(
+                        new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"]),
+                        Configuration["YouTube:StreamUrl"]
                     ));
-                    //.RegisterStreamProvider(new YouTubeStreamProvider(
-                    //    new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"]),
-                    //    Configuration["YouTube:StreamUrl"]
-                    //));
             });
         }
 
