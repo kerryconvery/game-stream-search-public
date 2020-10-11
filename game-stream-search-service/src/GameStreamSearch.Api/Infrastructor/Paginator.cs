@@ -44,15 +44,5 @@ namespace GameStreamSearch.Api.Infrastructor
 
             return base64Encryptor.ToString();
         }
-
-        public string getToken(Dictionary<string, string> paginations, string pageKey)
-        {
-            if (!paginations.ContainsKey(pageKey))
-            {
-                return null;
-            }
-
-            return paginations[pageKey];
-        }
     }
 }

@@ -1,0 +1,16 @@
+﻿{
+  "items": [
+    {
+      "id": "video1",
+      "statistics": {
+        "viewCount": "1"
+      }
+    },
+    {
+      "id": "video3",
+      "statistics": {
+        "viewCount": "2"
+      }
+    }
+  ]
+}

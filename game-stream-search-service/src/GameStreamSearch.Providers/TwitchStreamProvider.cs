@@ -14,8 +14,9 @@ namespace GameStreamSearch.Providers
     {
         private readonly ITwitchKrakenApi twitchStreamApi;
 
-        public TwitchStreamProvider(ITwitchKrakenApi twitchStreamApi)
+        public TwitchStreamProvider(string providerName, ITwitchKrakenApi twitchStreamApi)
         {
+            ProviderName = providerName;
             this.twitchStreamApi = twitchStreamApi;
         }
 
@@ -113,6 +114,6 @@ namespace GameStreamSearch.Providers
             return null;
         }
 
-        public string ProviderName { get; } = "Twitch";
+        public string ProviderName { get; private set; }
     }
 }

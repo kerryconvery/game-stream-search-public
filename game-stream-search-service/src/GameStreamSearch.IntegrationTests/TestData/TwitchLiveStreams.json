@@ -1,0 +1,50 @@
+﻿[
+  {
+    "streams": [
+      {
+        "channel": {
+          "display_name": "twitch channel 1",
+          "url": "http://fake.twitch.url",
+          "status": "game 1"
+        },
+        "viewers": 1,
+        "preview": {
+          "large": "http://twitch.thumbnail"
+        }
+      }
+    ]
+  },
+  {
+    "streams": [
+      {
+        "channel": {
+          "display_name": "twitch channel 2",
+          "url": "http://fake.twitch.url",
+          "status": "game 1"
+        },
+        "viewers": 1,
+        "preview": {
+          "large": "http://twitch.thumbnail"
+        }
+      }
+    ]
+  },
+  {
+    "streams": [
+      {
+        "channel": {
+          "display_name": "twitch channel 3",
+          "url": "http://fake.twitch.url",
+          "status": "game 2"
+        },
+        "viewers": 3,
+        "preview": {
+          "large": "http://twitch.thumbnail"
+        }
+      }
+    ]
+  },
+  {
+    "streams": []
+  }
+]

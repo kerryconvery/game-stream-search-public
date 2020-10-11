@@ -8,6 +8,5 @@ namespace GameStreamSearch.Services.Interfaces
     {
         string encode(Dictionary<string, string> paginations);
         Dictionary<string, string> decode(string encodedPaginations);
-        string getToken(Dictionary<string, string> paginations, string pageKey);
     }
 }

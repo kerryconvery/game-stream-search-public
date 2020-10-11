@@ -6,18 +6,20 @@ using GameStreamSearch.Services.Interfaces;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3;
+using GameStreamSearch.StreamProviders.Builders;
 
 namespace GameStreamSearch.StreamProviders
 {
     public class YouTubeStreamProvider : IStreamProvider
     {
+        private readonly IYouTubeWatchUrlBuilder urlBuilder;
         private readonly IYouTubeV3Api youTubeV3Api;
-        private readonly string streamUrl;
 
-        public YouTubeStreamProvider(IYouTubeV3Api youTubeV3Api, string streamUrl)
+        public YouTubeStreamProvider(string providerName, IYouTubeWatchUrlBuilder urlBuilder, IYouTubeV3Api youTubeV3Api)
         {
+            ProviderName = providerName;
+            this.urlBuilder = urlBuilder;
             this.youTubeV3Api = youTubeV3Api;
-            this.streamUrl = streamUrl;
         }
 
         private IEnumerable<GameStreamDto> mapToGameStream(IEnumerable<YouTubeVideoSearchItemDto> streams, IEnumerable<YouTubeVideoStatisticsItemDto> streamStatistics, bool isLive)
@@ -31,7 +33,7 @@ namespace GameStreamSearch.StreamProviders
                     GameName = v.snippet.title,
                     ImageUrl = v.snippet.thumbnails.high.url,
                     PlatformName = ProviderName,
-                    StreamUrl = string.Format("{0}/watch?v={1}", streamUrl, v.id.videoId),
+                    StreamUrl = urlBuilder.Build(v.id.videoId),
                     IsLive = isLive,
                     Views = statistics != null ? statistics.viewCount : 0,
                 };
@@ -55,6 +57,11 @@ namespace GameStreamSearch.StreamProviders
         public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null)
         {
             var liveVideos = await youTubeV3Api.SearchVideos(filterOptions.GameName, VideoEventType.Live, pageToken);
+
+            if (liveVideos.items == null)
+            {
+                return GameStreamsDto.Empty();
+            }
 
             var statistics = await GetStreamStatistics(liveVideos.items);
 
@@ -87,6 +94,6 @@ namespace GameStreamSearch.StreamProviders
             return null;
         }
 
-        public string ProviderName { get; } = "YouTube";
+        public string ProviderName { get; private set;  }
     }
 }

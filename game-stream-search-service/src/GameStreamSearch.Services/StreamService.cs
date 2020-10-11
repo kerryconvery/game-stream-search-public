@@ -37,7 +37,9 @@ namespace GameStreamSearch.Services
             var paginationTokens = paginator.decode(pagination);
 
             var tasks = streamProviders.Select(p => {
-                return p.GetLiveStreams(filterOptions, pageSize, paginator.getToken(paginationTokens, p.ProviderName));
+                var pageToken = paginationTokens.ContainsKey(p.ProviderName) ? paginationTokens[p.ProviderName] : null;
+
+                return p.GetLiveStreams(filterOptions, pageSize, pageToken);
             });
 
             var results = await Task.WhenAll(tasks);

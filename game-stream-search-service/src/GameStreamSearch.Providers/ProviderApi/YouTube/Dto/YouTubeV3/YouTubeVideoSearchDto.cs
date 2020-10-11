@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3
 {
-    public class YouTubeVideoSearchSnippetThumbnail
+    public class YouTubeVideoSearchSnippetThumbnailDto
     {
         public string url { get; set; }
     }
 
-    public class YouTubeVideoSearchSnippetThumbnails
+    public class YouTubeVideoSearchSnippetThumbnailsDto
     {
-        public YouTubeVideoSearchSnippetThumbnail high { get; set; }
+        public YouTubeVideoSearchSnippetThumbnailDto high { get; set; }
     }
 
     public class YouTubeVideoSearchSnippetDto
     {
         public string title { get; set; }
-        public YouTubeVideoSearchSnippetThumbnails thumbnails { get; set; }
+        public YouTubeVideoSearchSnippetThumbnailsDto thumbnails { get; set; }
         public string channelTitle { get; set; }
 
     }
