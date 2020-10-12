@@ -12,6 +12,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken
 
     public class TwitchStreamPreviewDto
     {
+        public string medium { get; set; }
         public string large { get; set; }
     }
 

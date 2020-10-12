@@ -4,9 +4,9 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 
 const ApplicationTemplate = ({ children }) => (
-  <Container maxWidth="lg">
-    <Grid container spacing={3} alignItems="center">
-      <Grid item xs={12}></Grid>
+  <Container  maxWidth="lg">
+    <Grid container spacing={1} alignItems="center">
+    <Grid item xs={12} />
       <Grid item xs={12}>
         {children}
       </Grid>

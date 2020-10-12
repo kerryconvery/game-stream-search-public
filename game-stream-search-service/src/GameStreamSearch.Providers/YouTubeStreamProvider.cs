@@ -31,7 +31,7 @@ namespace GameStreamSearch.StreamProviders
                 {
                     Streamer = v.snippet.channelTitle,
                     GameName = v.snippet.title,
-                    ImageUrl = v.snippet.thumbnails.high.url,
+                    ImageUrl = v.snippet.thumbnails.medium.url,
                     PlatformName = ProviderName,
                     StreamUrl = urlBuilder.Build(v.id.videoId),
                     IsLive = isLive,

@@ -52,7 +52,7 @@ namespace GameStreamSearch.Providers
             {
                 Streamer = s.channel.display_name,
                 GameName = s.channel.status,
-                ImageUrl = s.preview.large,
+                ImageUrl = s.preview.medium,
                 PlatformName = ProviderName,
                 StreamUrl = s.channel.url,
                 IsLive = true,

@@ -1,26 +1,33 @@
 import React from 'react';
-import { string, node } from 'prop-types';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent'
+import { node } from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
-const StandardPageTemplate = ({ title, children, actions }) => (
-  <Card>
-    <CardHeader title={title} action={actions} />
-    <CardContent>
-      {children}
-    </CardContent>
-  </Card>
-)
+const useStyles = makeStyles(theme => ({
+  content: {
+    backgroundColor: '#F8F9F9'
+  },
+}));
 
-StandardPageTemplate.propTypes = {
-  title: string.isRequired,
-  children: node.isRequired,
-  actions: node,
+const StandardPageTemplate = ({ toolBar, children }) => {
+  const classes = useStyles();
+
+  return (
+    <Grid container spacing={5}>
+      <Grid item direction="row" container justify="center" alignItems="stretch">
+        {toolBar}
+      </Grid>
+      <Grid item xs={12} className={classes.content}>
+        {children}
+      </Grid>
+    </Grid>
+  )
 }
 
-StandardPageTemplate.defaultProps = {
-  actions: null,
+StandardPageTemplate.propTypes = {
+  toolBar: node,
+  children: node.isRequired,
 }
 
 export default StandardPageTemplate;

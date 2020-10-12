@@ -5,6 +5,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
+import GameStreamDetails from './GameStreamDetails';
 
 const GameStreamListSkeleton = () => (
   <Grid container spacing={3}>
@@ -23,21 +24,18 @@ const GameStreamListSkeleton = () => (
 )
 
 const GameStreamGrid = (streams) => (
-  <GridList cols={4}>
+  <GridList cols={4} cellHeight={300} spacing={20}>
     {streams.map((stream, index) => (
       <GridListTile key={index}>
-        <a href={stream.streamUrl} target='_blank'>
-          <img src={stream.imageUrl} />
-          <GridListTileBar
-            titlePosition='top'
-            title={stream.gameName}
-            subtitle={stream.streamer}
-          />
-          <GridListTileBar
-            title={stream.platformName}
-            subtitle={<span>{stream.isLive ? `${stream.views} watching now` : `${stream.views} views` }</span>}
-          />
-        </a>
+        <GameStreamDetails
+          gameName={stream.gameName}
+          streamerName={stream.streamer}
+          platformName={stream.platformName}
+          imageUrl={stream.imageUrl}
+          streamUrl={stream.streamUrl}
+          isLive={stream.isLive}
+          viewCount={stream.views}
+        />
       </GridListTile>
     ))}
   </GridList>

@@ -10,6 +10,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3
 
     public class YouTubeVideoSearchSnippetThumbnailsDto
     {
+        public YouTubeVideoSearchSnippetThumbnailDto medium { get; set; }
         public YouTubeVideoSearchSnippetThumbnailDto high { get; set; }
     }
 

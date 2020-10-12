@@ -22,14 +22,15 @@ const GameStreamListPage = () => {
   }, [gameName, nextPageToken]);
   
   return (
-    <>
-      <GameStreamSearchBar onGameChange={onSearch} />
+    <StandardPageTemplate
+      toolBar={<GameStreamSearchBar onGameChange={onSearch} />}
+    >
       <InfiniteGameStreamList
         gameStreams={streams.items}
         nextPageToken={streams.nextPageToken}
         onLoadMore={setNextPageToken}
       />
-    </>
+    </StandardPageTemplate>
   )
 }
 
