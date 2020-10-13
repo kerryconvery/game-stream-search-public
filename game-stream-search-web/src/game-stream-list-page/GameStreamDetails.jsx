@@ -2,6 +2,7 @@ import React from 'react';
 import { string, bool, number } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +56,9 @@ const GameStreamDetails = ({
         <div className={classes.detailsContainer}>
           <Avatar src={channelThumbnailUrl} />
           <div className={classes.streamDetails}>
-            <h3 className={classes.streamTitle}>{streamTitle}</h3>
+            <Tooltip title={streamTitle}>
+              <h3 className={classes.streamTitle}>{streamTitle}</h3>
+            </Tooltip>
             <div className={classes.streamSubDetails}>
               <div>{streamerName}</div>
               <span>{platformName}</span>
