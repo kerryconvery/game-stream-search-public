@@ -9,7 +9,7 @@
           "title": "game 1",
           "channelTitle": "youtube channel 1",
           "thumbnails": {
-            "high": {
+            "medium": {
               "url": "http://youtube.thumbnail"
             }
           }
@@ -28,7 +28,7 @@
           "title": "game 2",
           "channelTitle": "youtube channel 2",
           "thumbnails": {
-            "high": {
+            "medium": {
               "url": "http://youtube.thumbnail"
             }
           }
@@ -47,7 +47,7 @@
           "title": "game 2",
           "channelTitle": "youtube channel 3",
           "thumbnails": {
-            "high": {
+            "medium": {
               "url": "http://youtube.thumbnail"
             }
           }

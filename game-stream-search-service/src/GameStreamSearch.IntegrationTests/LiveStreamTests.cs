@@ -27,7 +27,7 @@ namespace GameStreamSearch.IntegrationTests
         private StreamController SetupStreamData(
             List<TwitchLiveStreamDto> twitchLiveStreamDataPages,
             List<YouTubeVideoSearchDto> youTubLiveStreamDataPages,
-            YouTubeVideoStatisticsPartDto youTubeVideoStatisticsData)
+            YouTubeLiveStreamDetailsDto youTubeLiveStreamDetailsData)
         {
             var twitchKrakenApiStub = new Mock<ITwitchKrakenApi>();
             twitchKrakenApiStub.Setup(m => m.GetLiveStreams(1, 0)).ReturnsAsync(twitchLiveStreamDataPages[0]);
@@ -46,7 +46,7 @@ namespace GameStreamSearch.IntegrationTests
             youTubeV3ApiStub.Setup(m => m.SearchVideos("error", VideoEventType.Live, null)).ReturnsAsync(new YouTubeVideoSearchDto());
 
 
-            youTubeV3ApiStub.Setup(m => m.GetVideoStatisticsPart(It.IsAny<IEnumerable<string>>())).ReturnsAsync(youTubeVideoStatisticsData);
+            youTubeV3ApiStub.Setup(m => m.GetLiveStreamDetails(It.IsAny<IEnumerable<string>>())).ReturnsAsync(youTubeLiveStreamDetailsData);
 
             var youTubeStreamUrl = "https://www.youtube.com";
 
@@ -73,9 +73,9 @@ namespace GameStreamSearch.IntegrationTests
         {
             var twitchLiveStreamData = LoadTestData<List<TwitchLiveStreamDto>>("TwitchLiveStreams.json");
             var youTubeLiveStreamData = LoadTestData<List<YouTubeVideoSearchDto>>("YouTubeLiveStreams.json");
-            var youTubeVideoStatistics = LoadTestData<YouTubeVideoStatisticsPartDto>("YouTubeVideoStatistics.json");
+            var youTubeVideoDetails = LoadTestData<YouTubeLiveStreamDetailsDto>("YouTubeVideoStatistics.json");
 
-            streamController = SetupStreamData(twitchLiveStreamData, youTubeLiveStreamData, youTubeVideoStatistics);
+            streamController = SetupStreamData(twitchLiveStreamData, youTubeLiveStreamData, youTubeVideoDetails);
         }
 
         [Test]
@@ -85,20 +85,22 @@ namespace GameStreamSearch.IntegrationTests
 
             Assert.AreEqual(streams.Value.Items.Count() , 2);
 
-            Assert.AreEqual(streams.Value.Items.First().GameName, "game 1");
+            Assert.AreEqual(streams.Value.Items.First().StreamTitle, "game 1");
             Assert.AreEqual(streams.Value.Items.First().PlatformName, "Twitch");
             Assert.AreEqual(streams.Value.Items.First().Streamer, "twitch channel 1");
             Assert.AreEqual(streams.Value.Items.First().StreamUrl, "http://fake.twitch.url");
-            Assert.AreEqual(streams.Value.Items.First().ImageUrl, "http://twitch.thumbnail");
+            Assert.AreEqual(streams.Value.Items.First().ChannelThumbnailUrl, "http://channel.thumbnail.url");
+            Assert.AreEqual(streams.Value.Items.First().StreamThumbnailUrl, "http://twitch.thumbnail");
             Assert.AreEqual(streams.Value.Items.First().IsLive, true);
             Assert.AreEqual(streams.Value.Items.First().Views, 1);
 
 
-            Assert.AreEqual(streams.Value.Items.Last().GameName, "game 1");
+            Assert.AreEqual(streams.Value.Items.Last().StreamTitle, "game 1");
             Assert.AreEqual(streams.Value.Items.Last().PlatformName, "YouTube");
             Assert.AreEqual(streams.Value.Items.Last().Streamer, "youtube channel 1");
             Assert.AreEqual(streams.Value.Items.Last().StreamUrl, "https://www.youtube.com/watch?v=video1");
-            Assert.AreEqual(streams.Value.Items.Last().ImageUrl, "http://youtube.thumbnail");
+            Assert.AreEqual(streams.Value.Items.Last().ChannelThumbnailUrl, "http://channel.thumbnail.url");
+            Assert.AreEqual(streams.Value.Items.Last().StreamThumbnailUrl, "http://youtube.thumbnail");
             Assert.AreEqual(streams.Value.Items.Last().IsLive, true);
 
             Assert.AreEqual(streams.Value.Items.Last().Views, 1);
@@ -115,10 +117,10 @@ namespace GameStreamSearch.IntegrationTests
 
             Assert.AreEqual(secondPageStreams.Value.Items.Count(), 2);
 
-            Assert.AreEqual(secondPageStreams.Value.Items.First().GameName, "game 2");
+            Assert.AreEqual(secondPageStreams.Value.Items.First().StreamTitle, "game 2");
             Assert.AreEqual(secondPageStreams.Value.Items.First().PlatformName, "Twitch");
 
-            Assert.AreEqual(secondPageStreams.Value.Items.Last().GameName, "game 2");
+            Assert.AreEqual(secondPageStreams.Value.Items.Last().StreamTitle, "game 2");
             Assert.AreEqual(secondPageStreams.Value.Items.Last().PlatformName, "YouTube");
             Assert.AreEqual(secondPageStreams.Value.Items.Last().Views, 2);
 

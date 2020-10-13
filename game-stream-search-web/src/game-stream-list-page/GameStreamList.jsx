@@ -28,11 +28,12 @@ const GameStreamGrid = (streams) => (
     {streams.map((stream, index) => (
       <GridListTile key={index}>
         <GameStreamDetails
-          gameName={stream.gameName}
+          streamTitle={stream.streamTitle}
           streamerName={stream.streamer}
           platformName={stream.platformName}
-          imageUrl={stream.imageUrl}
+          streamThumbnailUrl={stream.streamThumbnailUrl}
           streamUrl={stream.streamUrl}
+          channelThumbnailUrl={stream.channelThumbnailUrl}
           isLive={stream.isLive}
           viewCount={stream.views}
         />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { string, bool, number } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'normal',
+    marginTop: 0,
     marginBottom: '0.25rem',
   },
   link: {
@@ -22,42 +24,58 @@ const useStyles = makeStyles(theme => ({
     color: 'inherit',
   },
   detailsContainer: {
-    paddingRight: '0.5rem',
-    paddingLeft: '0.5rem'
+    display: 'flex',
+    flexDirection: 'row',
+    paddingTop: '1rem',
   },
   streamDetails: {
+    paddingLeft: '0.5rem',
+  },
+  streamSubDetails: {
     color: '#606060',
     fontSize: '14px',
-  }
+  },
 }));
 
-const GameStreamDetails = ({ imageUrl, streamUrl, gameName, streamerName, platformName, isLive, viewCount }) => {
+const GameStreamDetails = ({
+  streamThumbnailUrl,
+  streamUrl, streamTitle,
+  streamerName,
+  channelThumbnailUrl,
+  platformName,
+  isLive,
+  viewCount }) => {
+
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <a href={streamUrl} target='_blank' className={classes.link}>
-        <img src={imageUrl} />
+        <img src={streamThumbnailUrl} />
         <div className={classes.detailsContainer}>
-          <h3 className={classes.streamTitle}>{gameName}</h3>
-            <div className={classes.streamDetails}>
+          <Avatar src={channelThumbnailUrl} />
+          <div className={classes.streamDetails}>
+            <h3 className={classes.streamTitle}>{streamTitle}</h3>
+            <div className={classes.streamSubDetails}>
               <div>{streamerName}</div>
               <span>{platformName}</span>
               <span> • </span>
               <span>{isLive ? `${viewCount} viewers` : `${viewCount} views` }</span>
             </div>
           </div>
-        </a>
+        </div>
+      </a>
     </div>
   )
 }
 
 GameStreamDetails.propTypes = {
-  gameName: string.isRequired,
+  streamTitle: string.isRequired,
   streamerName: string.isRequired,
-  platformName: string.isRequired,
-  imageUrl: string.isRequired,
+  streamThumbnailUrl: string.isRequired,
   streamUrl: string.isRequired,
+  channelThumbnailUrl: string.isRequired,
+  platformName: string.isRequired,
   isLive: bool.isRequired,
   viewCount: number.isRequired,
 }

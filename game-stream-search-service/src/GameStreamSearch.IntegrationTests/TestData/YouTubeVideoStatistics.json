@@ -2,14 +2,14 @@
   "items": [
     {
       "id": "video1",
-      "statistics": {
-        "viewCount": "1"
+      "liveStreamingDetails": {
+        "concurrentViewers": "1"
       }
     },
     {
       "id": "video3",
-      "statistics": {
-        "viewCount": "2"
+      "liveStreamingDetails": {
+        "concurrentViewers": "2"
       }
     }
   ]

@@ -74,16 +74,16 @@ namespace GameSearchService.StreamProviders.Tests
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchVideos("fake game", VideoEventType.Live, "fake page token")).ReturnsAsync(liveStreams);
-            youTubeV3ApiStub.Setup(m => m.GetVideoStatisticsPart(It.Is<IEnumerable<string>>(i => i.First() == "stream1"))).ReturnsAsync(streamStatistics);
+            youTubeV3ApiStub.Setup(m => m.GetVideoStatistics(It.Is<IEnumerable<string>>(i => i.First() == "stream1"))).ReturnsAsync(streamStatistics);
 
             var youTubeStreamProvider = new YouTubeStreamProvider("YouTube", watchUrlBuilderStub.Object, youTubeV3ApiStub.Object);
 
             var streams = await youTubeStreamProvider.GetLiveStreams(new StreamFilterOptionsDto { GameName = "fake game" }, 1, "fake page token");
 
             Assert.AreEqual(streams.Items.Count(), 1);
-            Assert.AreEqual(streams.Items.First().GameName, liveStreams.items.First().snippet.title);
+            Assert.AreEqual(streams.Items.First().StreamTitle, liveStreams.items.First().snippet.title);
             Assert.AreEqual(streams.Items.First().Streamer, liveStreams.items.First().snippet.channelTitle);
-            Assert.AreEqual(streams.Items.First().ImageUrl, liveStreams.items.First().snippet.thumbnails.high.url);
+            Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.items.First().snippet.thumbnails.high.url);
             Assert.AreEqual(streams.Items.First().StreamUrl, watchUrl);
             Assert.AreEqual(streams.Items.First().Views, 2);
             Assert.IsTrue(streams.Items.First().IsLive);

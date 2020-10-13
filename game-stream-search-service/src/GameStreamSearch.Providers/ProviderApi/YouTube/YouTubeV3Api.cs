@@ -45,7 +45,32 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             return response.Data;
         }
 
-        public async Task<YouTubeVideoStatisticsPartDto> GetVideoStatisticsPart(IEnumerable<string> videoIds)
+        public async Task<YouTubeLiveStreamDetailsDto> GetLiveStreamDetails(IEnumerable<string> videoIds)
+        {
+
+            var client = new RestClient(this.googleApiUrl);
+
+            var request = new RestRequest("/youtube/v3/videos", Method.GET);
+
+
+            request.AddParameter("part", "id");
+            request.AddParameter("part", "liveStreamingDetails");
+
+            foreach (var id in videoIds)
+            {
+                request.AddParameter("id", id);
+            }
+
+            request.AddParameter("key", googleApiKey);
+
+            request.AddHeader("Accept", "application/json");
+
+            var response = await client.ExecuteAsync<YouTubeLiveStreamDetailsDto>(request);
+
+            return response.Data;
+        }
+
+        public async Task<YouTubeVideoStatisticsPartDto> GetVideoStatistics(IEnumerable<string> videoIds)
         {
 
             var client = new RestClient(this.googleApiUrl);
@@ -66,6 +91,30 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             request.AddHeader("Accept", "application/json");
 
             var response = await client.ExecuteAsync<YouTubeVideoStatisticsPartDto>(request);
+
+            return response.Data;
+        }
+
+        public async Task<YouTubeChannelsDto> GetChannels(IEnumerable<string> channelIds)
+        {
+            var client = new RestClient(this.googleApiUrl);
+
+            var request = new RestRequest("/youtube/v3/channels", Method.GET);
+
+
+            request.AddParameter("part", "id");
+            request.AddParameter("part", "snippet");
+
+            foreach (var id in channelIds)
+            {
+                request.AddParameter("id", id);
+            }
+
+            request.AddParameter("key", googleApiKey);
+
+            request.AddHeader("Accept", "application/json");
+
+            var response = await client.ExecuteAsync<YouTubeChannelsDto>(request);
 
             return response.Data;
         }

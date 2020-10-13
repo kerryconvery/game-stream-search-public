@@ -22,19 +22,44 @@ namespace GameStreamSearch.StreamProviders
             this.youTubeV3Api = youTubeV3Api;
         }
 
-        private IEnumerable<GameStreamDto> mapToGameStream(IEnumerable<YouTubeVideoSearchItemDto> streams, IEnumerable<YouTubeVideoStatisticsItemDto> streamStatistics, bool isLive)
+        private IEnumerable<GameStreamDto> mapAsLiveStream(
+            IEnumerable<YouTubeVideoSearchItemDto> streams,
+            Dictionary<string, YouTubeChannelSnippetDto> channelSnippets,
+            IEnumerable<YouTubeLiveStreamDetailsItemDto> liveStreamDetails)
         {
             var gameStreams = streams.Select(v => {
-                var statistics = streamStatistics.FirstOrDefault(s => s.id == v.id.videoId)?.statistics;
+                var streamDetails = liveStreamDetails.FirstOrDefault(s => s.id == v.id.videoId)?.liveStreamingDetails;
+                var channelSnippet = channelSnippets.ContainsKey(v.snippet.channelId) ? channelSnippets[v.snippet.channelId] : null;
 
                 return new GameStreamDto
                 {
                     Streamer = v.snippet.channelTitle,
-                    GameName = v.snippet.title,
-                    ImageUrl = v.snippet.thumbnails.medium.url,
+                    StreamTitle = v.snippet.title,
+                    StreamThumbnailUrl = v.snippet.thumbnails.medium.url,
+                    ChannelThumbnailUrl = channelSnippet?.thumbnails.@default.url,
                     PlatformName = ProviderName,
                     StreamUrl = urlBuilder.Build(v.id.videoId),
-                    IsLive = isLive,
+                    IsLive = true,
+                    Views = streamDetails != null ? streamDetails.concurrentViewers : 0,
+                };
+            });
+
+            return gameStreams;
+        }
+
+        private IEnumerable<GameStreamDto> mapAsOnDemandStream(IEnumerable<YouTubeVideoSearchItemDto> streams, IEnumerable<YouTubeVideoStatisticsItemDto> videoStatistics)
+        {
+            var gameStreams = streams.Select(v => {
+                var statistics = videoStatistics.FirstOrDefault(s => s.id == v.id.videoId)?.statistics;
+
+                return new GameStreamDto
+                {
+                    StreamTitle = v.snippet.title,
+                    Streamer = v.snippet.channelTitle,
+                    StreamThumbnailUrl = v.snippet.thumbnails.medium.url,
+                    PlatformName = ProviderName,
+                    StreamUrl = urlBuilder.Build(v.id.videoId),
+                    IsLive = false,
                     Views = statistics != null ? statistics.viewCount : 0,
                 };
             });
@@ -42,14 +67,38 @@ namespace GameStreamSearch.StreamProviders
             return gameStreams;
         }
 
-        private async Task<IEnumerable<YouTubeVideoStatisticsItemDto>> GetStreamStatistics(
+        private async Task<IEnumerable<YouTubeLiveStreamDetailsItemDto>> GetLiveStreamDetails(
             IEnumerable<YouTubeVideoSearchItemDto> streams)
         {
             var videoIds = new List<string>();
 
             videoIds.AddRange(streams.Select(v => v.id.videoId));
 
-            var statistics = await youTubeV3Api.GetVideoStatisticsPart(videoIds);
+            var statistics = await youTubeV3Api.GetLiveStreamDetails(videoIds);
+
+            return statistics.items;
+        }
+
+        private async Task<Dictionary<string, YouTubeChannelSnippetDto>> GetChannelSnippets(
+            IEnumerable<YouTubeVideoSearchItemDto> streams)
+        {
+            var channelIds = new List<string>();
+
+            channelIds.AddRange(streams.Select(v => v.snippet.channelId));
+
+            var channels = await youTubeV3Api.GetChannels(channelIds);
+
+            return channels.items.ToDictionary(c => c.id, c => c.snippet);
+        }
+
+        private async Task<IEnumerable<YouTubeVideoStatisticsItemDto>> GetVideoStatistics(
+            IEnumerable<YouTubeVideoSearchItemDto> streams)
+        {
+            var videoIds = new List<string>();
+
+            videoIds.AddRange(streams.Select(v => v.id.videoId));
+
+            var statistics = await youTubeV3Api.GetVideoStatistics(videoIds);
 
             return statistics.items;
         }
@@ -58,16 +107,20 @@ namespace GameStreamSearch.StreamProviders
         {
             var liveVideos = await youTubeV3Api.SearchVideos(filterOptions.GameName, VideoEventType.Live, pageToken);
 
-            if (liveVideos.items == null)
+            if (liveVideos.items == null || liveVideos.items.Count() == 0)
             {
                 return GameStreamsDto.Empty();
             }
 
-            var statistics = await GetStreamStatistics(liveVideos.items);
+            var statisticsTask = GetLiveStreamDetails(liveVideos.items);
+            var channelSnippetsTask = GetChannelSnippets(liveVideos.items);
+
+            var statistics = await statisticsTask;
+            var channelSnippets = await channelSnippetsTask;
 
             return new GameStreamsDto
             {
-                Items = mapToGameStream(liveVideos.items, statistics, true),
+                Items = mapAsLiveStream(liveVideos.items, channelSnippets, statistics),
                 NextPageToken = liveVideos.nextPageToken,
             };
         }
@@ -81,11 +134,11 @@ namespace GameStreamSearch.StreamProviders
                 return GameStreamsDto.Empty();
             }
 
-            var statistics = await GetStreamStatistics(completedVideos.items);
+            var statistics = await GetVideoStatistics(completedVideos.items);
 
             return new GameStreamsDto
             {
-                Items = mapToGameStream(completedVideos.items, statistics, false),
+                Items = mapAsOnDemandStream(completedVideos.items, statistics),
             };
         }
 

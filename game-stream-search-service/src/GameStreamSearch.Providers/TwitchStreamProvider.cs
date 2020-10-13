@@ -50,9 +50,10 @@ namespace GameStreamSearch.Providers
         {
             return liveStreams.streams.Select(s => new GameStreamDto
             {
+                StreamTitle = s.channel.status,
                 Streamer = s.channel.display_name,
-                GameName = s.channel.status,
-                ImageUrl = s.preview.medium,
+                ChannelThumbnailUrl = s.channel.logo,
+                StreamThumbnailUrl = s.preview.medium,
                 PlatformName = ProviderName,
                 StreamUrl = s.channel.url,
                 IsLive = true,
@@ -99,8 +100,8 @@ namespace GameStreamSearch.Providers
                 Items = topVideos.vods.Select(v => new GameStreamDto
                 {
                     Streamer = v.channel.display_name,
-                    GameName = v.title,
-                    ImageUrl = v.preview.medium,
+                    StreamTitle = v.title,
+                    StreamThumbnailUrl = v.preview.medium,
                     PlatformName = ProviderName,
                     StreamUrl = v.url,
                     IsLive = false,
