@@ -6,13 +6,6 @@ using RestSharp;
 
 namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
 {
-    public enum VideoEventType
-    {
-        Completed,
-        Live,
-        Upcoming
-    }
-
     public class YouTubeV3Api : IYouTubeV3Api
     {
         private readonly string googleApiUrl;
@@ -37,6 +30,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             request.AddParameter("videoCategoryId", 20);
             request.AddParameter("key", googleApiKey);
             request.AddParameter("pageToken", pageToken);
+            request.AddParameter("order", "viewCount");
 
             request.AddHeader("Accept", "application/json");
 
