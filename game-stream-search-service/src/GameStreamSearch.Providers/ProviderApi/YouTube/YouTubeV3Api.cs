@@ -17,20 +17,20 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             this.googleApiKey = googleApiKey;
         }
 
-        public async Task<YouTubeSearchDto> SearchVideos(string query, VideoEventType eventType, string pageToken)
+        public async Task<YouTubeSearchDto> SearchVideos(string query, VideoEventType eventType, VideoSortType order, string pageToken)
         {
             var client = new RestClient(this.googleApiUrl);
 
             var request = new RestRequest("/youtube/v3/search", Method.GET);
 
             request.AddParameter("part", "snippet");
-            request.AddParameter("eventType", eventType.ToString().ToLower());
+            request.AddParameter("eventType", eventType.GetAsString());
             request.AddParameter("q", query);
             request.AddParameter("type", "video");
             request.AddParameter("videoCategoryId", 20);
             request.AddParameter("key", googleApiKey);
             request.AddParameter("pageToken", pageToken);
-            request.AddParameter("order", "viewCount");
+            request.AddParameter("order", order.GetAsString());
 
             request.AddHeader("Accept", "application/json");
 

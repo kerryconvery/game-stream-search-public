@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Services.Dto;
 using GameStreamSearch.Services.Interfaces;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3;
 using GameStreamSearch.StreamProviders.Builders;
@@ -101,7 +100,7 @@ namespace GameStreamSearch.StreamProviders
 
         public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null)
         {
-            var liveVideos = await youTubeV3Api.SearchVideos(filterOptions.GameName, VideoEventType.Live, pageToken);
+            var liveVideos = await youTubeV3Api.SearchVideos(filterOptions.GameName, VideoEventType.Live, VideoSortType.ViewCount, pageToken);
 
             if (liveVideos.items == null || liveVideos.items.Count() == 0)
             {
@@ -123,7 +122,7 @@ namespace GameStreamSearch.StreamProviders
 
         public async Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName)
         {
-            var completedVideos = await youTubeV3Api.SearchVideos(gameName, VideoEventType.Completed, null);
+            var completedVideos = await youTubeV3Api.SearchVideos(gameName, VideoEventType.Completed, VideoSortType.ViewCount, null);
 
             if (completedVideos.items == null)
             {

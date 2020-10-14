@@ -39,12 +39,12 @@ namespace GameStreamSearch.IntegrationTests
             twitchKrakenApiStub.Setup(m => m.SearchStreams("error", 1, 0)).ReturnsAsync(new TwitchLiveStreamDto());
 
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
-            youTubeV3ApiStub.Setup(m => m.SearchVideos(null, VideoEventType.Live, null)).ReturnsAsync(youTubLiveStreamDataPages[0]);
-            youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, null)).ReturnsAsync(youTubLiveStreamDataPages[1]);
-            youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, "page.token.2")).ReturnsAsync(youTubLiveStreamDataPages[2]);
-            youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, "page.token.3")).ReturnsAsync(youTubLiveStreamDataPages[3]);
+            youTubeV3ApiStub.Setup(m => m.SearchVideos(null, VideoEventType.Live, VideoSortType.ViewCount, null)).ReturnsAsync(youTubLiveStreamDataPages[0]);
+            youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, null)).ReturnsAsync(youTubLiveStreamDataPages[1]);
+            youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, "page.token.2")).ReturnsAsync(youTubLiveStreamDataPages[2]);
+            youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, "page.token.3")).ReturnsAsync(youTubLiveStreamDataPages[3]);
 
-            youTubeV3ApiStub.Setup(m => m.SearchVideos("error", VideoEventType.Live, null)).ReturnsAsync(new YouTubeSearchDto());
+            youTubeV3ApiStub.Setup(m => m.SearchVideos("error", VideoEventType.Live, VideoSortType.ViewCount, null)).ReturnsAsync(new YouTubeSearchDto());
             youTubeV3ApiStub.Setup(m => m.GetVideos(It.IsAny<string[]>())).ReturnsAsync(videos);
             youTubeV3ApiStub.Setup(m => m.GetChannels(It.IsAny<string[]>())).ReturnsAsync(channels);
 

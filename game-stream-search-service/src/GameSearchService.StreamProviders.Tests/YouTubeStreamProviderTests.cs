@@ -95,7 +95,7 @@ namespace GameSearchService.StreamProviders.Tests
         {
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
-            youTubeV3ApiStub.Setup(m => m.SearchVideos("fake game", VideoEventType.Live, "fake page token")).ReturnsAsync(liveStreams);
+            youTubeV3ApiStub.Setup(m => m.SearchVideos("fake game", VideoEventType.Live, VideoSortType.ViewCount, "fake page token")).ReturnsAsync(liveStreams);
             youTubeV3ApiStub.Setup(m => m.GetVideos(It.Is<string[]>(i => i.First() == "stream1"))).ReturnsAsync(videos);
             youTubeV3ApiStub.Setup(m => m.GetChannels(It.Is<string[]>(i => i.First() == "channel1"))).ReturnsAsync(channels);
 
@@ -119,7 +119,7 @@ namespace GameSearchService.StreamProviders.Tests
         {
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
-            youTubeV3ApiStub.Setup(m => m.SearchVideos(null, VideoEventType.Live, null)).ReturnsAsync(new YouTubeSearchDto());
+            youTubeV3ApiStub.Setup(m => m.SearchVideos(null, VideoEventType.Live, VideoSortType.ViewCount, null)).ReturnsAsync(new YouTubeSearchDto());
 
             var youTubeStreamProvider = new YouTubeStreamProvider("YouTube", watchUrlBuilderStub.Object, youTubeV3ApiStub.Object);
 

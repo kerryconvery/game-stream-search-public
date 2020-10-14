@@ -11,9 +11,37 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces
         Upcoming
     }
 
+    public enum VideoSortType
+    {
+        Date,
+        Rating,
+        Relevance,
+        Title,
+        VideoCount,
+        ViewCount
+    }
+
+    public static class TypeExtensions
+    {
+        public static string GetAsString(this VideoEventType videoEventType)
+        {
+            return videoEventType.ToString().ToLower();
+        }
+
+        public static string GetAsString(this VideoSortType videoSortType)
+        {
+            switch(videoSortType)
+            {
+                case VideoSortType.VideoCount: return "videoCount";
+                case VideoSortType.ViewCount: return "viewCount";
+                default: return videoSortType.ToString().ToLower();
+            }
+        }
+    }
+
     public interface IYouTubeV3Api
     {
-        Task<YouTubeSearchDto> SearchVideos(string query, VideoEventType eventType, string pageToken);
+        Task<YouTubeSearchDto> SearchVideos(string query, VideoEventType eventType, VideoSortType order, string pageToken);
         Task<YouTubeChannelsDto> GetChannels(string[] channelIds);
         Task<YouTubeVideosDto> GetVideos(string[] videoIds);
     }
