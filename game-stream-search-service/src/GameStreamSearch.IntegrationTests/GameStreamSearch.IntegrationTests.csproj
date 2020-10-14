@@ -28,7 +28,10 @@
     <None Update="TestData\YouTubeLiveStreams.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\YouTubeVideoStatistics.json">
+    <None Update="TestData\YouTubeVideos.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\YouTubeChannels.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -24,7 +24,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             this.googleApiKey = googleApiKey;
         }
 
-        public async Task<YouTubeVideoSearchDto> SearchVideos(string query, VideoEventType eventType, string pageToken)
+        public async Task<YouTubeSearchDto> SearchVideos(string query, VideoEventType eventType, string pageToken)
         {
             var client = new RestClient(this.googleApiUrl);
 
@@ -40,62 +40,12 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
 
             request.AddHeader("Accept", "application/json");
 
-            var response = await client.ExecuteAsync<YouTubeVideoSearchDto>(request);
+            var response = await client.ExecuteAsync<YouTubeSearchDto>(request);
 
             return response.Data;
         }
 
-        public async Task<YouTubeLiveStreamDetailsDto> GetLiveStreamDetails(IEnumerable<string> videoIds)
-        {
-
-            var client = new RestClient(this.googleApiUrl);
-
-            var request = new RestRequest("/youtube/v3/videos", Method.GET);
-
-
-            request.AddParameter("part", "id");
-            request.AddParameter("part", "liveStreamingDetails");
-
-            foreach (var id in videoIds)
-            {
-                request.AddParameter("id", id);
-            }
-
-            request.AddParameter("key", googleApiKey);
-
-            request.AddHeader("Accept", "application/json");
-
-            var response = await client.ExecuteAsync<YouTubeLiveStreamDetailsDto>(request);
-
-            return response.Data;
-        }
-
-        public async Task<YouTubeVideoStatisticsPartDto> GetVideoStatistics(IEnumerable<string> videoIds)
-        {
-
-            var client = new RestClient(this.googleApiUrl);
-
-            var request = new RestRequest("/youtube/v3/videos", Method.GET);
-
-
-            request.AddParameter("part", "id");
-            request.AddParameter("part", "statistics");
-
-            foreach (var id in videoIds)
-            {
-                request.AddParameter("id", id);
-            }
-
-            request.AddParameter("key", googleApiKey);
-
-            request.AddHeader("Accept", "application/json");
-
-            var response = await client.ExecuteAsync<YouTubeVideoStatisticsPartDto>(request);
-
-            return response.Data;
-        }
-
-        public async Task<YouTubeChannelsDto> GetChannels(IEnumerable<string> channelIds)
+        public async Task<YouTubeChannelsDto> GetChannels(string[] channelIds)
         {
             var client = new RestClient(this.googleApiUrl);
 
@@ -115,6 +65,30 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             request.AddHeader("Accept", "application/json");
 
             var response = await client.ExecuteAsync<YouTubeChannelsDto>(request);
+
+            return response.Data;
+        }
+
+        public async Task<YouTubeVideosDto> GetVideos(string[] videoIds)
+        {
+            var client = new RestClient(this.googleApiUrl);
+
+            var request = new RestRequest("/youtube/v3/videos", Method.GET);
+
+            request.AddParameter("part", "id");
+            request.AddParameter("part", "statistics");
+            request.AddParameter("part", "liveStreamingDetails");
+
+            foreach (var id in videoIds)
+            {
+                request.AddParameter("id", id);
+            }
+
+            request.AddParameter("key", googleApiKey);
+
+            request.AddHeader("Accept", "application/json");
+
+            var response = await client.ExecuteAsync<YouTubeVideosDto>(request);
 
             return response.Data;
         }

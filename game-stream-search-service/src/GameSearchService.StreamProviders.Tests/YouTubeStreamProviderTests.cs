@@ -16,23 +16,24 @@ namespace GameSearchService.StreamProviders.Tests
     
     public class YouTubeStreamProviderTests
     {
-        private YouTubeVideoSearchDto liveStreams = new YouTubeVideoSearchDto()
+        private YouTubeSearchDto liveStreams = new YouTubeSearchDto()
         {
-             items = new List<YouTubeVideoSearchItemDto>
+             items = new List<YouTubeSearchItemDto>
              {
-                 new YouTubeVideoSearchItemDto
+                 new YouTubeSearchItemDto
                  {
-                     id = new YouTubeVideoSearchItemIdDto
+                     id = new YouTubeSearchItemIdDto
                      {
                          videoId = "stream1"
                      },
-                     snippet = new YouTubeVideoSearchSnippetDto
+                     snippet = new YouTubeSearchSnippetDto
                      {
+                         channelId = "channel1",
                          channelTitle = "fake channel",
                          title = "fake game",
-                         thumbnails = new YouTubeVideoSearchSnippetThumbnailsDto
+                         thumbnails = new YouTubeSearchSnippetThumbnailsDto
                          {
-                             high = new YouTubeVideoSearchSnippetThumbnailDto
+                             medium = new YouTubeSearchSnippetThumbnailDto
                              {
                                  url = "http://fake.thumbnail.url"
                              }
@@ -43,17 +44,38 @@ namespace GameSearchService.StreamProviders.Tests
              nextPageToken = "next page token"
         };
 
-        private YouTubeVideoStatisticsPartDto streamStatistics = new YouTubeVideoStatisticsPartDto
+        private YouTubeVideosDto videos = new YouTubeVideosDto
         {
-            items = new List<YouTubeVideoStatisticsItemDto>
+            items = new List<YouTubeVideoDto>
             {
-                new YouTubeVideoStatisticsItemDto
+                new YouTubeVideoDto
                 {
                     id = "stream1",
-                    statistics = new YouTubeVideoStatisticsDto
+                    liveStreamingDetails = new YouTubeVideoLiveStreamingDetailsDto
                     {
-                        viewCount = 2,
-                    },
+                        concurrentViewers = 5,
+                    }
+                }
+            }
+        };
+
+        private YouTubeChannelsDto channels = new YouTubeChannelsDto
+        {
+            items = new List<YouTubeChannelDto>
+            {
+                new YouTubeChannelDto
+                {
+                    id = "channel1",
+                    snippet = new YouTubeChannelSnippetDto
+                    {
+                        thumbnails = new YouTubeChannelSnippetThumbnailsDto
+                        {
+                            @default = new YouTubeChannelSnippetThumbnailDto
+                            {
+                                url = "http://channel.thumpbnail.url",
+                            }
+                        }
+                    }
                 }
             }
         };
@@ -74,7 +96,8 @@ namespace GameSearchService.StreamProviders.Tests
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchVideos("fake game", VideoEventType.Live, "fake page token")).ReturnsAsync(liveStreams);
-            youTubeV3ApiStub.Setup(m => m.GetVideoStatistics(It.Is<IEnumerable<string>>(i => i.First() == "stream1"))).ReturnsAsync(streamStatistics);
+            youTubeV3ApiStub.Setup(m => m.GetVideos(It.Is<string[]>(i => i.First() == "stream1"))).ReturnsAsync(videos);
+            youTubeV3ApiStub.Setup(m => m.GetChannels(It.Is<string[]>(i => i.First() == "channel1"))).ReturnsAsync(channels);
 
             var youTubeStreamProvider = new YouTubeStreamProvider("YouTube", watchUrlBuilderStub.Object, youTubeV3ApiStub.Object);
 
@@ -83,9 +106,10 @@ namespace GameSearchService.StreamProviders.Tests
             Assert.AreEqual(streams.Items.Count(), 1);
             Assert.AreEqual(streams.Items.First().StreamTitle, liveStreams.items.First().snippet.title);
             Assert.AreEqual(streams.Items.First().Streamer, liveStreams.items.First().snippet.channelTitle);
-            Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.items.First().snippet.thumbnails.high.url);
+            Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.items.First().snippet.thumbnails.medium.url);
+            Assert.AreEqual(streams.Items.First().ChannelThumbnailUrl, channels.items.First().snippet.thumbnails.@default.url);
             Assert.AreEqual(streams.Items.First().StreamUrl, watchUrl);
-            Assert.AreEqual(streams.Items.First().Views, 2);
+            Assert.AreEqual(streams.Items.First().Views, 5);
             Assert.IsTrue(streams.Items.First().IsLive);
             Assert.AreEqual(streams.NextPageToken, liveStreams.nextPageToken);
         }
@@ -95,7 +119,7 @@ namespace GameSearchService.StreamProviders.Tests
         {
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
-            youTubeV3ApiStub.Setup(m => m.SearchVideos(null, VideoEventType.Live, null)).ReturnsAsync(new YouTubeVideoSearchDto());
+            youTubeV3ApiStub.Setup(m => m.SearchVideos(null, VideoEventType.Live, null)).ReturnsAsync(new YouTubeSearchDto());
 
             var youTubeStreamProvider = new YouTubeStreamProvider("YouTube", watchUrlBuilderStub.Object, youTubeV3ApiStub.Object);
 

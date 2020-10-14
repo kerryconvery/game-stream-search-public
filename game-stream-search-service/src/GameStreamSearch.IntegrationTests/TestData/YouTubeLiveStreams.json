@@ -7,6 +7,7 @@
         },
         "snippet": {
           "title": "game 1",
+          "channelId": "channel1",
           "channelTitle": "youtube channel 1",
           "thumbnails": {
             "medium": {
@@ -26,6 +27,7 @@
         },
         "snippet": {
           "title": "game 2",
+          "channelId": "channel2",
           "channelTitle": "youtube channel 2",
           "thumbnails": {
             "medium": {
@@ -45,6 +47,7 @@
         },
         "snippet": {
           "title": "game 2",
+          "channelId":  "channel3",
           "channelTitle": "youtube channel 3",
           "thumbnails": {
             "medium": {

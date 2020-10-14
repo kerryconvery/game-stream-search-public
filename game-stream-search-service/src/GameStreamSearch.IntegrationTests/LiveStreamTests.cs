@@ -26,8 +26,9 @@ namespace GameStreamSearch.IntegrationTests
 
         private StreamController SetupStreamData(
             List<TwitchLiveStreamDto> twitchLiveStreamDataPages,
-            List<YouTubeVideoSearchDto> youTubLiveStreamDataPages,
-            YouTubeLiveStreamDetailsDto youTubeLiveStreamDetailsData)
+            List<YouTubeSearchDto> youTubLiveStreamDataPages,
+            YouTubeVideosDto videos,
+            YouTubeChannelsDto channels)
         {
             var twitchKrakenApiStub = new Mock<ITwitchKrakenApi>();
             twitchKrakenApiStub.Setup(m => m.GetLiveStreams(1, 0)).ReturnsAsync(twitchLiveStreamDataPages[0]);
@@ -43,10 +44,9 @@ namespace GameStreamSearch.IntegrationTests
             youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, "page.token.2")).ReturnsAsync(youTubLiveStreamDataPages[2]);
             youTubeV3ApiStub.Setup(m => m.SearchVideos("game 2", VideoEventType.Live, "page.token.3")).ReturnsAsync(youTubLiveStreamDataPages[3]);
 
-            youTubeV3ApiStub.Setup(m => m.SearchVideos("error", VideoEventType.Live, null)).ReturnsAsync(new YouTubeVideoSearchDto());
-
-
-            youTubeV3ApiStub.Setup(m => m.GetLiveStreamDetails(It.IsAny<IEnumerable<string>>())).ReturnsAsync(youTubeLiveStreamDetailsData);
+            youTubeV3ApiStub.Setup(m => m.SearchVideos("error", VideoEventType.Live, null)).ReturnsAsync(new YouTubeSearchDto());
+            youTubeV3ApiStub.Setup(m => m.GetVideos(It.IsAny<string[]>())).ReturnsAsync(videos);
+            youTubeV3ApiStub.Setup(m => m.GetChannels(It.IsAny<string[]>())).ReturnsAsync(channels);
 
             var youTubeStreamUrl = "https://www.youtube.com";
 
@@ -72,10 +72,11 @@ namespace GameStreamSearch.IntegrationTests
         public void Setup()
         {
             var twitchLiveStreamData = LoadTestData<List<TwitchLiveStreamDto>>("TwitchLiveStreams.json");
-            var youTubeLiveStreamData = LoadTestData<List<YouTubeVideoSearchDto>>("YouTubeLiveStreams.json");
-            var youTubeVideoDetails = LoadTestData<YouTubeLiveStreamDetailsDto>("YouTubeVideoStatistics.json");
+            var youTubeLiveStreamData = LoadTestData<List<YouTubeSearchDto>>("YouTubeLiveStreams.json");
+            var youTubeVideos = LoadTestData<YouTubeVideosDto>("YouTubeVideos.json");
+            var youTubeChannels = LoadTestData<YouTubeChannelsDto>("YouTubeChannels.json");
 
-            streamController = SetupStreamData(twitchLiveStreamData, youTubeLiveStreamData, youTubeVideoDetails);
+            streamController = SetupStreamData(twitchLiveStreamData, youTubeLiveStreamData, youTubeVideos, youTubeChannels);
         }
 
         [Test]
@@ -90,7 +91,7 @@ namespace GameStreamSearch.IntegrationTests
             Assert.AreEqual(streams.Value.Items.First().Streamer, "twitch channel 1");
             Assert.AreEqual(streams.Value.Items.First().StreamUrl, "http://fake.twitch.url");
             Assert.AreEqual(streams.Value.Items.First().ChannelThumbnailUrl, "http://channel.thumbnail.url");
-            Assert.AreEqual(streams.Value.Items.First().StreamThumbnailUrl, "http://twitch.thumbnail");
+            Assert.AreEqual(streams.Value.Items.First().StreamThumbnailUrl, "http://twitch.thumbnail.url");
             Assert.AreEqual(streams.Value.Items.First().IsLive, true);
             Assert.AreEqual(streams.Value.Items.First().Views, 1);
 
@@ -99,7 +100,7 @@ namespace GameStreamSearch.IntegrationTests
             Assert.AreEqual(streams.Value.Items.Last().PlatformName, "YouTube");
             Assert.AreEqual(streams.Value.Items.Last().Streamer, "youtube channel 1");
             Assert.AreEqual(streams.Value.Items.Last().StreamUrl, "https://www.youtube.com/watch?v=video1");
-            Assert.AreEqual(streams.Value.Items.Last().ChannelThumbnailUrl, "http://channel.thumbnail.url");
+            Assert.AreEqual(streams.Value.Items.Last().ChannelThumbnailUrl, "http://channel1.thumbnail.url");
             Assert.AreEqual(streams.Value.Items.Last().StreamThumbnailUrl, "http://youtube.thumbnail");
             Assert.AreEqual(streams.Value.Items.Last().IsLive, true);
 

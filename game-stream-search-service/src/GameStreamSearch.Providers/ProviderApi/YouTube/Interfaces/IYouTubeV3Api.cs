@@ -7,9 +7,8 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces
 {
     public interface IYouTubeV3Api
     {
-        Task<YouTubeVideoSearchDto> SearchVideos(string query, VideoEventType eventType, string pageToken);
-        Task<YouTubeVideoStatisticsPartDto> GetVideoStatistics(IEnumerable<string> videoIds);
-        Task<YouTubeLiveStreamDetailsDto> GetLiveStreamDetails(IEnumerable<string> videoIds);
-        Task<YouTubeChannelsDto> GetChannels(IEnumerable<string> channelIds);
+        Task<YouTubeSearchDto> SearchVideos(string query, VideoEventType eventType, string pageToken);
+        Task<YouTubeChannelsDto> GetChannels(string[] channelIds);
+        Task<YouTubeVideosDto> GetVideos(string[] videoIds);
     }
 }

@@ -23,12 +23,12 @@ namespace GameStreamSearch.StreamProviders
         }
 
         private IEnumerable<GameStreamDto> mapAsLiveStream(
-            IEnumerable<YouTubeVideoSearchItemDto> streams,
+            IEnumerable<YouTubeSearchItemDto> streams,
             Dictionary<string, YouTubeChannelSnippetDto> channelSnippets,
-            IEnumerable<YouTubeLiveStreamDetailsItemDto> liveStreamDetails)
+            Dictionary<string, YouTubeVideoLiveStreamingDetailsDto> liveStreamDetails)
         {
             var gameStreams = streams.Select(v => {
-                var streamDetails = liveStreamDetails.FirstOrDefault(s => s.id == v.id.videoId)?.liveStreamingDetails;
+                var streamDetails = liveStreamDetails.ContainsKey(v.id.videoId) ? liveStreamDetails[v.id.videoId] : null;
                 var channelSnippet = channelSnippets.ContainsKey(v.snippet.channelId) ? channelSnippets[v.snippet.channelId] : null;
 
                 return new GameStreamDto
@@ -47,10 +47,12 @@ namespace GameStreamSearch.StreamProviders
             return gameStreams;
         }
 
-        private IEnumerable<GameStreamDto> mapAsOnDemandStream(IEnumerable<YouTubeVideoSearchItemDto> streams, IEnumerable<YouTubeVideoStatisticsItemDto> videoStatistics)
+        private IEnumerable<GameStreamDto> mapAsOnDemandStream(
+            IEnumerable<YouTubeSearchItemDto> streams,
+            Dictionary<string, YouTubeVideoStatisticsDto> videoStatistics)
         {
             var gameStreams = streams.Select(v => {
-                var statistics = videoStatistics.FirstOrDefault(s => s.id == v.id.videoId)?.statistics;
+                var statistics = videoStatistics.ContainsKey(v.id.videoId) ? videoStatistics[v.id.videoId] : null;
 
                 return new GameStreamDto
                 {
@@ -67,40 +69,34 @@ namespace GameStreamSearch.StreamProviders
             return gameStreams;
         }
 
-        private async Task<IEnumerable<YouTubeLiveStreamDetailsItemDto>> GetLiveStreamDetails(
-            IEnumerable<YouTubeVideoSearchItemDto> streams)
+        private async Task<Dictionary<string, YouTubeVideoLiveStreamingDetailsDto>> GetLiveStreamDetails(
+            IEnumerable<YouTubeSearchItemDto> streams)
         {
-            var videoIds = new List<string>();
+            var videoIds = streams.Select(v => v.id.videoId).ToArray();
 
-            videoIds.AddRange(streams.Select(v => v.id.videoId));
+            var videos = await youTubeV3Api.GetVideos(videoIds);
 
-            var statistics = await youTubeV3Api.GetLiveStreamDetails(videoIds);
-
-            return statistics.items;
+            return videos.items.ToDictionary(v => v.id, v => v.liveStreamingDetails);
         }
 
         private async Task<Dictionary<string, YouTubeChannelSnippetDto>> GetChannelSnippets(
-            IEnumerable<YouTubeVideoSearchItemDto> streams)
+            IEnumerable<YouTubeSearchItemDto> streams)
         {
-            var channelIds = new List<string>();
-
-            channelIds.AddRange(streams.Select(v => v.snippet.channelId));
+            var channelIds = streams.Select(v => v.snippet.channelId).ToArray();
 
             var channels = await youTubeV3Api.GetChannels(channelIds);
 
             return channels.items.ToDictionary(c => c.id, c => c.snippet);
         }
 
-        private async Task<IEnumerable<YouTubeVideoStatisticsItemDto>> GetVideoStatistics(
-            IEnumerable<YouTubeVideoSearchItemDto> streams)
+        private async Task<Dictionary<string, YouTubeVideoStatisticsDto>> GetVideoStatistics(
+            IEnumerable<YouTubeSearchItemDto> streams)
         {
-            var videoIds = new List<string>();
+            var videoIds = streams.Select(v => v.id.videoId).ToArray();
 
-            videoIds.AddRange(streams.Select(v => v.id.videoId));
+            var videos = await youTubeV3Api.GetVideos(videoIds);
 
-            var statistics = await youTubeV3Api.GetVideoStatistics(videoIds);
-
-            return statistics.items;
+            return videos.items.ToDictionary(v => v.id, v => v.statistics);
         }
 
         public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null)
@@ -112,15 +108,15 @@ namespace GameStreamSearch.StreamProviders
                 return GameStreamsDto.Empty();
             }
 
-            var statisticsTask = GetLiveStreamDetails(liveVideos.items);
-            var channelSnippetsTask = GetChannelSnippets(liveVideos.items);
+            var getLiveStreamDetailsTask = GetLiveStreamDetails(liveVideos.items);
+            var getChannelSnippetsTask = GetChannelSnippets(liveVideos.items);
 
-            var statistics = await statisticsTask;
-            var channelSnippets = await channelSnippetsTask;
+            var liveStreamDetails = await getLiveStreamDetailsTask;
+            var channelSnippets = await getChannelSnippetsTask;
 
             return new GameStreamsDto
             {
-                Items = mapAsLiveStream(liveVideos.items, channelSnippets, statistics),
+                Items = mapAsLiveStream(liveVideos.items, channelSnippets, liveStreamDetails),
                 NextPageToken = liveVideos.nextPageToken,
             };
         }

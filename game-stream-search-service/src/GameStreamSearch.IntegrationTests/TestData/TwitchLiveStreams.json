@@ -10,7 +10,7 @@
         },
         "viewers": 1,
         "preview": {
-          "large": "http://twitch.thumbnail"
+          "medium": "http://twitch.thumbnail.url"
         }
       }
     ]
@@ -26,7 +26,7 @@
         },
         "viewers": 1,
         "preview": {
-          "large": "http://twitch.thumbnail"
+          "medium": "http://twitch.thumbnail"
         }
       }
     ]
@@ -42,7 +42,7 @@
         },
         "viewers": 3,
         "preview": {
-          "large": "http://twitch.thumbnail"
+          "medium": "http://twitch.thumbnail.url"
         }
       }
     ]
