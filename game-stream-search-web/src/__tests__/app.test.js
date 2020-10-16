@@ -1,5 +1,4 @@
 import React from 'react';
-import { Mount } from 'enzyme';
 import { render, fireEvent, waitFor, screen, act, waitForElementToBeRemoved } from '@testing-library/react';
 import nock from 'nock';
 import { ConfigurationProvider } from '../providers/configurationProvider';

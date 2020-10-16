@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Game Stream Details should match the snapshot 1`] = `
+<div
+  class="makeStyles-root-1"
+>
+  <a
+    class="makeStyles-link-3"
+    href="http://test.stream.url"
+    target="_blank"
+  >
+    <img
+      src="http://test.stream.thumbnail.url"
+    />
+    <div
+      class="makeStyles-detailsContainer-4"
+    >
+      <div
+        class="MuiAvatar-root MuiAvatar-circle"
+      >
+        <img
+          class="MuiAvatar-img"
+          src="http://test.channel.thumbnail.url"
+        />
+      </div>
+      <div
+        class="makeStyles-streamDetails-5"
+      >
+        <h3
+          class="makeStyles-streamTitle-2"
+          title="test stream"
+        >
+          test stream
+        </h3>
+        <div
+          class="makeStyles-streamSubDetails-6"
+        >
+          <div>
+            test streamer
+          </div>
+          <span>
+            test platform
+          </span>
+          <span>
+             • 
+          </span>
+          <span>
+            100 viewers
+          </span>
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
+`;
