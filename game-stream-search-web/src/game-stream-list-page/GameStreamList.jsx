@@ -29,7 +29,7 @@ const GameStreamGrid = (streams) => (
       <GridListTile key={index}>
         <GameStreamDetails
           streamTitle={stream.streamTitle}
-          streamerName={stream.streamer}
+          streamerName={stream.streamerName}
           platformName={stream.platformName}
           streamThumbnailUrl={stream.streamThumbnailUrl}
           streamUrl={stream.streamUrl}

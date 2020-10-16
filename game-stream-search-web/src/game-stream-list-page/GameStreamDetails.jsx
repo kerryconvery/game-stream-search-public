@@ -39,12 +39,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GameStreamDetails = ({
+  streamTitle,
   streamThumbnailUrl,
-  streamUrl, streamTitle,
+  streamUrl,
   streamerName,
   channelThumbnailUrl,
   platformName,
-  isLive,
   viewCount }) => {
 
   const classes = useStyles();
@@ -63,7 +63,7 @@ const GameStreamDetails = ({
               <div>{streamerName}</div>
               <span>{platformName}</span>
               <span> • </span>
-              <span>{isLive ? `${viewCount} viewers` : `${viewCount} views` }</span>
+              <span>{`${viewCount} viewers`}</span>
             </div>
           </div>
         </div>
@@ -79,7 +79,6 @@ GameStreamDetails.propTypes = {
   streamUrl: string.isRequired,
   channelThumbnailUrl: string.isRequired,
   platformName: string.isRequired,
-  isLive: bool.isRequired,
   viewCount: number.isRequired,
 }
 

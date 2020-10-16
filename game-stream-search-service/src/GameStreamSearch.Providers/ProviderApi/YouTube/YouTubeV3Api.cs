@@ -17,7 +17,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube
             this.googleApiKey = googleApiKey;
         }
 
-        public async Task<YouTubeSearchDto> SearchVideos(string query, VideoEventType eventType, VideoSortType order, string pageToken)
+        public async Task<YouTubeSearchDto> SearchGamingVideos(string query, VideoEventType eventType, VideoSortType order, string pageToken)
         {
             var client = new RestClient(this.googleApiUrl);
 

@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { useGameStreamApi } from '../api/gameStreamApi';
 import StandardPageTemplate from '../templates/StandardPageTemplate';
 import GameStreamSearchBar from './GameStreamSearchBar';
 import InfiniteGameStreamList from './InfiniteGameStreamList';
-import addStreams from './gameStreamListSelectors';
+import streamsReducer, { UPDATE, CLEAR } from './gameStreamListReducers';
 
 const GameStreamListPage = () => {
   const [ gameName, setGameName ] = useState();
   const [ nextPageToken, setNextPageToken ] = useState();
-  const [ streams, setStreams ] = useState({});
+  const [ streams, dispatchStreams ] = useReducer(streamsReducer, {});
   const { getStreams } = useGameStreamApi();
 
   const onSearch = (gameName) => {
     setNextPageToken(null);
-    setStreams({});
+    dispatchStreams({ type: CLEAR });
     setGameName(gameName);
   }
   
   useEffect(() => {
-    getStreams(gameName, nextPageToken).then(data => setStreams(addStreams(streams, data)))
+    getStreams(gameName, nextPageToken).then(data => dispatchStreams({ type: UPDATE, data }));
   }, [gameName, nextPageToken]);
   
   return (
