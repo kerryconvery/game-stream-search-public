@@ -1,13 +1,12 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen, act, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen, act, getByTestId } from '@testing-library/react';
 import nock from 'nock';
 import { ConfigurationProvider } from '../providers/configurationProvider';
 import App from '../app';
-
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/extend-expect';
 
 describe('Application', () => {
-  it('should render multiple pages of streams', async () => {
+  it('should render streams', async () => {
     const streams = {
       items: [{
         streamTitle: 'fake stream 1',
@@ -16,6 +15,7 @@ describe('Application', () => {
         streamerName: 'fake steamer',
         streamerAvatarUrl: 'http://fake.channel1.url',
         platformName: 'fake platform',
+        isLive: true,
         views: 100
       }],
       nextPageToken: 'nextPage',
@@ -37,7 +37,7 @@ describe('Application', () => {
 
     await waitFor(() => screen.getByText('fake stream 1'));
     
-    expect(screen.getByText('fake stream 1')).toBeDefined();
+    expect(screen.getByText('fake stream 1')).toBeInTheDocument();
   });
 
   it('should display the searched for game stream', async () => {
@@ -49,6 +49,7 @@ describe('Application', () => {
         streamerName: 'fake steamer',
         streamerAvatarUrl: 'http://fake.channel1.url',
         platformName: 'fake platform',
+        isLive: true,
         views: 100
       }],
       nextPageToken: null,
@@ -62,6 +63,7 @@ describe('Application', () => {
         streamerName: 'fake steamer',
         streamerAvatarUrl: 'http://fake.channel1.url',
         platformName: 'fake platform',
+        isLive: true,
         views: 100
       }],
       nextPageToken: null,
@@ -92,7 +94,7 @@ describe('Application', () => {
     await waitFor(() => screen.getByText('fake stream 1'));
 
     const searchInput = screen.getByPlaceholderText('Search');
-    const searchButton = screen.getByRole('button');
+    const searchButton = screen.getByRole('button', { name: 'search' });
 
     fireEvent.change(searchInput, { target: { value: 'testGame' } });
     fireEvent.click(searchButton, { button: 1 })
@@ -106,6 +108,6 @@ describe('Application', () => {
     await waitFor(() => screen.getByText('fake stream 2'));
 
     expect(screen.queryByText('fake stream 1')).not.toBeInTheDocument();
-    expect(screen.getByText('fake stream 2')).toBeDefined();
+    expect(screen.getByText('fake stream 2')).toBeInTheDocument();
   })
 })

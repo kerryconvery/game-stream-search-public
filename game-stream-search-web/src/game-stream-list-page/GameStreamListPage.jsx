@@ -9,6 +9,7 @@ const GameStreamListPage = () => {
   const [ gameName, setGameName ] = useState();
   const [ nextPageToken, setNextPageToken ] = useState();
   const [ streams, dispatchStreams ] = useReducer(streamsReducer, {});
+  const [ fetching, setFetching ] = useState(false);
   const { getStreams } = useGameStreamApi();
 
   const onSearch = (gameName) => {
@@ -18,7 +19,10 @@ const GameStreamListPage = () => {
   }
   
   useEffect(() => {
-    getStreams(gameName, nextPageToken).then(data => dispatchStreams({ type: UPDATE, data }));
+    setFetching(true);
+    getStreams(gameName, nextPageToken)
+      .then(data => { setFetching(false), dispatchStreams({ type: UPDATE, data }) })
+      .catch(() => setFetching(false));
   }, [gameName, nextPageToken]);
   
   return (
@@ -26,9 +30,10 @@ const GameStreamListPage = () => {
       toolBar={<GameStreamSearchBar onGameChange={onSearch} />}
     >
       <InfiniteGameStreamList
-        gameStreams={streams.items}
+        streams={streams.items}
         nextPageToken={streams.nextPageToken}
         onLoadMore={setNextPageToken}
+        fetching={fetching}
       />
     </StandardPageTemplate>
   )

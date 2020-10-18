@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
 import GameStreamList from './GameStreamList';
 

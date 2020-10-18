@@ -43,6 +43,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: '14px',
   },
   playButton: {
+    color: 'white',
     opacity: 0,
     position: 'absolute',
     left: 0, 
