@@ -9,7 +9,7 @@ describe('Game Stream Details', () => {
       streamerName: 'test streamer',
       streamThumbnailUrl: 'http://test.stream.thumbnail.url',
       streamUrl: 'http://test.stream.url',
-      channelThumbnailUrl: 'http://test.channel.thumbnail.url',
+      streamerAvatarUrl: 'http://test.channel.thumbnail.url',
       platformName: 'test platform',
       viewCount: 100
     }

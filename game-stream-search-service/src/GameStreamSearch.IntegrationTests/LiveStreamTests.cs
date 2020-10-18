@@ -88,9 +88,9 @@ namespace GameStreamSearch.IntegrationTests
 
             Assert.AreEqual(streams.Value.Items.First().StreamTitle, "game 1");
             Assert.AreEqual(streams.Value.Items.First().PlatformName, "Twitch");
-            Assert.AreEqual(streams.Value.Items.First().Streamer, "twitch channel 1");
+            Assert.AreEqual(streams.Value.Items.First().StreamerName, "twitch channel 1");
             Assert.AreEqual(streams.Value.Items.First().StreamUrl, "http://fake.twitch.url");
-            Assert.AreEqual(streams.Value.Items.First().ChannelThumbnailUrl, "http://channel.thumbnail.url");
+            Assert.AreEqual(streams.Value.Items.First().StreamerAvatarUrl, "http://channel.thumbnail.url");
             Assert.AreEqual(streams.Value.Items.First().StreamThumbnailUrl, "http://twitch.thumbnail.url");
             Assert.AreEqual(streams.Value.Items.First().IsLive, true);
             Assert.AreEqual(streams.Value.Items.First().Views, 1);
@@ -98,9 +98,9 @@ namespace GameStreamSearch.IntegrationTests
 
             Assert.AreEqual(streams.Value.Items.Last().StreamTitle, "game 1");
             Assert.AreEqual(streams.Value.Items.Last().PlatformName, "YouTube");
-            Assert.AreEqual(streams.Value.Items.Last().Streamer, "youtube channel 1");
+            Assert.AreEqual(streams.Value.Items.Last().StreamerName, "youtube channel 1");
             Assert.AreEqual(streams.Value.Items.Last().StreamUrl, "https://www.youtube.com/watch?v=video1");
-            Assert.AreEqual(streams.Value.Items.Last().ChannelThumbnailUrl, "http://channel1.thumbnail.url");
+            Assert.AreEqual(streams.Value.Items.Last().StreamerAvatarUrl, "http://channel1.thumbnail.url");
             Assert.AreEqual(streams.Value.Items.Last().StreamThumbnailUrl, "http://youtube.thumbnail");
             Assert.AreEqual(streams.Value.Items.Last().IsLive, true);
 

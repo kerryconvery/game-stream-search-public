@@ -105,9 +105,9 @@ namespace GameSearchService.StreamProviders.Tests
 
             Assert.AreEqual(streams.Items.Count(), 1);
             Assert.AreEqual(streams.Items.First().StreamTitle, liveStreams.items.First().snippet.title);
-            Assert.AreEqual(streams.Items.First().Streamer, liveStreams.items.First().snippet.channelTitle);
+            Assert.AreEqual(streams.Items.First().StreamerName, liveStreams.items.First().snippet.channelTitle);
             Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.items.First().snippet.thumbnails.medium.url);
-            Assert.AreEqual(streams.Items.First().ChannelThumbnailUrl, channels.items.First().snippet.thumbnails.@default.url);
+            Assert.AreEqual(streams.Items.First().StreamerAvatarUrl, channels.items.First().snippet.thumbnails.@default.url);
             Assert.AreEqual(streams.Items.First().StreamUrl, watchUrl);
             Assert.AreEqual(streams.Items.First().Views, 5);
             Assert.IsTrue(streams.Items.First().IsLive);

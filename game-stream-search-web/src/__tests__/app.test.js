@@ -14,7 +14,7 @@ describe('Application', () => {
         streamThumbnailUrl: 'http://fake.stream1.thumbnail',
         streamUrl: 'fake.stream1.url',
         streamerName: 'fake steamer',
-        channelThumbnailUrl: 'http://fake.channel1.url',
+        streamerAvatarUrl: 'http://fake.channel1.url',
         platformName: 'fake platform',
         views: 100
       }],
@@ -47,7 +47,7 @@ describe('Application', () => {
         streamThumbnailUrl: 'http://fake.stream1.thumbnail',
         streamUrl: 'fake.stream1.url',
         streamerName: 'fake steamer',
-        channelThumbnailUrl: 'http://fake.channel1.url',
+        streamerAvatarUrl: 'http://fake.channel1.url',
         platformName: 'fake platform',
         views: 100
       }],
@@ -60,7 +60,7 @@ describe('Application', () => {
         streamThumbnailUrl: 'http://fake.stream2.thumbnail',
         streamUrl: 'fake.stream2.url',
         streamerName: 'fake steamer',
-        channelThumbnailUrl: 'http://fake.channel1.url',
+        streamerAvatarUrl: 'http://fake.channel1.url',
         platformName: 'fake platform',
         views: 100
       }],

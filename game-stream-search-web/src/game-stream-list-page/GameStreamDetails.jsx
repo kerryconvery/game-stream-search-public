@@ -43,7 +43,7 @@ const GameStreamDetails = ({
   streamThumbnailUrl,
   streamUrl,
   streamerName,
-  channelThumbnailUrl,
+  streamerAvatarUrl,
   platformName,
   viewCount }) => {
 
@@ -52,9 +52,9 @@ const GameStreamDetails = ({
   return (
     <div className={classes.root}>
       <a href={streamUrl} target='_blank' className={classes.link}>
-        <img src={streamThumbnailUrl} />
+        <img src={streamThumbnailUrl} width={320} height={180} />
         <div className={classes.detailsContainer}>
-          <Avatar src={channelThumbnailUrl} />
+          <Avatar src={streamerAvatarUrl} />
           <div className={classes.streamDetails}>
             <Tooltip title={streamTitle}>
               <h3 className={classes.streamTitle}>{streamTitle}</h3>
@@ -77,7 +77,7 @@ GameStreamDetails.propTypes = {
   streamerName: string.isRequired,
   streamThumbnailUrl: string.isRequired,
   streamUrl: string.isRequired,
-  channelThumbnailUrl: string.isRequired,
+  streamerAvatarUrl: string.isRequired,
   platformName: string.isRequired,
   viewCount: number.isRequired,
 }

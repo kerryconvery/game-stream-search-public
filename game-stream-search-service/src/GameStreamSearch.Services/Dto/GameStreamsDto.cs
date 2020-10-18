@@ -8,8 +8,8 @@ namespace GameStreamSearch.Services.Dto
         public string StreamTitle { get; set; }
         public string StreamThumbnailUrl { get; set; }
         public string StreamUrl { get; set; }
-        public string Streamer { get; set; }
-        public string ChannelThumbnailUrl { get; set; }
+        public string StreamerName { get; set; }
+        public string StreamerAvatarUrl { get; set; }
         public string PlatformName { get; set; }
         public bool IsLive { get; set; }
         public int Views { get; set; }

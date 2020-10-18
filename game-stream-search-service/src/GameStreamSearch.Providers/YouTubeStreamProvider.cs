@@ -32,10 +32,10 @@ namespace GameStreamSearch.StreamProviders
 
                 return new GameStreamDto
                 {
-                    Streamer = v.snippet.channelTitle,
+                    StreamerName = v.snippet.channelTitle,
                     StreamTitle = v.snippet.title,
                     StreamThumbnailUrl = v.snippet.thumbnails.medium.url,
-                    ChannelThumbnailUrl = channelSnippet?.thumbnails.@default.url,
+                    StreamerAvatarUrl = channelSnippet?.thumbnails.@default.url,
                     PlatformName = ProviderName,
                     StreamUrl = urlBuilder.Build(v.id.videoId),
                     IsLive = true,
@@ -56,7 +56,7 @@ namespace GameStreamSearch.StreamProviders
                 return new GameStreamDto
                 {
                     StreamTitle = v.snippet.title,
-                    Streamer = v.snippet.channelTitle,
+                    StreamerName = v.snippet.channelTitle,
                     StreamThumbnailUrl = v.snippet.thumbnails.medium.url,
                     PlatformName = ProviderName,
                     StreamUrl = urlBuilder.Build(v.id.videoId),
@@ -135,11 +135,6 @@ namespace GameStreamSearch.StreamProviders
             {
                 Items = mapAsOnDemandStream(completedVideos.items, statistics),
             };
-        }
-
-        public Task<IEnumerable<GameStreamDto>> GetTopLiveStreams()
-        {
-            return null;
         }
 
         public string ProviderName { get; private set;  }

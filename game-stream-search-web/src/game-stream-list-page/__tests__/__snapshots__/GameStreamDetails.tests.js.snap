@@ -10,7 +10,9 @@ exports[`Game Stream Details should match the snapshot 1`] = `
     target="_blank"
   >
     <img
+      height="180"
       src="http://test.stream.thumbnail.url"
+      width="320"
     />
     <div
       class="makeStyles-detailsContainer-4"

@@ -4,6 +4,7 @@ using GameStreamSearch.Services;
 using GameStreamSearch.Services.Interfaces;
 using GameStreamSearch.StreamProviders;
 using GameStreamSearch.StreamProviders.Builders;
+using GameStreamSearch.StreamProviders.ProviderApi.DLive;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
 using Microsoft.AspNetCore.Builder;
@@ -43,13 +44,17 @@ namespace GameStreamSearch.Api
                 return new StreamService(service.GetService<IPaginator>())
                     .RegisterStreamProvider(new TwitchStreamProvider(
                         "Twitch",
-                        new TwitchKrakenApi(Configuration["Twitch:Url"], Configuration["Twitch:ClientId"])
+                        new TwitchKrakenApi(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"])
                     ))
                     .RegisterStreamProvider(new YouTubeStreamProvider(
                         "YouTube",
-                        new YouTubeWatchUrlBuilder(Configuration["YouTube:StreamUrl"]),
-                        new YouTubeV3Api(Configuration["YouTube:Url"], Configuration["YouTube:ApiKey"])
-                    ));
+                        new YouTubeWatchUrlBuilder(Configuration["YouTube:WatchUrl"]),
+                        new YouTubeV3Api(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"])
+                    ))
+                    .RegisterStreamProvider(new DLiveStreamProvider(
+                        "DLive",
+                        new DLiveWatchUrlBuilder(Configuration["DLive:WatchUrl"]),
+                        new DLiveGraphQLApi(Configuration["DLive:Apiurl"])));
             });
         }
 

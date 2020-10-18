@@ -51,8 +51,8 @@ namespace GameStreamSearch.Providers
             return liveStreams.streams.Select(s => new GameStreamDto
             {
                 StreamTitle = s.channel.status,
-                Streamer = s.channel.display_name,
-                ChannelThumbnailUrl = s.channel.logo,
+                StreamerName = s.channel.display_name,
+                StreamerAvatarUrl = s.channel.logo,
                 StreamThumbnailUrl = s.preview.medium,
                 PlatformName = ProviderName,
                 StreamUrl = s.channel.url,
@@ -99,7 +99,7 @@ namespace GameStreamSearch.Providers
             {
                 Items = topVideos.vods.Select(v => new GameStreamDto
                 {
-                    Streamer = v.channel.display_name,
+                    StreamerName = v.channel.display_name,
                     StreamTitle = v.title,
                     StreamThumbnailUrl = v.preview.medium,
                     PlatformName = ProviderName,
@@ -108,11 +108,6 @@ namespace GameStreamSearch.Providers
                     Views = v.views,
                 })
             };
-        }
-
-        public Task<IEnumerable<GameStreamDto>> GetTopLiveStreams()
-        {
-            return null;
         }
 
         public string ProviderName { get; private set; }

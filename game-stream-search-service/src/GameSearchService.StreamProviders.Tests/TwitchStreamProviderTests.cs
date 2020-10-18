@@ -69,8 +69,8 @@ namespace GameSearchService.StreamProviders.Tests
 
             Assert.AreEqual(streams.Items.Count(), 1);
             Assert.AreEqual(streams.Items.First().StreamTitle, liveStreams.streams.First().channel.status);
-            Assert.AreEqual(streams.Items.First().Streamer, liveStreams.streams.First().channel.display_name);
-            Assert.AreEqual(streams.Items.First().ChannelThumbnailUrl, liveStreams.streams.First().channel.logo);
+            Assert.AreEqual(streams.Items.First().StreamerName, liveStreams.streams.First().channel.display_name);
+            Assert.AreEqual(streams.Items.First().StreamerAvatarUrl, liveStreams.streams.First().channel.logo);
             Assert.AreEqual(streams.Items.First().PlatformName, "Twitch");
             Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.streams.First().preview.medium);
             Assert.AreEqual(streams.Items.First().StreamUrl, liveStreams.streams.First().channel.url);
@@ -91,8 +91,8 @@ namespace GameSearchService.StreamProviders.Tests
 
             Assert.AreEqual(streams.Items.Count(), 1);
             Assert.AreEqual(streams.Items.First().StreamTitle, liveStreams.streams.First().channel.status);
-            Assert.AreEqual(streams.Items.First().Streamer, liveStreams.streams.First().channel.display_name);
-            Assert.AreEqual(streams.Items.First().ChannelThumbnailUrl, liveStreams.streams.First().channel.logo);
+            Assert.AreEqual(streams.Items.First().StreamerName, liveStreams.streams.First().channel.display_name);
+            Assert.AreEqual(streams.Items.First().StreamerAvatarUrl, liveStreams.streams.First().channel.logo);
             Assert.AreEqual(streams.Items.First().PlatformName, "Twitch");
             Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.streams.First().preview.medium);
             Assert.AreEqual(streams.Items.First().StreamUrl, liveStreams.streams.First().channel.url);
@@ -142,7 +142,7 @@ namespace GameSearchService.StreamProviders.Tests
             var streamsPage2 = await twitchStreamProvider.GetLiveStreams(new StreamFilterOptionsDto(), 1, streamsPage1.NextPageToken);
 
             Assert.AreEqual(streamsPage2.Items.Count(), 1);
-            Assert.AreEqual(streamsPage2.Items.First().Streamer, liveStreamsB.streams.First().channel.display_name);
+            Assert.AreEqual(streamsPage2.Items.First().StreamerName, liveStreamsB.streams.First().channel.display_name);
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace GameSearchService.StreamProviders.Tests
             var streamsPage2 = await twitchStreamProvider.GetLiveStreams(new StreamFilterOptionsDto() { GameName = "fake game" }, 1, streamsPage1.NextPageToken);
 
             Assert.AreEqual(streamsPage2.Items.Count(), 1);
-            Assert.AreEqual(streamsPage2.Items.First().Streamer, liveStreamsB.streams.First().channel.display_name);
+            Assert.AreEqual(streamsPage2.Items.First().StreamerName, liveStreamsB.streams.First().channel.display_name);
         }
 
         [Test]

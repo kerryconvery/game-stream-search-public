@@ -33,7 +33,7 @@ const GameStreamGrid = (streams) => (
           platformName={stream.platformName}
           streamThumbnailUrl={stream.streamThumbnailUrl}
           streamUrl={stream.streamUrl}
-          channelThumbnailUrl={stream.channelThumbnailUrl}
+          streamerAvatarUrl={stream.streamerAvatarUrl}
           isLive={stream.isLive}
           viewCount={stream.views}
         />
@@ -44,9 +44,10 @@ const GameStreamGrid = (streams) => (
 
 GameStreamGrid.propTypes = {
   gameStreams: arrayOf(shape({
-    streamer: string.isRequired,
-    gameName: string.isRequired,
-    imageUrl: string.isRequired,
+    streamerName: string.isRequired,
+    streamTitle: string.isRequired,
+    streamThumbnailUrl: string.isRequired,
+    streamerAvatarUrl: string.isRequired,
     platformName: string.isRequired,
     isLive: bool.isRequired,
     streamUrl: string.isRequired,
