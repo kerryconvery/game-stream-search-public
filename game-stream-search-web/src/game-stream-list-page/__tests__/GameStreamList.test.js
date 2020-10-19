@@ -28,10 +28,7 @@ describe('Game string list', () => {
 
     render(<GameStreamList streams={streams} fetching={false} />);
 
-    const streamTile = screen.getByText('test stream');
-    const loadingTitle = screen.queryByTestId('loading-tile');
-
-    expect(streamTile).toBeInTheDocument();
-    expect(loadingTitle).not.toBeInTheDocument();
+    expect(screen.getByText('test stream')).toBeInTheDocument();
+    expect(screen.queryByTestId('loading-tile')).not.toBeInTheDocument();
   });
 });

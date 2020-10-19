@@ -9,7 +9,7 @@ describe('Application', () => {
   it('should render streams without errors', async () => {
     const streams = {
       items: [{
-        streamTitle: 'fake stream 1',
+        streamTitle: 'fake stream',
         streamThumbnailUrl: 'http://fake.stream1.thumbnail',
         streamUrl: 'fake.stream1.url',
         streamerName: 'fake steamer',
@@ -35,9 +35,9 @@ describe('Application', () => {
         </ConfigurationProvider>
       )
 
-    await waitFor(() => screen.getByText('fake stream 1'));
+    const fakeStream = await waitFor(() => screen.getByText('fake stream'));
     
-    expect(screen.getByText('fake stream 1')).toBeInTheDocument();
+    expect(fakeStream).toBeInTheDocument();
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     expect(screen.queryByTestId('streams-not-found')).not.toBeInTheDocument();
   });
@@ -107,10 +107,10 @@ describe('Application', () => {
       </ConfigurationProvider>
     );
 
-    await waitFor(() => screen.getByText('fake stream 2'));
+    const fakeStream2 = await waitFor(() => screen.getByText('fake stream 2'));
 
+    expect(fakeStream2).toBeInTheDocument();
     expect(screen.queryByText('fake stream 1')).not.toBeInTheDocument();
-    expect(screen.getByText('fake stream 2')).toBeInTheDocument();
   });
 
   it('should display an error alerts when there is an error getting the streams', async () =>{
@@ -128,9 +128,9 @@ describe('Application', () => {
         </ConfigurationProvider>
       )
 
-    await waitFor(() => screen.getByRole('alert'));
+    const alert = await waitFor(() => screen.getByRole('alert'));
     
-    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(alert).toBeInTheDocument();
   });
 
   it('should display a streams not found message when there are no streams matching the search criteria', async () => {
@@ -148,8 +148,8 @@ describe('Application', () => {
         </ConfigurationProvider>
       )
 
-    await waitFor(() => screen.getByTestId('streams-not-found'));
+    const noStreamsFound = await waitFor(() => screen.getByTestId('streams-not-found'));
     
-    expect(screen.getByTestId('streams-not-found')).toBeInTheDocument();
+    expect(noStreamsFound).toBeInTheDocument();
   });
 })
