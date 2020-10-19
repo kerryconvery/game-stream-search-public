@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import _isEmpty from 'lodash/isEmpty';
 import { useGameStreamApi } from '../api/gameStreamApi';
+import { useAlertNotification } from '../notifications/AlertNotificationProvider';
 import StandardPageTemplate from '../templates/StandardPageTemplate';
 import GameStreamSearchBar from './GameStreamSearchBar';
 import InfiniteGameStreamList from './InfiniteGameStreamList';
@@ -11,6 +12,7 @@ const GameStreamListPage = () => {
   const [ nextPageToken, setNextPageToken ] = useState();
   const [ streams, dispatchStreams ] = useReducer(streamsReducer, {});
   const { getStreams } = useGameStreamApi();
+  const { showErrorAlert } = useAlertNotification();
 
   const onSearch = (gameName) => {
     setNextPageToken(null);
@@ -22,7 +24,8 @@ const GameStreamListPage = () => {
   
   useEffect(() => {
     getStreams(gameName, nextPageToken)
-      .then(data => dispatchStreams({ type: UPDATE, data }));
+      .then(data => dispatchStreams({ type: UPDATE, data }))
+      .catch(showErrorAlert);
   }, [gameName, nextPageToken]);
   
   return (

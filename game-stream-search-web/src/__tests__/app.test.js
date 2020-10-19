@@ -6,7 +6,7 @@ import App from '../app';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Application', () => {
-  it('should render streams', async () => {
+  it('should render streams without errors', async () => {
     const streams = {
       items: [{
         streamTitle: 'fake stream 1',
@@ -38,6 +38,7 @@ describe('Application', () => {
     await waitFor(() => screen.getByText('fake stream 1'));
     
     expect(screen.getByText('fake stream 1')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('should display the searched for game stream', async () => {
@@ -109,5 +110,25 @@ describe('Application', () => {
 
     expect(screen.queryByText('fake stream 1')).not.toBeInTheDocument();
     expect(screen.getByText('fake stream 2')).toBeInTheDocument();
+  });
+
+  it('should display an error alerts when there is an error getting the streams', async () =>{
+    nock('http://localhost:5000')
+      .defaultReplyHeaders({
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true' 
+      })
+      .get('/api/streams?pageSize=25')
+      .reply(500);
+
+      const { rerender } = render(
+        <ConfigurationProvider configuration={{ "streamSearchServiceUrl": "http://localhost:5000/api" }} >
+          <App />
+        </ConfigurationProvider>
+      )
+
+    await waitFor(() => screen.getByRole('alert'));
+    
+    expect(screen.getByRole('alert')).toBeInTheDocument();
   })
 })
