@@ -39,6 +39,7 @@ describe('Application', () => {
     
     expect(screen.getByText('fake stream 1')).toBeInTheDocument();
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('streams-not-found')).not.toBeInTheDocument();
   });
 
   it('should display the searched for game stream', async () => {
@@ -130,5 +131,25 @@ describe('Application', () => {
     await waitFor(() => screen.getByRole('alert'));
     
     expect(screen.getByRole('alert')).toBeInTheDocument();
-  })
+  });
+
+  it('should display a streams not found message when there are no streams matching the search criteria', async () => {
+    nock('http://localhost:5000')
+      .defaultReplyHeaders({
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true' 
+      })
+      .get('/api/streams?pageSize=25')
+      .reply(200, { items: [] });
+
+      const { rerender } = render(
+        <ConfigurationProvider configuration={{ "streamSearchServiceUrl": "http://localhost:5000/api" }} >
+          <App />
+        </ConfigurationProvider>
+      )
+
+    await waitFor(() => screen.getByTestId('streams-not-found'));
+    
+    expect(screen.getByTestId('streams-not-found')).toBeInTheDocument();
+  });
 })

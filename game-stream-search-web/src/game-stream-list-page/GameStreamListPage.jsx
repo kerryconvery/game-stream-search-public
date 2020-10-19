@@ -5,6 +5,7 @@ import { useAlertNotification } from '../providers/AlertNotificationProvider';
 import StandardPageTemplate from '../templates/StandardPageTemplate';
 import GameStreamSearchBar from './GameStreamSearchBar';
 import InfiniteGameStreamList from './InfiniteGameStreamList';
+import NoStreamsFound from './NoStreamsFound';
 import streamsReducer, { UPDATE, CLEAR } from './gameStreamListReducers';
 
 const GameStreamListPage = () => {
@@ -32,13 +33,16 @@ const GameStreamListPage = () => {
     <StandardPageTemplate
       toolBar={<GameStreamSearchBar onGameChange={onSearch} />}
     >
-      <InfiniteGameStreamList
-        streams={streams.items}
-        nextPageToken={streams.nextPageToken}
-        onLoadMore={setNextPageToken}
-        fetching={getIsFetching()}
-      />
-    </StandardPageTemplate>
+      {!_isEmpty(streams) && streams.items.length === 0 && <NoStreamsFound searchTerm={gameName} /> }
+      {(_isEmpty(streams) || streams.items.length > 0) &&
+        <InfiniteGameStreamList
+          streams={streams.items}
+          nextPageToken={streams.nextPageToken}
+          onLoadMore={setNextPageToken}
+          fetching={getIsFetching()}
+        />
+      }
+  </StandardPageTemplate>
   )
 }
 
