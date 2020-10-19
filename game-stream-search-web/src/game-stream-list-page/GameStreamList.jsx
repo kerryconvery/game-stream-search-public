@@ -1,5 +1,6 @@
 import React from 'react';
 import { arrayOf, shape, string, bool, number } from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -7,13 +8,43 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
 import GameStreamDetails from './GameStreamDetails';
 
+const useStyles = makeStyles(theme => ({
+  detailsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingTop: '1rem',
+    width: '100%',
+    height: '100%',
+  },
+  details: {
+    paddingLeft: '0.5rem',
+    width: '80%',
+    height: '80%',
+  },
+  subDetails: {
+    width: '50%',
+  },
+}));
+
 const GetLoadingTitles = (size) => {
+  const classes = useStyles();
+  
   const skeletonItems = [];
 
   for (let index = 0; index < size; index++) {
     skeletonItems.push(
       <GridListTile key={index} data-testid='loading-tile'>
-        <Skeleton variant='rect' height='100%' animation='wave' />
+          <Skeleton variant='rect' height='60%' animation='wave' />
+          <div className={classes.detailsContainer}>
+            <Skeleton variant='circle' width={50} height={50} animation='wave' />
+            <div className={classes.details}>
+              <Skeleton variant='text' animation='wave' />
+              <div className={classes.subDetails}>
+                <Skeleton variant='text' animation='wave' />
+                <Skeleton variant='text' animation='wave' />
+              </div>
+            </div>
+        </div>
       </GridListTile>,
     )
   }
@@ -21,7 +52,7 @@ const GetLoadingTitles = (size) => {
   return skeletonItems;
 }
 
-const GetGameStreamTiles = (streams) => (
+const GetStreamTiles = (streams) => (
   streams.map((stream, index) => (
     <GridListTile key={index}>
       <GameStreamDetails
@@ -40,7 +71,7 @@ const GetGameStreamTiles = (streams) => (
 
 const GameStreamList = ({ streams, fetching }) => (
   <GridList cols={4} cellHeight={300} spacing={20}>
-    {streams && GetGameStreamTiles(streams)}
+    {streams && GetStreamTiles(streams)}
     {fetching && GetLoadingTitles(6)}
   </GridList>
 )
