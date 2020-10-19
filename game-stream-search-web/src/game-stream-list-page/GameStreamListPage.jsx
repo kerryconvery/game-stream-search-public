@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useReducer } from 'react';
+import _isEmpty from 'lodash/isEmpty';
 import { useGameStreamApi } from '../api/gameStreamApi';
 import StandardPageTemplate from '../templates/StandardPageTemplate';
 import GameStreamSearchBar from './GameStreamSearchBar';
@@ -9,7 +10,6 @@ const GameStreamListPage = () => {
   const [ gameName, setGameName ] = useState();
   const [ nextPageToken, setNextPageToken ] = useState();
   const [ streams, dispatchStreams ] = useReducer(streamsReducer, {});
-  const [ fetching, setFetching ] = useState(false);
   const { getStreams } = useGameStreamApi();
 
   const onSearch = (gameName) => {
@@ -17,12 +17,12 @@ const GameStreamListPage = () => {
     dispatchStreams({ type: CLEAR });
     setGameName(gameName);
   }
+
+  const getIsFetching = () => _isEmpty(streams) || streams.nextPageToken === nextPageToken;
   
   useEffect(() => {
-    setFetching(true);
     getStreams(gameName, nextPageToken)
-      .then(data => { setFetching(false), dispatchStreams({ type: UPDATE, data }) })
-      .catch(() => setFetching(false));
+      .then(data => dispatchStreams({ type: UPDATE, data }));
   }, [gameName, nextPageToken]);
   
   return (
@@ -33,7 +33,7 @@ const GameStreamListPage = () => {
         streams={streams.items}
         nextPageToken={streams.nextPageToken}
         onLoadMore={setNextPageToken}
-        fetching={fetching}
+        fetching={getIsFetching()}
       />
     </StandardPageTemplate>
   )
