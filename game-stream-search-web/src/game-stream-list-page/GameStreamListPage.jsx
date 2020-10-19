@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import _isEmpty from 'lodash/isEmpty';
 import { useGameStreamApi } from '../api/gameStreamApi';
-import { useAlertNotification } from '../notifications/AlertNotificationProvider';
+import { useAlertNotification } from '../providers/AlertNotificationProvider';
 import StandardPageTemplate from '../templates/StandardPageTemplate';
 import GameStreamSearchBar from './GameStreamSearchBar';
 import InfiniteGameStreamList from './InfiniteGameStreamList';

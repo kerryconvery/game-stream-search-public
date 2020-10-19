@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen, act, getByTestId } from '@testing-library/react';
 import nock from 'nock';
-import { ConfigurationProvider } from '../providers/configurationProvider';
+import { ConfigurationProvider } from '../providers/ConfigurationProvider';
 import App from '../app';
 import '@testing-library/jest-dom/extend-expect';
 
