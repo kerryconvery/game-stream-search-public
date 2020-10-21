@@ -55,16 +55,7 @@ export const getLoadingTitles = (size) => {
 export const getStreamTiles = (streams) => (
   streams.map((stream, index) => (
     <GridListTile key={index}>
-      <GameStreamDetails
-        streamTitle={stream.streamTitle}
-        streamerName={stream.streamerName}
-        platformName={stream.platformName}
-        streamThumbnailUrl={stream.streamThumbnailUrl}
-        streamUrl={stream.streamUrl}
-        streamerAvatarUrl={stream.streamerAvatarUrl}
-        isLive={stream.isLive}
-        viewCount={stream.views}
-      />
+      <GameStreamDetails {...stream} />
     </GridListTile>
   ))
 )

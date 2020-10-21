@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import InfiniteGameStreamGrid from '../InfiniteGameStreamGrid';
+import InfiniteGameStreamGrid from '../components/InfiniteGameStreamGrid';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Game string list', () => {

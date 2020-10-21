@@ -1,6 +1,6 @@
 import React from 'react';
 import { node, bool, number } from 'prop-types';
-import StandardPageTemplate from '../templates/StandardPageTemplate';
+import StandardPageTemplate from '../../templates/StandardPageTemplate';
 
 const GameStreamPageTemplate = ({ children, searchBar, notFoundNotice, numberOfStreams, isLoadingStreams }) => {
   const hasStreams = numberOfStreams > 0 || isLoadingStreams;

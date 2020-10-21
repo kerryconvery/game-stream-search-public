@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import GameStreamDetails from '../GameStreamDetails';
+import GameStreamDetails from '../components/GameStreamDetails';
 
 describe('Game Stream Details', () => {
   it('should match the snapshot', () => {
@@ -11,7 +11,7 @@ describe('Game Stream Details', () => {
       streamUrl: 'http://test.stream.url',
       streamerAvatarUrl: 'http://test.channel.thumbnail.url',
       platformName: 'test platform',
-      viewCount: 100
+      views: 100
     }
 
     const { container } = render(<GameStreamDetails {...stream}  />);

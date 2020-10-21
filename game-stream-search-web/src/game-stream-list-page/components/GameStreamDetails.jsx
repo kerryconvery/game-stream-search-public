@@ -67,7 +67,7 @@ const GameStreamDetails = ({
   streamerName,
   streamerAvatarUrl,
   platformName,
-  viewCount }) => {
+  views }) => {
 
   const classes = useStyles();
 
@@ -88,7 +88,7 @@ const GameStreamDetails = ({
               <div>{streamerName}</div>
               <span>{platformName}</span>
               <span> • </span>
-              <span>{`${viewCount} viewers`}</span>
+              <span>{`${views} viewers`}</span>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ GameStreamDetails.propTypes = {
   streamUrl: string.isRequired,
   streamerAvatarUrl: string.isRequired,
   platformName: string.isRequired,
-  viewCount: number.isRequired,
+  views: number.isRequired,
 }
 
 export default GameStreamDetails;
