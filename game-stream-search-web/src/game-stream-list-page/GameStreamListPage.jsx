@@ -13,11 +13,11 @@ const GameStreamListPage = () => {
   const { showErrorAlert } = useAlertNotification();
   const { getStreams } = useGameStreamApi();
 
-  const streams = useInfiniteStreamLoader(filters, getStreams, showErrorAlert);
+  const streams = useInfiniteStreamLoader(getStreams(filters.gameName), showErrorAlert);
   
   const setFilter = filterName => value => {
-    streams.clearStreams();
     setFilters({ ...filters, [filterName]: value });
+    streams.reloadStreams();
   };
 
   return (      

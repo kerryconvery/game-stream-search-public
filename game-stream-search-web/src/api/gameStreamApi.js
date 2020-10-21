@@ -1,7 +1,7 @@
 import { useConfiguration } from '../providers/ConfigurationProvider';
 import axios from 'axios';
 
-export const getStreamsRequest = (baseUrl) => (gameName, pageToken) => (
+export const getStreamsRequest = (baseUrl) => (gameName) => (pageToken) => (
   axios({
     url: `${baseUrl}/streams`,
     method: 'GET',

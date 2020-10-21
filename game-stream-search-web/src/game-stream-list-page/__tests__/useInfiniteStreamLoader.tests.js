@@ -11,7 +11,7 @@ describe('Use game stream data hook', () => {
 
     const loadStreamsStub = () => new Promise(() => streamData);
 
-    const { result } = renderHook(() => useInfiniteStreamLoader({}, loadStreamsStub, jest.fn()))
+    const { result } = renderHook(() => useInfiniteStreamLoader(loadStreamsStub, jest.fn()))
 
     expect(result.current.isLoading).toBeTruthy();
   });
@@ -24,7 +24,7 @@ describe('Use game stream data hook', () => {
     
     const loadStreamsStub = () => new Promise(resolve => resolve(streamData));
 
-    const { result } = renderHook(() => useInfiniteStreamLoader({}, loadStreamsStub, jest.fn()))
+    const { result } = renderHook(() => useInfiniteStreamLoader(loadStreamsStub, jest.fn()))
 
     await act(loadStreamsStub);
  
@@ -40,7 +40,7 @@ describe('Use game stream data hook', () => {
     
     const loadStreamsStub = () => new Promise(resolve => resolve(streams));
 
-    const { rerender, result } = renderHook(() => useInfiniteStreamLoader({}, loadStreamsStub, jest.fn()))
+    const { rerender, result } = renderHook(() => useInfiniteStreamLoader(loadStreamsStub, jest.fn()))
 
     await act(loadStreamsStub);
 
@@ -61,7 +61,7 @@ describe('Use game stream data hook', () => {
     
     const loadStreamsStub = () => new Promise(resolve => resolve(streams));
 
-    const { result } = renderHook(() => useInfiniteStreamLoader({}, loadStreamsStub, jest.fn()))
+    const { result } = renderHook(() => useInfiniteStreamLoader(loadStreamsStub, jest.fn()))
 
     await act(loadStreamsStub);
     
@@ -73,56 +73,36 @@ describe('Use game stream data hook', () => {
     expect(result.current.isLoading).toBeFalsy();
   });
 
-  it('should return streams filtered by game', async () => {
-    const filteredStreams = {
-      'testGame1': {
-        items: [{},{}],
-        nextPageToken: 'next page token',
-      }
-    }
-
-    const loadStreamsStub = gameName => new Promise(resolve => resolve(filteredStreams[gameName]));
-
-    const { result } = renderHook(() => {
-      return useInfiniteStreamLoader({ gameName: 'testGame1' }, loadStreamsStub, jest.fn());
-    })
-
-    await act(loadStreamsStub);
- 
-    expect(result.current.items.length).toEqual(2);
-    expect(result.current.isLoading).toBeFalsy();
-  });
-
   it('should return streams filtered by game when the filter changes', async () => {
-    const filteredStreams = {
-      'testGame1': {
-        items: [{},{}],
-        nextPageToken: 'next page token',
-      },
-      'testGame2': {
-        items: [{},{},{}],
-        nextPageToken: 'next page token',
-      }
-    }
+    const testGameA = {
+      items: [{},{}],
+      nextPageToken: 'next page token',
+    };
+     
+    const testGameB = {
+      items: [{},{},{}],
+      nextPageToken: 'next page token',
+    };
 
-    const loadStreamsStub = gameName => new Promise(resolve => resolve(filteredStreams[gameName]));
-
+    const loadGameAStreams = () => new Promise(resolve => resolve(testGameA));
+    const loadGameBStreams = () => new Promise(resolve => resolve(testGameB));
+    
     const { rerender, result } = renderHook(
-      filters => useInfiniteStreamLoader(filters, loadStreamsStub, jest.fn()),
+      props => useInfiniteStreamLoader(props.loadStreamsStub, jest.fn()),
       {
         initialProps: {
-          gameName: 'testGame1'
+          loadStreamsStub: loadGameAStreams,
         }
       }
     )
 
-    await act(loadStreamsStub);
+    await act(loadGameAStreams);
 
-    act(result.current.clearStreams);
+    rerender({ loadStreamsStub: loadGameBStreams });
 
-    rerender({ gameName: 'testGame2' });
+    act(result.current.reloadStreams);
  
-    await act(loadStreamsStub);
+    await act(loadGameBStreams);
 
     expect(result.current.items.length).toEqual(3);
     expect(result.current.isLoading).toBeFalsy();
@@ -136,7 +116,7 @@ describe('Use game stream data hook', () => {
     
     const loadStreamsStub = () => new Promise(resolve => resolve(streamData));
 
-    const { result } = renderHook(() => useInfiniteStreamLoader({}, loadStreamsStub, jest.fn()))
+    const { result } = renderHook(() => useInfiniteStreamLoader(loadStreamsStub, jest.fn()))
 
     await act(loadStreamsStub);
  
@@ -151,7 +131,7 @@ describe('Use game stream data hook', () => {
     
     const loadStreamsStub = () => new Promise(resolve => resolve(streamData));
 
-    const { result } = renderHook(() => useInfiniteStreamLoader({}, loadStreamsStub, jest.fn()))
+    const { result } = renderHook(() => useInfiniteStreamLoader(loadStreamsStub, jest.fn()))
 
     await act(loadStreamsStub);
  

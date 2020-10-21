@@ -10,18 +10,20 @@ const reducer = (state, action) => {
         isLoading: false,
       }
     }
-    case 'CLEAR_STREAMS': {
+    case 'RELOAD_STREAMS': {
       return {
         ...state,
         items: [],
         nextPageToken: null,
         currentPageToken: null,
+        isLoading: true,
       }
     }
     case 'LOAD_MORE_STREAMS': {
       return {
         ...state,
         currentPageToken: state.nextPageToken,
+        isLoading: true,
       }
     }
     case 'LOADING': {
@@ -41,29 +43,27 @@ const initialState = {
   isLoading: true
 };
 
-const useInfiniteStreamLoader = (filters, onLoadStreams, onLoadError) => {
+const useInfiniteStreamLoader = (onLoadStreams, onLoadError) => {
   const [ state, dispatch ] = useReducer(reducer, initialState);
 
-  const clearStreams = () => dispatch({ type: 'CLEAR_STREAMS' });
-  const loadMoreStreams = () => dispatch({ type: 'LOAD_MORE_STREAMS' });
-
   const hasMoreStreams = state.nextPageToken !== null && !state.isLoading;
+
+  const reloadStreams = () => dispatch({ type: 'RELOAD_STREAMS' });
+  const loadMoreStreams = () => dispatch({ type: 'LOAD_MORE_STREAMS' });
   
   useEffect(() => {
-    if (!state.isLoading) {
-      dispatch({ type: 'LOADING' });
+    if (state.isLoading) {
+      onLoadStreams(state.currentPageToken)
+        .then(data => dispatch({ type: 'STREAMS_LOADED', data }))
+        .catch(onLoadError);
     }
-
-    onLoadStreams(filters.gameName, state.currentPageToken)
-      .then(data => dispatch({ type: 'STREAMS_LOADED', data }))
-      .catch(onLoadError);
-  }, [filters.gameName, state.currentPageToken]);
+  }, [state.isLoading, state.currentPageToken]);
   
   return {
     items: state.items,
     isLoading: state.isLoading,
     hasMoreStreams,
-    clearStreams,
+    reloadStreams,
     loadMoreStreams,
   };
 }
