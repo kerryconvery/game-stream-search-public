@@ -1,48 +1,39 @@
-import React, { useEffect, useState, useReducer } from 'react';
-import _isEmpty from 'lodash/isEmpty';
-import { useGameStreamApi } from '../api/gameStreamApi';
+import React, { useState } from 'react';
+import _set from 'lodash/set';
 import { useAlertNotification } from '../providers/AlertNotificationProvider';
-import StandardPageTemplate from '../templates/StandardPageTemplate';
+import { useGameStreamApi } from '../api/gameStreamApi';
+import useInfiniteStreamLoader from './useInfiniteStreamLoader';
+import GameStreamPageTemplate from './GameStreamPageTemplate';
 import GameStreamSearchBar from './GameStreamSearchBar';
-import InfiniteGameStreamList from './InfiniteGameStreamList';
+import InfiniteGameStreamGrid from './InfiniteGameStreamGrid';
 import NoStreamsFound from './NoStreamsFound';
-import streamsReducer, { UPDATE, CLEAR } from './gameStreamListReducers';
 
 const GameStreamListPage = () => {
-  const [ gameName, setGameName ] = useState();
-  const [ nextPageToken, setNextPageToken ] = useState();
-  const [ streams, dispatchStreams ] = useReducer(streamsReducer, {});
-  const { getStreams } = useGameStreamApi();
+  const [ filters, setFilters ] = useState({});
   const { showErrorAlert } = useAlertNotification();
+  const { getStreams } = useGameStreamApi();
 
-  const onSearch = (gameName) => {
-    setNextPageToken(null);
-    dispatchStreams({ type: CLEAR });
-    setGameName(gameName);
-  }
+  const streams = useInfiniteStreamLoader(filters, getStreams, showErrorAlert);
+  
+  const setFilter = filterName => value => {
+    streams.clearStreams();
+    setFilters({ ...filters, [filterName]: value });
+  };
 
-  const getIsFetching = () => _isEmpty(streams) || streams.nextPageToken === nextPageToken;
-  
-  useEffect(() => {
-    getStreams(gameName, nextPageToken)
-      .then(data => dispatchStreams({ type: UPDATE, data }))
-      .catch(showErrorAlert);
-  }, [gameName, nextPageToken]);
-  
-  return (
-    <StandardPageTemplate
-      toolBar={<GameStreamSearchBar onGameChange={onSearch} />}
+  return (      
+    <GameStreamPageTemplate
+      searchBar={<GameStreamSearchBar onGameChange={setFilter('gameName')} />}
+      notFoundNotice={<NoStreamsFound />}
+      numberOfStreams={streams.items.length}
+      isLoadingStreams={streams.isLoading}
     >
-      {!_isEmpty(streams) && streams.items.length === 0 && <NoStreamsFound searchTerm={gameName} /> }
-      {(_isEmpty(streams) || streams.items.length > 0) &&
-        <InfiniteGameStreamList
-          streams={streams.items}
-          nextPageToken={streams.nextPageToken}
-          onLoadMore={setNextPageToken}
-          fetching={getIsFetching()}
-        />
-      }
-  </StandardPageTemplate>
+      <InfiniteGameStreamGrid
+        streams={streams.items}
+        loadMoreStreams={streams.loadMoreStreams}
+        isLoadingStreams={streams.isLoading}
+        hasMoreStreams={streams.hasMoreStreams}
+      />
+    </GameStreamPageTemplate>
   )
 }
 

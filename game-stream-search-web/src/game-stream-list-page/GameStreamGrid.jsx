@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, shape, string, bool, number } from 'prop-types';
+import { node } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const GetLoadingTitles = (size) => {
+export const getLoadingTitles = (size) => {
   const classes = useStyles();
   
   const skeletonItems = [];
@@ -52,7 +52,7 @@ const GetLoadingTitles = (size) => {
   return skeletonItems;
 }
 
-const GetStreamTiles = (streams) => (
+export const getStreamTiles = (streams) => (
   streams.map((stream, index) => (
     <GridListTile key={index}>
       <GameStreamDetails
@@ -69,29 +69,14 @@ const GetStreamTiles = (streams) => (
   ))
 )
 
-const GameStreamList = ({ streams, fetching }) => (
+const GameStreamGrid = ({ children }) => (
   <GridList cols={4} cellHeight={300} spacing={20}>
-    {streams && GetStreamTiles(streams)}
-    {fetching && GetLoadingTitles(6)}
+    {children}
   </GridList>
 )
 
-GameStreamList.propTypes = {
-  streams: arrayOf(shape({
-    streamerName: string.isRequired,
-    streamTitle: string.isRequired,
-    streamThumbnailUrl: string.isRequired,
-    streamerAvatarUrl: string.isRequired,
-    platformName: string.isRequired,
-    isLive: bool.isRequired,
-    streamUrl: string.isRequired,
-    views: number.isRequired,
-  })),
-  fetching: bool.isRequired,
+GameStreamGrid.propTypes = {
+  children: node.isRequired,
 }
 
-GameStreamList.defaultProps = {
-  streams: null
-}
-
-export default GameStreamList;
+export default GameStreamGrid;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import GameStreamList from '../GameStreamList';
+import InfiniteGameStreamGrid from '../InfiniteGameStreamGrid';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Game string list', () => {
   it('should render loading tiles when the streams are being fetched', () => {
-    render(<GameStreamList fetching={true} />);
+    render(<InfiniteGameStreamGrid isLoadingStreams={true} hasMoreStreams={false} loadMoreStreams={jest.fn()} />);
 
     const loadingTitles = screen.getAllByTestId('loading-tile');
 
@@ -26,7 +26,14 @@ describe('Game string list', () => {
       }
     ]
 
-    render(<GameStreamList streams={streams} fetching={false} />);
+    render(
+      <InfiniteGameStreamGrid
+        streams={streams}
+        isLoadingStreams={false}
+        hasMoreStreams={false}
+        loadMoreStreams={jest.fn()}
+      />
+    );
 
     expect(screen.getByText('test stream')).toBeInTheDocument();
     expect(screen.queryByTestId('loading-tile')).not.toBeInTheDocument();
