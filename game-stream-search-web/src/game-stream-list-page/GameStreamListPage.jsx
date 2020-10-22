@@ -3,7 +3,7 @@ import _set from 'lodash/set';
 import { useAlertNotification } from '../providers/AlertNotificationProvider';
 import { useGameStreamApi } from '../api/gameStreamApi';
 import useInfiniteStreamLoader from './hooks/useInfiniteStreamLoader';
-import GameStreamPageTemplate from './templates/GameStreamPageTemplate';
+import GameStreamPageTemplate from './GameStreamPageTemplate';
 import GameStreamSearchBar from './components/GameStreamSearchBar';
 import InfiniteGameStreamGrid from './components/InfiniteGameStreamGrid';
 import NoStreamsFound from './components/NoStreamsFound';
