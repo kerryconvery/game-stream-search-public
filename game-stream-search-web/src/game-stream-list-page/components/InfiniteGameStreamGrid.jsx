@@ -1,7 +1,7 @@
 import React from 'react';
 import { string, func, bool, arrayOf, shape, number } from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
-import GameStreamGrid, { getLoadingTitles, getStreamTiles } from './GameStreamGrid';
+import GameStreamGrid, { getLoadingTiles, getStreamTiles } from './GameStreamGrid';
 
 const InfiniteGameStreamGrid = ({ streams, isLoadingStreams, hasMoreStreams, loadMoreStreams, }) => (
   <InfiniteScroll
@@ -11,7 +11,7 @@ const InfiniteGameStreamGrid = ({ streams, isLoadingStreams, hasMoreStreams, loa
   >
     <GameStreamGrid>
       {getStreamTiles(streams)}
-      {isLoadingStreams && getLoadingTitles(6)}
+      {isLoadingStreams && getLoadingTiles(6)}
     </GameStreamGrid>
   </InfiniteScroll>
 )
