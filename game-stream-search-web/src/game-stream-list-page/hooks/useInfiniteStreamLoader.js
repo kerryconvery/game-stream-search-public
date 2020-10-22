@@ -10,10 +10,11 @@ const reducer = (state, action) => {
         isLoading: false,
       }
     }
-    case 'RELOAD_STREAMS': {
+    case 'FILTER_STREAMS': {
       return {
         ...state,
         items: [],
+        filters: {...state.filters, ...action.filters },
         nextPageToken: null,
         currentPageToken: null,
         isLoading: true,
@@ -26,45 +27,38 @@ const reducer = (state, action) => {
         isLoading: true,
       }
     }
-    case 'LOADING': {
-      return {
-        ...state,
-        isLoading: true,
-      }
-    }
     default: throw new Error(`useInfiniteStreamLoader - unknown action ${action.type}`);
   }
 }
 
 const initialState = {
   items: [],
-  currentPageToken: null,
+  filters: {},
   nextPageToken: null,
+  currentPageToken: null,
   isLoading: true
 };
 
-const useInfiniteStreamLoader = (onLoadStreams, onLoadError) => {
-  const [ state, dispatch ] = useReducer(reducer, initialState);
+const useInfiniteStreamLoader = (onLoadStreams, onLoadError, initialFilters = {}) => {
+  const [ state, dispatch ] = useReducer(reducer, { ...initialState, filters: initialFilters });
 
   const hasMoreStreams = state.nextPageToken !== null && !state.isLoading;
 
-  const reloadStreams = () => dispatch({ type: 'RELOAD_STREAMS' });
   const loadMoreStreams = () => dispatch({ type: 'LOAD_MORE_STREAMS' });
+  const filterStreams = filters => dispatch({ type: 'FILTER_STREAMS', filters });
   
   useEffect(() => {
-    if (state.isLoading) {
-      onLoadStreams(state.currentPageToken)
-        .then(data => dispatch({ type: 'STREAMS_LOADED', data }))
-        .catch(onLoadError);
-    }
-  }, [state.isLoading, state.currentPageToken]);
+    onLoadStreams(state.filters, state.currentPageToken)
+      .then(data => dispatch({ type: 'STREAMS_LOADED', data }))
+      .catch(onLoadError);
+  }, [state.filters, state.currentPageToken]);
   
   return {
     items: state.items,
     isLoading: state.isLoading,
     hasMoreStreams,
-    reloadStreams,
     loadMoreStreams,
+    filterStreams,
   };
 }
 

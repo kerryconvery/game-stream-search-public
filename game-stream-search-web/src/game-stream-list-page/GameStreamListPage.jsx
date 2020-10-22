@@ -9,20 +9,13 @@ import InfiniteGameStreamGrid from './components/InfiniteGameStreamGrid';
 import NoStreamsFound from './components/NoStreamsFound';
 
 const GameStreamListPage = () => {
-  const [ filters, setFilters ] = useState({});
   const { showErrorAlert } = useAlertNotification();
   const { getStreams } = useGameStreamApi();
-
-  const streams = useInfiniteStreamLoader(getStreams(filters.gameName), showErrorAlert);
-  
-  const setFilter = filterName => value => {
-    setFilters({ ...filters, [filterName]: value });
-    streams.reloadStreams();
-  };
+  const streams = useInfiniteStreamLoader(getStreams, showErrorAlert);
 
   return (      
     <GameStreamPageTemplate
-      searchBar={<GameStreamSearchBar onGameChange={setFilter('gameName')} />}
+      searchBar={<GameStreamSearchBar onGameChange={gameName => streams.filterStreams({ gameName })} />}
       notFoundNotice={<NoStreamsFound />}
       numberOfStreams={streams.items.length}
       isLoadingStreams={streams.isLoading}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { func } from 'prop-types';
 import _has from 'lodash/has';
+import _trim from 'lodash/trim';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
@@ -37,8 +38,12 @@ const GameStreamInput = ({ onGameChange }) => {
   }
   const onKeyPress = (e) => {
     if(e.keyCode === 13 && _has(e, 'target.value')) {
-      onGameChange(e.target.value)
+      onClick(e.target.value)
     }
+  }
+
+  const onClick = (value) => {
+    onGameChange(_trim(value) !== '' ? value : null);
   }
 
   return (

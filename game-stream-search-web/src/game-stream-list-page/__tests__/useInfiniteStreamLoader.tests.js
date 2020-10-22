@@ -74,35 +74,28 @@ describe('Use game stream data hook', () => {
   });
 
   it('should return streams filtered by game when the filter changes', async () => {
-    const testGameA = {
-      items: [{},{}],
-      nextPageToken: 'next page token',
-    };
-     
-    const testGameB = {
-      items: [{},{},{}],
-      nextPageToken: 'next page token',
-    };
-
-    const loadGameAStreams = () => new Promise(resolve => resolve(testGameA));
-    const loadGameBStreams = () => new Promise(resolve => resolve(testGameB));
-    
-    const { rerender, result } = renderHook(
-      props => useInfiniteStreamLoader(props.loadStreamsStub, jest.fn()),
-      {
-        initialProps: {
-          loadStreamsStub: loadGameAStreams,
-        }
+    const streams = {
+      testGameA: {
+        items: [{},{}],
+        nextPageToken: 'next page token',
+      },
+      testGameB: {
+        items: [{},{},{}],
+        nextPageToken: 'next page token',
       }
-    )
+    }
 
-    await act(loadGameAStreams);
+    const loadGameStreamsStub = filters => new Promise(resolve => resolve(streams[filters.gameName]));
 
-    rerender({ loadStreamsStub: loadGameBStreams });
+    const { rerender, result } = renderHook(() => {
+      return useInfiniteStreamLoader(loadGameStreamsStub, jest.fn(), { gameName: 'testGameA' });
+    });
 
-    act(result.current.reloadStreams);
+    await act(() => loadGameStreamsStub({ gameName: 'testGameA' }));
+
+    act(() => result.current.filterStreams({ gameName: 'testGameB' }));
  
-    await act(loadGameBStreams);
+    await act(() => loadGameStreamsStub({ gameName: 'testGameB' }));
 
     expect(result.current.items.length).toEqual(3);
     expect(result.current.isLoading).toBeFalsy();
