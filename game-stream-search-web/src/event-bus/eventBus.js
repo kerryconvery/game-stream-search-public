@@ -31,7 +31,7 @@ const useEventBus = (subscribers = {}) => {
 
       _forIn(listeners, (value, key) => eventBus.removeEventListener(key, value));
 
-      listeners = [];
+      listeners.length = 0;
     }
   }, []);
 
