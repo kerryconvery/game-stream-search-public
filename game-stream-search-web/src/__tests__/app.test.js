@@ -29,7 +29,7 @@ describe('Application', () => {
       .get('/api/streams?pageSize=25')
       .reply(200, streams);
 
-      const { rerender } = render(
+      render(
         <ConfigurationProvider configuration={{ "streamSearchServiceUrl": "http://localhost:5000/api" }} >
           <App />
         </ConfigurationProvider>
@@ -122,13 +122,15 @@ describe('Application', () => {
       .get('/api/streams?pageSize=25')
       .reply(500);
 
-      const { rerender } = render(
+    render(
         <ConfigurationProvider configuration={{ "streamSearchServiceUrl": "http://localhost:5000/api" }} >
           <App />
         </ConfigurationProvider>
       )
 
-    const alert = await waitFor(() => screen.getByRole('alert'));
+    const alert = await waitFor(() => { 
+      return screen.getByText('An unexpected error has occurred. Refresh your browser to try again.');
+    });
     
     expect(alert).toBeInTheDocument();
   });
@@ -142,7 +144,7 @@ describe('Application', () => {
       .get('/api/streams?pageSize=25')
       .reply(200, { items: [] });
 
-      const { rerender } = render(
+      render(
         <ConfigurationProvider configuration={{ "streamSearchServiceUrl": "http://localhost:5000/api" }} >
           <App />
         </ConfigurationProvider>

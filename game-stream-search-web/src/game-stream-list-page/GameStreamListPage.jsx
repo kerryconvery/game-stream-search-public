@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import _set from 'lodash/set';
-import { useAlertNotification } from '../providers/AlertNotificationProvider';
+import React from 'react';
 import { useGameStreamApi } from '../api/gameStreamApi';
+import useEventBus from '../event-bus/eventBus';
+import { dispatchAlert, getErrorAlert } from '../notifications/alerts';
 import useInfiniteStreamLoader from './hooks/useInfiniteStreamLoader';
 import GameStreamPageTemplate from './GameStreamPageTemplate';
 import GameStreamSearchBar from './components/GameStreamSearchBar';
@@ -9,8 +9,11 @@ import InfiniteGameStreamGrid from './components/InfiniteGameStreamGrid';
 import NoStreamsFound from './components/NoStreamsFound';
 
 const GameStreamListPage = () => {
-  const { showErrorAlert } = useAlertNotification();
   const { getStreams } = useGameStreamApi();
+  const { dispatchEvent } = useEventBus();
+
+  const showErrorAlert = () => dispatchAlert(dispatchEvent, getErrorAlert());
+
   const streams = useInfiniteStreamLoader(getStreams, showErrorAlert);
 
   return (      
