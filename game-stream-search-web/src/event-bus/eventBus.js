@@ -21,9 +21,9 @@ const useEventBus = (subscribers = {}) => {
     _forIn(subscribers, (value, key) => {
       const listener = eventListenerProxy(value);
 
-      listeners.push({ [key]: listener });
-
       eventBus.addEventListener(key, listener);
+      
+      listeners.push({ [key]: listener });
     });
 
     return () => {
