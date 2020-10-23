@@ -20,13 +20,18 @@ const useEventBus = (subscribers = {}) => {
   useEffect(() => {
     _forIn(subscribers, (value, key) => {
       const listener = eventListenerProxy(value);
-      eventBus.addEventListener(key, listener);
+
       listeners.push({ [key]: listener });
+
+      eventBus.addEventListener(key, listener);
     });
 
     return () => {
       unmounting.current = true;
+
       _forIn(listeners, (value, key) => eventBus.removeEventListener(key, value));
+
+      listeners = [];
     }
   }, []);
 
