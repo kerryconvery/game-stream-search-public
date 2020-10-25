@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStreamSearch.Services",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStreamSearch.StreamProviders", "GameStreamSearch.Providers\GameStreamSearch.StreamProviders.csproj", "{56EFD8B9-34F1-41AA-A84A-25F05D955A7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStreamSearch.IntegrationTests", "GameStreamSearch.IntegrationTests\GameStreamSearch.IntegrationTests.csproj", "{8E490256-8612-42B2-BB63-85F8C77EDD64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStreamSearch.Api.Tests", "GameStreamSearch.IntegrationTests\GameStreamSearch.Api.Tests.csproj", "{8E490256-8612-42B2-BB63-85F8C77EDD64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStreamSearch.Services.Tests", "GameStreamSearch.Services.Tests\GameStreamSearch.Services.Tests.csproj", "{441DE026-9B1E-45DE-BCC0-B089CDDE86C6}"
 EndProject

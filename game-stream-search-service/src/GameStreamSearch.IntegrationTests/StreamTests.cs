@@ -10,7 +10,6 @@ using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces;
 using GameStreamSearch.StreamProviders;
 using System.Threading.Tasks;
 using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
 using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -18,9 +17,9 @@ using System.IO;
 using System.Reflection;
 using GameStreamSearch.StreamProviders.Builders;
 
-namespace GameStreamSearch.IntegrationTests
+namespace GameStreamSearch.Api.Tests
 {
-    public class LiveStreamTests
+    public class StreamTests
     {
         private StreamController streamController;
 
@@ -39,12 +38,12 @@ namespace GameStreamSearch.IntegrationTests
             twitchKrakenApiStub.Setup(m => m.SearchStreams("error", 1, 0)).ReturnsAsync(new TwitchLiveStreamDto());
 
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
-            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos(null, VideoEventType.Live, VideoSortType.ViewCount, null)).ReturnsAsync(youTubLiveStreamDataPages[0]);
-            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, null)).ReturnsAsync(youTubLiveStreamDataPages[1]);
-            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, "page.token.2")).ReturnsAsync(youTubLiveStreamDataPages[2]);
-            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, "page.token.3")).ReturnsAsync(youTubLiveStreamDataPages[3]);
-
-            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("error", VideoEventType.Live, VideoSortType.ViewCount, null)).ReturnsAsync(new YouTubeSearchDto());
+            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos(null, VideoEventType.Live, VideoSortType.ViewCount, 1, null)).ReturnsAsync(youTubLiveStreamDataPages[0]);
+            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, 1, null)).ReturnsAsync(youTubLiveStreamDataPages[1]);
+            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, 1, "page.token.2")).ReturnsAsync(youTubLiveStreamDataPages[2]);
+            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("game 2", VideoEventType.Live, VideoSortType.ViewCount, 1, "page.token.3")).ReturnsAsync(youTubLiveStreamDataPages[3]);
+             
+            youTubeV3ApiStub.Setup(m => m.SearchGamingVideos("error", VideoEventType.Live, VideoSortType.ViewCount, 1, null)).ReturnsAsync(new YouTubeSearchDto());
             youTubeV3ApiStub.Setup(m => m.GetVideos(It.IsAny<string[]>())).ReturnsAsync(videos);
             youTubeV3ApiStub.Setup(m => m.GetChannels(It.IsAny<string[]>())).ReturnsAsync(channels);
 
