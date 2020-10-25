@@ -35,29 +35,13 @@
 
 ### Improvements
 #### Application improvements
-* For security, secure the backend with OAuth and require the user to login before they can view client information
-* Store client information encrypted at rest
-* Use SSL between frontend and backend
-* Generate a human friendly client/patient number which is displayed on the frontend
-* Capture additional information about the client/patient such as:
-  - Middle name
-  - Email address
-  - Date of birth
-  - Physical Address
-  - Current GP
-  - Next of kin
-  - Emergency contact
-  - Date they joined
-  - Notes
-  - Auditing information
-* Support search by name, client/patient number, email address, phone number 
-* Improve the user experience with input masks (for phone number, email address, etc) and improved validation
-* Ability to edit and delete an existing client/patient record
-* Frontend error handling
+* Filter by langauge
+* Provide a way to support new streamers
 
 #### Technical improvements
 * Setup a CICD build pipeline and have it hosted on the a cloud platform
-* Store secrets in a secure location such as AWS Parameter store or secrets manager
+* Store API keys in a secure location such as AWS Parameter store or secrets manager
+* Add a API rate limiter
 * Service monitoring
 * Error logging frontend and backend
 * Use a linter
