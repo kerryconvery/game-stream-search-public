@@ -8,7 +8,7 @@ namespace GameStreamSearch.Services.Interfaces
     public interface IStreamProvider
     {
         Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null);
-        Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName);
+        Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName, int pageSize);
 
         string ProviderName { get; }
     }

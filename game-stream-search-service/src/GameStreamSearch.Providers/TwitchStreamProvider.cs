@@ -91,7 +91,7 @@ namespace GameStreamSearch.Providers
             };
         }
 
-        public async Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName)
+        public async Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName, int pageSize)
         {
             var topVideos = await twitchStreamApi.GetTopVideos(gameName);
 
