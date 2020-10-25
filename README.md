@@ -41,6 +41,7 @@
 #### Technical improvements
 * Setup a CICD build pipeline and have it hosted on the a cloud platform
 * Store API keys in a secure location such as AWS Parameter store or secrets manager
+* Add a rate limiter
 * Service monitoring
 * Error logging frontend and backend
 * Use a linter
