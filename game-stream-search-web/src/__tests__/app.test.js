@@ -26,7 +26,7 @@ describe('Application', () => {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true' 
       })
-      .get('/api/streams?pageSize=25')
+      .get('/api/streams?pageSize=10')
       .reply(200, streams);
 
       render(
@@ -76,7 +76,7 @@ describe('Application', () => {
       'access-control-allow-origin': '*',
       'access-control-allow-credentials': 'true' 
     })
-    .get('/api/streams?pageSize=25')
+    .get('/api/streams?pageSize=10')
     .reply(200, streams);
 
     nock('http://localhost:5000')
@@ -84,7 +84,7 @@ describe('Application', () => {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true' 
       })
-      .get('/api/streams?game=testGame&pageSize=25')
+      .get('/api/streams?game=testGame&pageSize=10')
       .reply(200, foundStreams);
 
     const { rerender } = render(
@@ -119,7 +119,7 @@ describe('Application', () => {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true' 
       })
-      .get('/api/streams?pageSize=25')
+      .get('/api/streams?pageSize=10')
       .reply(500);
 
     render(
@@ -141,7 +141,7 @@ describe('Application', () => {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true' 
       })
-      .get('/api/streams?pageSize=25')
+      .get('/api/streams?pageSize=10')
       .reply(200, { items: [] });
 
       render(
