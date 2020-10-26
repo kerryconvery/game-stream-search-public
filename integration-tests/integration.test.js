@@ -12,6 +12,6 @@ describe('When getting live streams', () => {
     });
 
     expect(response.status).toEqual(200);
-    expect(response.data.items.length).toEqual(3);
+    expect(response.data.items.length).toEqual(1);
   });
 });

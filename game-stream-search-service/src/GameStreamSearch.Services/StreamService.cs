@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Services.Dto;
 using GameStreamSearch.Services.Interfaces;
+using System;
 
 namespace GameStreamSearch.Services
 {
@@ -34,12 +35,14 @@ namespace GameStreamSearch.Services
 
         public async Task<GameStreamsDto> GetStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pagination)
         {
+            int pageSizePerProvider = (int)Math.Ceiling((double)pageSize / streamProviders.Count());
+
             var paginationTokens = paginator.decode(pagination);
 
             var tasks = streamProviders.Select(p => {
                 var pageToken = paginationTokens.ContainsKey(p.ProviderName) ? paginationTokens[p.ProviderName] : null;
 
-                return p.GetLiveStreams(filterOptions, pageSize, pageToken);
+                return p.GetLiveStreams(filterOptions, pageSizePerProvider, pageToken);
             });
 
             var results = await Task.WhenAll(tasks);
@@ -48,7 +51,8 @@ namespace GameStreamSearch.Services
 
             var sortedItems = results
                 .SelectMany(s => s.Items)
-                .OrderByDescending(s => s.Views);
+                .OrderByDescending(s => s.Views)
+                .Take(pageSize);
 
             return new GameStreamsDto()
             {
