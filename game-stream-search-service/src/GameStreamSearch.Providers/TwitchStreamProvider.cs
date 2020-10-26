@@ -91,25 +91,6 @@ namespace GameStreamSearch.Providers
             };
         }
 
-        public async Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName, int pageSize)
-        {
-            var topVideos = await twitchStreamApi.GetTopVideos(gameName);
-
-            return new GameStreamsDto
-            {
-                Items = topVideos.vods.Select(v => new GameStreamDto
-                {
-                    StreamerName = v.channel.display_name,
-                    StreamTitle = v.title,
-                    StreamThumbnailUrl = v.preview.medium,
-                    PlatformName = ProviderName,
-                    StreamUrl = v.url,
-                    IsLive = false,
-                    Views = v.views,
-                })
-            };
-        }
-
         public string ProviderName { get; private set; }
     }
 }

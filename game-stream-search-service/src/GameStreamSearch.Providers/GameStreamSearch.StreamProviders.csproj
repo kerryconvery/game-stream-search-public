@@ -12,7 +12,6 @@
     <Folder Include="ProviderApi\" />
     <Folder Include="ProviderApi\Twitch\" />
     <Folder Include="ProviderApi\Twitch\Interfaces\" />
-    <Folder Include="ProviderApi\Twitch\Dto\Helix\" />
     <Folder Include="ProviderApi\Twitch\Dto\Kraken\" />
     <Folder Include="ProviderApi\YouTube\" />
     <Folder Include="ProviderApi\YouTube\Interfaces\" />

@@ -33,22 +33,6 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch
             return response.Data;
         }
 
-        public async Task<TwitchTopVideosDto> GetTopVideos(string gameName)
-        {
-            var client = new RestClient(this.twitchApiUrl);
-
-            var request = new RestRequest("/kraken/videos/top", Method.GET);
-
-            request.AddHeader("Accept", "application/vnd.twitchtv.v5+json");
-            request.AddHeader("Client-ID", twitchClientId);
-
-            request.AddParameter("game", gameName);
-
-            var response = await client.ExecuteAsync<TwitchTopVideosDto>(request);
-
-            return response.Data;
-        }
-
         public async Task<TwitchLiveStreamDto> SearchStreams(string searchTerm, int pageSize, int pageOffset)
         {
             var client = new RestClient(this.twitchApiUrl);

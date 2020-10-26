@@ -6,7 +6,6 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces
     public interface ITwitchKrakenApi
     {
         Task<TwitchLiveStreamDto> SearchStreams(string searchTerm, int pageSize, int pageOffset);
-        Task<TwitchTopVideosDto> GetTopVideos(string gameName);
         Task<TwitchLiveStreamDto> GetLiveStreams(int pageSize, int pageOffset);
     }
 }

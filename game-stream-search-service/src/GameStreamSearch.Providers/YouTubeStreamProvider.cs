@@ -46,28 +46,6 @@ namespace GameStreamSearch.StreamProviders
             return gameStreams;
         }
 
-        private IEnumerable<GameStreamDto> mapAsOnDemandStream(
-            IEnumerable<YouTubeSearchItemDto> streams,
-            Dictionary<string, YouTubeVideoStatisticsDto> videoStatistics)
-        {
-            var gameStreams = streams.Select(v => {
-                var statistics = videoStatistics.ContainsKey(v.id.videoId) ? videoStatistics[v.id.videoId] : null;
-
-                return new GameStreamDto
-                {
-                    StreamTitle = v.snippet.title,
-                    StreamerName = v.snippet.channelTitle,
-                    StreamThumbnailUrl = v.snippet.thumbnails.medium.url,
-                    PlatformName = ProviderName,
-                    StreamUrl = urlBuilder.Build(v.id.videoId),
-                    IsLive = false,
-                    Views = statistics != null ? statistics.viewCount : 0,
-                };
-            });
-
-            return gameStreams;
-        }
-
         private async Task<Dictionary<string, YouTubeVideoLiveStreamingDetailsDto>> GetLiveStreamDetails(
             IEnumerable<YouTubeSearchItemDto> streams)
         {
@@ -86,16 +64,6 @@ namespace GameStreamSearch.StreamProviders
             var channels = await youTubeV3Api.GetChannels(channelIds);
 
             return channels.items.ToDictionary(c => c.id, c => c.snippet);
-        }
-
-        private async Task<Dictionary<string, YouTubeVideoStatisticsDto>> GetVideoStatistics(
-            IEnumerable<YouTubeSearchItemDto> streams)
-        {
-            var videoIds = streams.Select(v => v.id.videoId).ToArray();
-
-            var videos = await youTubeV3Api.GetVideos(videoIds);
-
-            return videos.items.ToDictionary(v => v.id, v => v.statistics);
         }
 
         public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null)
@@ -117,23 +85,6 @@ namespace GameStreamSearch.StreamProviders
             {
                 Items = mapAsLiveStream(liveVideos.items, channelSnippets, liveStreamDetails),
                 NextPageToken = liveVideos.nextPageToken,
-            };
-        }
-
-        public async Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName, int pageSize)
-        {
-            var completedVideos = await youTubeV3Api.SearchGamingVideos(gameName, VideoEventType.Completed, VideoSortType.ViewCount, 5, null);
-
-            if (completedVideos.items == null)
-            {
-                return GameStreamsDto.Empty();
-            }
-
-            var statistics = await GetVideoStatistics(completedVideos.items);
-
-            return new GameStreamsDto
-            {
-                Items = mapAsOnDemandStream(completedVideos.items, statistics),
             };
         }
 

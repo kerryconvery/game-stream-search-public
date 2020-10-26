@@ -77,13 +77,6 @@ namespace GameStreamSearch.StreamProviders
             };
         }
 
-        public Task<GameStreamsDto> GetOnDemandStreamsByGameName(string gameName, int pageSize)
-        {
-            //DLive does not support on demand streams
-            return Task.FromResult<GameStreamsDto>(new GameStreamsDto());
-        }
-
-
         public string ProviderName { get; private set; }
     }
 }
