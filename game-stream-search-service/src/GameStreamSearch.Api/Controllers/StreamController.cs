@@ -22,7 +22,7 @@ namespace GameStreamSearch.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<GameStreamsDto>> GetStreams(
             [FromQuery(Name = "game")] string gameName = null,
-            [FromQuery(Name = "pageSize")] int pageSize = 25,
+            [FromQuery(Name = "pageSize")] int pageSize = 8,
             [FromQuery(Name = "pageToken")] string pageToken = null)
         {
             var filterOptions = new StreamFilterOptionsDto
