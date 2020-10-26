@@ -1,10 +1,9 @@
 import React from 'react';
 import { node } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   content: {
     backgroundColor: '#F8F9F9'
   },

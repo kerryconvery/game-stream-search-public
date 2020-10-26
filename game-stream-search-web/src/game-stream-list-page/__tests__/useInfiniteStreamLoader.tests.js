@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks'
 import useInfiniteStreamLoader from '../hooks/useInfiniteStreamLoader';
 
@@ -87,7 +86,7 @@ describe('Use game stream data hook', () => {
 
     const loadGameStreamsStub = filters => new Promise(resolve => resolve(streams[filters.gameName]));
 
-    const { rerender, result } = renderHook(() => {
+    const { result } = renderHook(() => {
       return useInfiniteStreamLoader(loadGameStreamsStub, jest.fn(), { gameName: 'testGameA' });
     });
 

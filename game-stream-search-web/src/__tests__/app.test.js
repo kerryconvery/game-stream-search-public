@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen, act, getByTestId } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import nock from 'nock';
 import { ConfigurationProvider } from '../providers/ConfigurationProvider';
 import App from '../app';
