@@ -35,14 +35,12 @@ namespace GameStreamSearch.Services
 
         public async Task<GameStreamsDto> GetStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pagination)
         {
-            int pageSizePerProvider = (int)Math.Ceiling((double)pageSize / streamProviders.Count());
-
             var paginationTokens = paginator.decode(pagination);
 
             var tasks = streamProviders.Select(p => {
                 var pageToken = paginationTokens.ContainsKey(p.ProviderName) ? paginationTokens[p.ProviderName] : null;
 
-                return p.GetLiveStreams(filterOptions, pageSizePerProvider, pageToken);
+                return p.GetLiveStreams(filterOptions, pageSize, pageToken);
             });
 
             var results = await Task.WhenAll(tasks);

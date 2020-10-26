@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace GameStreamSearch.Services.Tests
 {
-    public class StreamServiceTests
+    public class StreaServiceTests
     {
         [Test]
         public async Task Should_Return_An_Aggregated_List_Of_Streams_From_All_Registered_Providers()
@@ -20,11 +20,11 @@ namespace GameStreamSearch.Services.Tests
 
             paginatorStub.Setup(m => m.decode(It.IsAny<string>())).Returns(new Dictionary<string, string>());
 
-            streamProviderStubA.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
+            streamProviderStubA.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
                 .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } } );
             streamProviderStubA.SetupGet(m => m.ProviderName).Returns("streamA");
 
-            streamProviderStubB.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
+            streamProviderStubB.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
                 .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } } );
             streamProviderStubB.SetupGet(m => m.ProviderName).Returns("streamB");
 
@@ -138,11 +138,11 @@ namespace GameStreamSearch.Services.Tests
 
             paginatorStub.Setup(m => m.decode("encoded.composit.token")).Returns(pageTokens);
 
-            streamProviderStubA.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
+            streamProviderStubA.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
                 .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } });
             streamProviderStubA.SetupGet(m => m.ProviderName).Returns("streamA");
 
-            streamProviderStubB.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, "streamB.token"))
+            streamProviderStubB.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, "streamB.token"))
                 .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } });
             streamProviderStubB.SetupGet(m => m.ProviderName).Returns("streamB");
 
@@ -178,87 +178,6 @@ namespace GameStreamSearch.Services.Tests
 
             Assert.AreEqual(streams.Items.First().Views, 2);
             Assert.AreEqual(streams.Items.Last().Views, 1);
-        }
-
-        [Test]
-        public async Task Should_Return_Only_One_Result()
-        {
-            var paginatorStub = new Mock<IPaginator>();
-            var streamProviderStubA = new Mock<IStreamProvider>();
-            var streamProviderStubB = new Mock<IStreamProvider>();
-            var streamFilterOptions = new StreamFilterOptionsDto();
-
-            paginatorStub.Setup(m => m.decode(It.IsAny<string>())).Returns(new Dictionary<string, string>());
-
-            streamProviderStubA.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
-                .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } });
-            streamProviderStubA.SetupGet(m => m.ProviderName).Returns("streamA");
-
-            streamProviderStubB.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
-                .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } });
-            streamProviderStubB.SetupGet(m => m.ProviderName).Returns("streamB");
-
-            var streamService = new StreamService(paginatorStub.Object)
-                .RegisterStreamProvider(streamProviderStubA.Object)
-                .RegisterStreamProvider(streamProviderStubB.Object);
-
-            var streams = await streamService.GetStreams(streamFilterOptions, 1, null);
-
-            Assert.AreEqual(streams.Items.Count(), 1);
-        }
-
-        [Test]
-        public async Task Should_Return_Only_One_Result_Per_Provider()
-        {
-            var paginatorStub = new Mock<IPaginator>();
-            var streamProviderStubA = new Mock<IStreamProvider>();
-            var streamProviderStubB = new Mock<IStreamProvider>();
-            var streamFilterOptions = new StreamFilterOptionsDto();
-
-            paginatorStub.Setup(m => m.decode(It.IsAny<string>())).Returns(new Dictionary<string, string>());
-
-            streamProviderStubA.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
-                .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } });
-            streamProviderStubA.SetupGet(m => m.ProviderName).Returns("streamA");
-
-            streamProviderStubB.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
-                .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } });
-            streamProviderStubB.SetupGet(m => m.ProviderName).Returns("streamB");
-
-            var streamService = new StreamService(paginatorStub.Object)
-                .RegisterStreamProvider(streamProviderStubA.Object)
-                .RegisterStreamProvider(streamProviderStubB.Object);
-
-            var streams = await streamService.GetStreams(streamFilterOptions, 2, null);
-
-            Assert.AreEqual(streams.Items.Count(), 2);
-        }
-
-        [Test]
-        public async Task Should_Return_Three_Results()
-        {
-            var paginatorStub = new Mock<IPaginator>();
-            var streamProviderStubA = new Mock<IStreamProvider>();
-            var streamProviderStubB = new Mock<IStreamProvider>();
-            var streamFilterOptions = new StreamFilterOptionsDto();
-
-            paginatorStub.Setup(m => m.decode(It.IsAny<string>())).Returns(new Dictionary<string, string>());
-
-            streamProviderStubA.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
-                .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto(), new GameStreamDto() } });
-            streamProviderStubA.SetupGet(m => m.ProviderName).Returns("streamA");
-
-            streamProviderStubB.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
-                .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto(), new GameStreamDto() } });
-            streamProviderStubB.SetupGet(m => m.ProviderName).Returns("streamB");
-
-            var streamService = new StreamService(paginatorStub.Object)
-                .RegisterStreamProvider(streamProviderStubA.Object)
-                .RegisterStreamProvider(streamProviderStubB.Object);
-
-            var streams = await streamService.GetStreams(streamFilterOptions, 3, null);
-
-            Assert.AreEqual(streams.Items.Count(), 3);
         }
     }
 }
