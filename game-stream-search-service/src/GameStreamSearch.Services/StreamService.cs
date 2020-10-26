@@ -49,8 +49,7 @@ namespace GameStreamSearch.Services
 
             var sortedItems = results
                 .SelectMany(s => s.Items)
-                .OrderByDescending(s => s.Views)
-                .Take(pageSize);
+                .OrderByDescending(s => s.Views);
 
             return new GameStreamsDto()
             {

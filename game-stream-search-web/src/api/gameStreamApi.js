@@ -7,7 +7,7 @@ export const getStreamsRequest = (baseUrl) => (filters = {}, pageToken) => (
     method: 'GET',
     params: {
       game: filters.gameName,
-      pageSize: 8,
+      pageSize: 10,
       pageToken: pageToken,
     },
   }).then(res => res.data)
