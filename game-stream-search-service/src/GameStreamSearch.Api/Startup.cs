@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using GameStreamSearch.Api.Infrastructor;
 using GameStreamSearch.Providers;
 using GameStreamSearch.Services;
@@ -28,6 +29,24 @@ namespace GameStreamSearch.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // needed to store rate limit counters and ip rules
+            services.AddMemoryCache();
+
+            //load general configuration from appsettings.json
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+
+            // inject counter and rules stores
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+
+            // https://github.com/aspnet/Hosting/issues/793
+            // the IHttpContextAccessor service is not registered by default.
+            // the clientId/clientIp resolvers use it.
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // configuration (resolvers, counter key builders)
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("allowAll",
@@ -61,6 +80,7 @@ namespace GameStreamSearch.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
+            app.UseIpRateLimiting();
             app.UseRouting();
 
             app.UseCors("allowAll");
