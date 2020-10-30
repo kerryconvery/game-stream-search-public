@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ApplicationName:
+    Type: String
+    Description: The name of the Elastic beanstalk application
+  ApplicationDescription:
+    Type: String
+    Description: The description of the Elastic beanstalk application
+  DeploymentBucketName:
+    Type: String
+    Description: The name of the S3 bucket that contains the deployable bundle
+  DeploymentBucketKey:
+    Type: String
+    Description: The S3 bucket key of deployable bundle
+  ServiceRoleName:
+    Type: String
+    Description: The service role that the elastic beanstalk enviroment will use to manage resources
+  SecurityGroupName:
+    Type: String
+    Description: The security group to associate with the instance
+
+Resources:
+  Application:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName:
+        Ref: ApplicationName
+      Description:
+        Ref: ApplicationDescription
+
+  ApplicationVersion:
+    Type: AWS::ElasticBeanstalk::ApplicationVersion
+    Properties:
+      ApplicationName:
+        Ref: ApplicationName
+      SourceBundle:
+        S3Bucket:
+          Ref: DeploymentBucketName
+        S3Key:
+          Ref: DeploymentBucketKey
+  
+  ConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      ApplicationName:
+        Ref: ApplicationName
+      Description: The elastic beanstalk configuration template
+      SolutionStackName: 64bit Amazon Linux 2 v3.2.0 running Docker
+      OptionSettings:
+        - Namespace: aws:ec2:instances
+          OptionName: InstanceTypes
+          Value: t2.micro
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: EnvironmentType
+          Value: SingleInstance
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: ServiceRole
+          Value:
+            Ref: ServiceRoleName
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: SecurityGroups
+          Value:
+            Ref: SecurityGroupName
+  
+  Environment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName:
+        Ref: ApplicationName
+      Description: The elastic beanstalk application environment
+      Template:
+        Ref: ConfigurationTemplate
+      VersionLabel:
+        Ref: ApplicationVersion
+
+
+    
+

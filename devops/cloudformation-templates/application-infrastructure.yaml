@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  EbServiceRoleName:
+    Type: String
+    Description: The name of the role to associate with the elastic beanstalk environment
+  EbSecurityGroupName:
+    Type: String
+    Description: The name of the security group to create
+  EbDeploymentBucketName:
+    Type: String
+    Description: The name of the S3 bucket to create
+  EbContainerRepositoryName:
+    Type: String
+    Description: The name of the registry where the docker images will be stored
+  DeployUser:
+    Type: String
+    Description: The name of the user that will deploy the application to ECR and S3
+
+Resources:
+  EbServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Ref: EbServiceRoleName
+      Description: Elastic beanstalk role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+              - elasticbeanstalk.amazonaws.com
+            Action:
+              - sts:AssumeRole
+
+  EbDeploymentBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName:
+        Ref: EbDeploymentBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  
+  EbDeploymentBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: EbDeploymentBucketName
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowGet
+            Effect: Allow
+            Principal: 
+              AWS:
+                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/${EbServiceRoleName}
+            Action:
+              - s3:GetObject
+            Resource:
+              - Fn::Sub: ${EbDeploymentBucket.Arn}/*
+          - Sid: AllowPut
+            Effect: Allow
+            Principal: 
+              AWS:
+                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:user/${DeployUser}
+            Action:
+              - s3:PutObject
+            Resource:
+              - Fn::Sub: ${EbDeploymentBucket.Arn}/*
+
+  EbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName:
+        Ref: EbSecurityGroupName
+      GroupDescription: Allows incoming traffic on all ip addressed to port 5000
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: 0.0.0.0/0
+  
+  EbDockerContainerRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName:
+        Ref: EbContainerRepositoryName
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement: 
+          - Sid: AllowPull
+            Effect: Allow
+            Principal: 
+              AWS:
+                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/${EbServiceRoleName}
+            Action:
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+              - ecr:BatchCheckLayerAvailability
+          - Sid: AllowPush
+            Effect: Allow
+            Principal:
+              AWS:
+                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:user/${DeployUser}
+            Action:
+            - "ecr:PutImage"
+            - "ecr:InitiateLayerUpload"
+            - "ecr:UploadLayerPart"
+            - "ecr:CompleteLayerUpload"
