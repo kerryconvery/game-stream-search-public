@@ -32,19 +32,42 @@ Resources:
     Type: AWS::ElasticBeanstalk::ApplicationVersion
     Properties:
       ApplicationName:
-        Ref: ApplicationName
+        Ref: Application
       SourceBundle:
         S3Bucket:
           Ref: DeploymentBucketName
         S3Key:
           Ref: DeploymentBucketKey
   
-  ConfigurationTemplate:
-    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+  InstanceProfileRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Sub: 'eb-instance-role-${ApplicationName}'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName:
+        Fn::Sub: 'eb-instance-profile-${ApplicationName}'
+      Roles:
+        - Ref: InstanceProfileRole
+
+  Environment:
+    Type: AWS::ElasticBeanstalk::Environment
     Properties:
       ApplicationName:
-        Ref: ApplicationName
-      Description: The elastic beanstalk configuration template
+        Ref: Application
+      Description: The elastic beanstalk application environment
       SolutionStackName: 64bit Amazon Linux 2 v3.2.0 running Docker
       OptionSettings:
         - Namespace: aws:ec2:instances
@@ -58,18 +81,13 @@ Resources:
           Value:
             Ref: ServiceRoleName
         - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value:
+            Ref: InstanceProfile
+        - Namespace: aws:autoscaling:launchconfiguration
           OptionName: SecurityGroups
           Value:
             Ref: SecurityGroupName
-  
-  Environment:
-    Type: AWS::ElasticBeanstalk::Environment
-    Properties:
-      ApplicationName:
-        Ref: ApplicationName
-      Description: The elastic beanstalk application environment
-      Template:
-        Ref: ConfigurationTemplate
       VersionLabel:
         Ref: ApplicationVersion
 
