@@ -2,7 +2,7 @@ import React from 'react';
 import { string } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     textAlign: 'center'
   },
