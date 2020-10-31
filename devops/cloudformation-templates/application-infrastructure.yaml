@@ -1,22 +1,69 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-  EbServiceRoleName:
+  FrontendBucketName:
     Type: String
-    Description: The name of the role to associate with the elastic beanstalk environment
-  EbSecurityGroupName:
-    Type: String
-    Description: The name of the security group to create
+    Description: The name of the bucket containing the frontend bundle
   EbDeploymentBucketName:
     Type: String
     Description: The name of the S3 bucket to create
   EbContainerRepositoryName:
     Type: String
     Description: The name of the registry where the docker images will be stored
+  EbServiceRoleName:
+    Type: String
+    Description: The name of the role to associate with the elastic beanstalk environment
+  EbSecurityGroupName:
+    Type: String
+    Description: The name of the security group to create
   DeployUser:
     Type: String
     Description: The name of the user that will deploy the application to ECR and S3
 
 Resources:
+  FrontendBundleBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName:
+        Ref: FrontendBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: false
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: false  
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - '*'
+            MaxAge: 86400
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: FrontendBundleBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action:
+              - s3:GetObject
+            Resource:
+              - Fn::Sub: ${FrontendBundleBucket.Arn}/*
+          - Effect: Allow
+            Principal: 
+              AWS:
+                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:user/${DeployUser}
+            Action:
+              - s3:PutObject
+            Resource:
+              - Fn::Sub: ${FrontendBundleBucket.Arn}/*        
+
   EbServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -47,8 +94,6 @@ Resources:
                   - 'ec2:AssociateAddress'
                   - 'ec2:DescribeAddresses'
                   - 'ec2:DescribeSecurityGroups'
-                  - 'sqs:GetQueueAttributes'
-                  - 'sqs:GetQueueUrl'
                   - 'autoscaling:DescribeAutoScalingGroups'
                   - 'autoscaling:DescribeAutoScalingInstances'
                   - 'autoscaling:DescribeScalingActivities'
@@ -100,11 +145,11 @@ Resources:
     Properties:
       GroupName:
         Ref: EbSecurityGroupName
-      GroupDescription: Allows incoming traffic on all ip addressed to port 5000
+      GroupDescription: Allows incoming traffic on all ip addressed to port 80
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 5000
-          ToPort: 5000
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
   
   EbDockerContainerRepository:

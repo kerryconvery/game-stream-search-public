@@ -68,6 +68,9 @@ Resources:
       ApplicationName:
         Ref: Application
       Description: The elastic beanstalk application environment
+      Tier:
+        Name: WebServer
+        Type: Standard
       SolutionStackName: 64bit Amazon Linux 2 v3.2.0 running Docker
       OptionSettings:
         - Namespace: aws:ec2:instances
