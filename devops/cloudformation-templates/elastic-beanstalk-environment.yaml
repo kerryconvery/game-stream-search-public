@@ -6,6 +6,9 @@ Parameters:
   ApplicationDescription:
     Type: String
     Description: The description of the Elastic beanstalk application
+  EnvironmentCNAMEPrefix:
+    Type: String
+    Description: The name associated with the environment
   DeploymentBucketName:
     Type: String
     Description: The name of the S3 bucket that contains the deployable bundle
@@ -67,6 +70,8 @@ Resources:
     Properties:
       ApplicationName:
         Ref: Application
+      CNAMEPrefix:
+        Ref: EnvironmentCNAMEPrefix
       Description: The elastic beanstalk application environment
       Tier:
         Name: WebServer
