@@ -33,6 +33,14 @@
 5. Navigate your browser to http://localhost:8080
 6. Stop the web service `lerna run stop:service`
 
+### Deploy AWS infrastructure needed to support the application
+1. Change to the folder /devops
+2. Ensure the infrastructure is deployed by running ```deploy-application-infrastructure-preprod.sh```
+
+### Deploy application to AWS
+1. Change to the folder /devops
+2. Deploy the application by running ```deploy-application-components-preprod.sh
+
 ### Improvements
 #### Application improvements
 * Filter by langauge
