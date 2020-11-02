@@ -39,7 +39,7 @@
 
 ### Deploy application to AWS
 1. Change to the folder /devops
-2. Deploy the application by running ```deploy-application-components-preprod.sh```
+2. Deploy the application by running ```deploy-application-components-preprod.sh``` and pass a number number as the first parameter
 
 ### Improvements
 #### Application improvements
