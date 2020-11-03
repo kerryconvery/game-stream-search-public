@@ -35,11 +35,11 @@
 
 ### Deploy AWS infrastructure needed to support the application
 1. Change to the folder /devops
-2. Ensure the infrastructure is deployed by running ```deploy-application-infrastructure-preprod.sh```
+2. Ensure the infrastructure is deployed by running ```deploy-application-infrastructure.sh```
 
 ### Deploy application to AWS
 1. Change to the folder /devops
-2. Deploy the application by running ```deploy-application-components-preprod.sh``` and pass a number number as the first parameter
+2. Deploy the application by running ```deploy-application-components.sh <env name> <build no>``` e.g ./deploy-application-components.sh prodA 123
 
 ### Improvements
 #### Application improvements
