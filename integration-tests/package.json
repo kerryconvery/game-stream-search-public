@@ -1,0 +1,32 @@
+{
+  "name": "integration-tests",
+  "version": "1.0.0",
+  "description": "Game stream search integration tests",
+  "main": "index.js",
+  "author": "kerry convery",
+  "license": "ISC",
+  "scripts": {
+    "test:integration": "cross-env APP_ENV=local jest --color",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@babel/core": "7.10.2",
+    "@babel/preset-env": "7.10.2",
+    "babel-eslint": "10.1.0",
+    "babel-jest": "26.0.1",
+    "babel-loader": "8.1.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.12.0",
+    "eslint-plugin-import": "^2.22.1",
+    "jest": "26.0.1"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.js?$"
+  }
+}
