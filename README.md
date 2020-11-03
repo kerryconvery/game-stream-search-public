@@ -39,7 +39,8 @@
 
 ### Deploy application to AWS
 1. Change to the folder /devops
-2. Deploy the application by running ```deploy-application-components-preprod.sh <env name> <build no>``` e.g deploy-application-components-preprod.sh prodA 123
+2. Deploy the application by running ```deploy-application-components-preprod.sh <env name> <build no>```
+    e.g ./deploy-application-components-preprod.sh prodA 123
 
 ### Improvements
 #### Application improvements
