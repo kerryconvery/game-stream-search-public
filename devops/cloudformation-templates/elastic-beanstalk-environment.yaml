@@ -3,24 +3,12 @@ Parameters:
   ApplicationName:
     Type: String
     Description: The name of the Elastic beanstalk application
-  ApplicationDescription:
-    Type: String
-    Description: The description of the Elastic beanstalk application
   EnvironmentCNAMEPrefix:
     Type: String
     Description: The name associated with the environment
-  DeploymentBucketName:
-    Type: String
-    Description: The name of the S3 bucket that contains the deployable bundle
   DeploymentBucketKey:
     Type: String
     Description: The S3 bucket key of deployable bundle
-  ServiceRoleName:
-    Type: String
-    Description: The service role that the elastic beanstalk enviroment will use to manage resources
-  SecurityGroupName:
-    Type: String
-    Description: The security group to associate with the instance
 
 Resources:
   Application:
@@ -28,8 +16,6 @@ Resources:
     Properties:
       ApplicationName:
         Ref: ApplicationName
-      Description:
-        Ref: ApplicationDescription
 
   ApplicationVersion:
     Type: AWS::ElasticBeanstalk::ApplicationVersion
@@ -38,32 +24,9 @@ Resources:
         Ref: Application
       SourceBundle:
         S3Bucket:
-          Ref: DeploymentBucketName
+          Fn::ImportValue: EbDeploymentBucketName
         S3Key:
           Ref: DeploymentBucketKey
-  
-  InstanceProfileRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName:
-        Fn::Sub: 'eb-instance-role-${ApplicationName}'
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ec2.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
-
-  InstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      InstanceProfileName:
-        Fn::Sub: 'eb-instance-profile-${ApplicationName}'
-      Roles:
-        - Ref: InstanceProfileRole
 
   Environment:
     Type: AWS::ElasticBeanstalk::Environment
@@ -87,15 +50,15 @@ Resources:
         - Namespace: aws:elasticbeanstalk:environment
           OptionName: ServiceRole
           Value:
-            Ref: ServiceRoleName
+            Fn::ImportValue: EbServiceRoleName
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value:
-            Ref: InstanceProfile
+            Fn::ImportValue: InstanceProfileName
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: SecurityGroups
           Value:
-            Ref: SecurityGroupName
+            Fn::ImportValue: SecurityGroupName
       VersionLabel:
         Ref: ApplicationVersion
 

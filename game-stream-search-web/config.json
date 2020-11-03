@@ -4,7 +4,7 @@
       "streamSearchServiceUrl": "http://localhost:5000/api"
     },
     "preprod": {
-      "streamSearchServiceUrl": "http://preprod-stream-machine.ap-southeast-2.elasticbeanstalk.com/api"
+      "streamSearchServiceUrl": "http://prodA-stream-machine.ap-southeast-2.elasticbeanstalk.com/api"
     }
   }
 }

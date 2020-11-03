@@ -1,23 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
+  ApplicationName:
+    Type: String
+    Description: This name will be used in the naming of AWS resources
   FrontendBucketName:
     Type: String
     Description: The name of the bucket containing the frontend bundle
   EbDeploymentBucketName:
     Type: String
     Description: The name of the S3 bucket to create
-  EbContainerRepositoryName:
+  ContainerRepositoryName:
     Type: String
     Description: The name of the registry where the docker images will be stored
-  EbServiceRoleName:
-    Type: String
-    Description: The name of the role to associate with the elastic beanstalk environment
-  EbSecurityGroupName:
-    Type: String
-    Description: The name of the security group to create
-  DeployUser:
-    Type: String
-    Description: The name of the user that will deploy the application to ECR and S3
 
 Resources:
   FrontendBundleBucket:
@@ -54,52 +48,44 @@ Resources:
             Action:
               - s3:GetObject
             Resource:
-              - Fn::Sub: ${FrontendBundleBucket.Arn}/*
-          - Effect: Allow
-            Principal: 
-              AWS:
-                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:user/${DeployUser}
-            Action:
-              - s3:PutObject
-            Resource:
-              - Fn::Sub: ${FrontendBundleBucket.Arn}/*        
+              - Fn::Sub: ${FrontendBundleBucket.Arn}/* 
 
   EbServiceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName:
-        Ref: EbServiceRoleName
-      Description: Elastic beanstalk role
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-              - elasticbeanstalk.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName:
-            Fn::Sub: 'eb-service-role-policy-${EbServiceRoleName}'
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'elasticloadbalancing:DescribeInstanceHealth'
-                  - 'ec2:DescribeInstances'
-                  - 'ec2:DescribeInstanceStatus'
-                  - 'ec2:GetConsoleOutput'
-                  - 'ec2:AssociateAddress'
-                  - 'ec2:DescribeAddresses'
-                  - 'ec2:DescribeSecurityGroups'
-                  - 'autoscaling:DescribeAutoScalingGroups'
-                  - 'autoscaling:DescribeAutoScalingInstances'
-                  - 'autoscaling:DescribeScalingActivities'
-                  - 'autoscaling:DescribeNotificationConfigurations'
-                Resource:
-                  - '*'
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName:
+          Fn::Sub: 'eb-${ApplicationName}-service-role'
+        Description: Elastic beanstalk role
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                - elasticbeanstalk.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName:
+              Fn::Sub: 'eb-${ApplicationName}-service-role'
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - 'elasticloadbalancing:DescribeInstanceHealth'
+                    - 'ec2:DescribeInstances'
+                    - 'ec2:DescribeInstanceStatus'
+                    - 'ec2:GetConsoleOutput'
+                    - 'ec2:AssociateAddress'
+                    - 'ec2:DescribeAddresses'
+                    - 'ec2:DescribeSecurityGroups'
+                    - 'autoscaling:DescribeAutoScalingGroups'
+                    - 'autoscaling:DescribeAutoScalingInstances'
+                    - 'autoscaling:DescribeScalingActivities'
+                    - 'autoscaling:DescribeNotificationConfigurations'
+                  Resource:
+                    - '*'
 
   EbDeploymentBucket:
     Type: AWS::S3::Bucket
@@ -125,57 +111,128 @@ Resources:
             Effect: Allow
             Principal: 
               AWS:
-                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/${EbServiceRoleName}
+                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/${EbServiceRole}
             Action:
               - s3:GetObject
             Resource:
               - Fn::Sub: ${EbDeploymentBucket.Arn}/*
-          - Sid: AllowPut
-            Effect: Allow
-            Principal: 
-              AWS:
-                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:user/${DeployUser}
-            Action:
-              - s3:PutObject
-            Resource:
-              - Fn::Sub: ${EbDeploymentBucket.Arn}/*
+  
+  DockerContainerRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName:
+        Ref: ContainerRepositoryName
+  
+  ParameterStoreKmsKey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: Enable IAM User Permissions
+          Effect: Allow
+          Principal:
+            AWS:
+              Fn::Sub: arn:aws:iam::${AWS::AccountId}:root
+          Action: kms:*
+          Resource: '*'
 
-  EbSecurityGroup:
+  ParameterStoreKmsKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName:
+        Fn::Sub: 'alias/${ApplicationName}'
+      TargetKeyId:
+        Ref: ParameterStoreKmsKey
+
+  SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName:
-        Ref: EbSecurityGroupName
+        Fn::Sub: '${ApplicationName}-service'
       GroupDescription: Allows incoming traffic on all ip addressed to port 80
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-  
-  EbDockerContainerRepository:
-    Type: AWS::ECR::Repository
+
+  InstanceProfileRole:
+    Type: AWS::IAM::Role
     Properties:
-      RepositoryName:
-        Ref: EbContainerRepositoryName
-      RepositoryPolicyText:
-        Version: "2012-10-17"
-        Statement: 
-          - Sid: AllowPull
-            Effect: Allow
-            Principal: 
-              AWS:
-                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/${EbServiceRoleName}
-            Action:
-              - ecr:GetDownloadUrlForLayer
-              - ecr:BatchGetImage
-              - ecr:BatchCheckLayerAvailability
-          - Sid: AllowPush
-            Effect: Allow
+      RoleName:
+        Fn::Sub: '${ApplicationName}-instance-role'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
             Principal:
-              AWS:
-                - Fn::Sub: arn:aws:iam::${AWS::AccountId}:user/${DeployUser}
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - Ref: ParameterStoreKmsPolicy
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName:
+        Fn::Sub: '${ApplicationName}-instance-profile'
+      Roles:
+        - Ref: InstanceProfileRole
+
+  DeploymentPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName:
+        Fn::Sub: '${ApplicationName}-deployment'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
             Action:
-              - "ecr:PutImage"
-              - "ecr:InitiateLayerUpload"
-              - "ecr:UploadLayerPart"
-              - "ecr:CompleteLayerUpload"
+              - s3:PutObject
+            Resource:
+              - Fn::GetAtt: FrontendBundleBucket.Arn
+              - Fn::GetAtt: EbDeploymentBucket.Arn
+
+  ParameterStoreKmsPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName:
+        Fn::Sub: '${ApplicationName}-parameter-store'
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - kms:Decrypt
+            Resource:
+              Fn::Sub: 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/${ParameterStoreKmsKey.KeyId}'
+          - Effect: Allow
+            Action:
+              - ssm:GetParameter
+            Resource:
+              Fn::Sub: 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ApplicationName}-*'
+
+Outputs:
+  InstanceProfileName:
+    Value:
+      Ref: InstanceProfile
+    Export:
+      Name: InstanceProfileName
+  SecurityGroupName:
+    Value:
+      Ref: SecurityGroup
+    Export:
+      Name: SecurityGroupName
+  EbDeploymentBucketName:
+    Value:
+      Ref: EbDeploymentBucket
+    Export:
+      Name: EbDeploymentBucketName
+  EbServiceRoleName:
+    Value:
+      Ref: EbServiceRole
+    Export:
+      Name: EbServiceRoleName
