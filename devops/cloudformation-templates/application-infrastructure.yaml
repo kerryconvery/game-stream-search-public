@@ -171,7 +171,7 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
-        - Ref: ParameterStoreKmsPolicy
+        - Ref: ParameterStorePolicy
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -196,11 +196,11 @@ Resources:
               - Fn::GetAtt: FrontendBundleBucket.Arn
               - Fn::GetAtt: EbDeploymentBucket.Arn
 
-  ParameterStoreKmsPolicy:
+  ParameterStorePolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
       ManagedPolicyName:
-        Fn::Sub: '${ApplicationName}-parameter-store'
+        Fn::Sub: '${ApplicationName}-parameter-store-read'
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -212,8 +212,9 @@ Resources:
           - Effect: Allow
             Action:
               - ssm:GetParameter
+              - ssm:GetParametersByPath
             Resource:
-              Fn::Sub: 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ApplicationName}-*'
+              Fn::Sub: 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ApplicationName}*'
 
 Outputs:
   InstanceProfileName:
