@@ -1,5 +1,5 @@
 # Game stream search
-
+http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Requirements to run
 * Docker v2
