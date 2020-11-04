@@ -123,27 +123,27 @@ Resources:
       RepositoryName:
         Ref: ContainerRepositoryName
   
-  ParameterStoreKmsKey:
-    Type: AWS::KMS::Key
-    Properties:
-      KeyPolicy:
-        Version: '2012-10-17'
-        Statement:
-        - Sid: Enable IAM User Permissions
-          Effect: Allow
-          Principal:
-            AWS:
-              Fn::Sub: arn:aws:iam::${AWS::AccountId}:root
-          Action: kms:*
-          Resource: '*'
+  # ParameterStoreKmsKey:
+  #   Type: AWS::KMS::Key
+  #   Properties:
+  #     KeyPolicy:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #       - Sid: Enable IAM User Permissions
+  #         Effect: Allow
+  #         Principal:
+  #           AWS:
+  #             Fn::Sub: arn:aws:iam::${AWS::AccountId}:root
+  #         Action: kms:*
+  #         Resource: '*'
 
-  ParameterStoreKmsKeyAlias:
-    Type: AWS::KMS::Alias
-    Properties:
-      AliasName:
-        Fn::Sub: 'alias/${ApplicationName}'
-      TargetKeyId:
-        Ref: ParameterStoreKmsKey
+  # ParameterStoreKmsKeyAlias:
+  #   Type: AWS::KMS::Alias
+  #   Properties:
+  #     AliasName:
+  #       Fn::Sub: 'alias/${ApplicationName}'
+  #     TargetKeyId:
+  #       Ref: ParameterStoreKmsKey
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -204,11 +204,11 @@ Resources:
       PolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Effect: Allow
-            Action:
-              - kms:Decrypt
-            Resource:
-              Fn::Sub: 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/${ParameterStoreKmsKey.KeyId}'
+          # - Effect: Allow
+          #   Action:
+          #     - kms:Decrypt
+          #   Resource:
+          #     Fn::Sub: 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/${ParameterStoreKmsKey.KeyId}'
           - Effect: Allow
             Action:
               - ssm:GetParameter
