@@ -36,7 +36,7 @@ echo "Deploy elastic beanstalk infrastructure"
 aws cloudformation deploy --stack-name $STACK_NAME --template-file ./cloudformation-templates/elastic-beanstalk-environment.yaml --parameter-overrides ApplicationName=$EB_APPLICATION_NAME EnvironmentCNAMEPrefix=$EB_ENVIRONMENT_CNAME_PREFIX DeploymentBucketKey=$EB_DEPLOYMENT_PACKAGE --capabilities CAPABILITY_NAMED_IAM
 
 echo "Building frontend bundle"
-npm run build:preprod --prefix ../game-stream-search-web
+npm run build:prod --prefix ../game-stream-search-web
 
 echo "Deploy frontend static files"
 aws s3api put-object --bucket $FRONTEND_DEPLOY_BUCKET_NAME --key index.html --body ../game-stream-search-web/dist/index.html --cache-control "public" --content-type "text/html; charset=utf-8" >/dev/null
