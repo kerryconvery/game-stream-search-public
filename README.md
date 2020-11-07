@@ -47,8 +47,8 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Future Improvements
 #### Application
+* Provide a way to discover new streamers
 * Filter by langauge
-* Provide a way to support new streamers
 
 #### Technical
 * Setup a CICD build pipeline
