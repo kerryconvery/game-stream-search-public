@@ -1,19 +1,22 @@
 using AspNetCoreRateLimit;
-using GameStreamSearch.Api.Infrastructor;
-using GameStreamSearch.Providers;
-using GameStreamSearch.Services;
-using GameStreamSearch.Services.Interfaces;
-using GameStreamSearch.StreamProviders;
-using GameStreamSearch.StreamProviders.Builders;
-using GameStreamSearch.StreamProviders.ProviderApi.DLive;
-using GameStreamSearch.StreamProviders.ProviderApi.Twitch;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using GameStreamSearch.Application.Services;
+using GameStreamSearch.StreamProviders;
+using GameStreamSearch.StreamProviders.ProviderApi.Twitch;
+using GameStreamSearch.StreamProviders.Builders;
+using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
+using GameStreamSearch.StreamProviders.ProviderApi.DLive;
+using GameStreamSearch.Application;
+using GameStreamSearch.Application.Dto;
+using GameStreamSearch.Application.Interactors;
+using GameStreamSearch.Application.Providers;
+using GameStreamSearch.Repositories.InMemoryRepositories;
+using Newtonsoft.Json.Converters;
 
 namespace GameStreamSearch.Api
 {
@@ -56,25 +59,32 @@ namespace GameStreamSearch.Api
                 });
             });
 
-            services.AddControllers();
-            services.AddScoped<IPaginator, Paginator>();
-            services.AddScoped<IStreamService>(service =>
+            services.AddControllers()
+                .AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
+            services.AddScoped< IStreamService>(service =>
             {
-                return new StreamService(service.GetService<IPaginator>())
+                return new StreamService()
                     .RegisterStreamProvider(new TwitchStreamProvider(
-                        "Twitch",
-                        new TwitchKrakenApi(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"])
+                            new TwitchKrakenApi(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"])
                     ))
                     .RegisterStreamProvider(new YouTubeStreamProvider(
-                        "YouTube",
-                        new YouTubeWatchUrlBuilder(Configuration["YouTube:WatchUrl"]),
-                        new YouTubeV3Api(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"])
+                            new YouTubeWatchUrlBuilder(Configuration["YouTube:WatchUrl"]),
+                            new YouTubeV3Api(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"])
                     ))
                     .RegisterStreamProvider(new DLiveStreamProvider(
-                        "DLive",
-                        new DLiveWatchUrlBuilder(Configuration["DLive:WatchUrl"]),
-                        new DLiveGraphQLApi(Configuration["DLive:Apiurl"])));
+                            new DLiveWatchUrlBuilder(Configuration["DLive:WatchUrl"]),
+                            new DLiveGraphQLApi(Configuration["DLive:Apiurl"])));
+
+
             });
+
+
+            services.AddScoped<IInteractor<StreamerDto, IRegisterStreamerPresenter>, RegisterStreamerInteractor>();
+            services.AddScoped<IInteractor<string, IGetStreamerByIdPresenter>, GetStreamerByIdInteractor>();
+            services.AddScoped<ITimeProvider, UtcTimeProvider>();
+            services.AddScoped<IIdProvider, GuidIdProvider>();
+            services.AddSingleton<IStreamerRepository, InMemoryStreamerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
