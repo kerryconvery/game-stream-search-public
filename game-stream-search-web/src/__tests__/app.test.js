@@ -129,7 +129,7 @@ describe('Application', () => {
       )
 
     const alert = await waitFor(() => { 
-      return screen.getByText('An unexpected error has occurred. Refresh your browser to try again.');
+      return screen.getByText('The application is currently offline. Please try back later.');
     });
     
     expect(alert).toBeInTheDocument();

@@ -52,7 +52,7 @@ namespace GameStreamSearch.Api.Tests
 
             Mock<IUrlHelper> urlHelper = new Mock<IUrlHelper>();
 
-            urlHelper.Setup(s => s.Link(nameof(streamerController.GetStreamer), It.IsAny<object>())).Returns<string, GetStreamerByIdParams>((routeName, routeParams) =>
+            urlHelper.Setup(s => s.Link(nameof(streamerController.GetStreamerById), It.IsAny<object>())).Returns<string, GetStreamerByIdParams>((routeName, routeParams) =>
             {
                 return routeParams.Id;
             });
