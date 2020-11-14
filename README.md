@@ -8,8 +8,9 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Requirements to develop
 * Lerna v3.22+ `npm install --global lerna`
+* Node 14+
 * Npm 6.14+
-* .Net Core 3.1
+* .Net Core 5.0
 * AWS Credentials for the account
 
 ### Commands
@@ -32,13 +33,24 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### How to develop the application
 1. Clone to repository to your local machine
-2. Ensure that you have configured AWS authentication on your local machine
-3. Change the to folder into which the repository was cloned.
-4. Install all dependencies `lerna bootstrap`
+2. Change the to folder into which the repository was cloned.
+3. Install all dependencies `lerna bootstrap`
+4. In the application root folder, create the file .env file containing your AWS credentials as follows:  
+     `AWS_ACCESS_KEY_ID=xxxx`  
+     `AWS_SECRET_ACCESS_KEY=xxxx`
 5. Start the web service and web server `lerna run start:service --stream`
 6. Start the web client `lerna run start:local`
 7. Navigate your browser to http://localhost:8080
 8. Stop the web service `lerna run stop:service`
+
+### How to run the service through Visual Studio
+1. Clone to repository to your local machine
+2. Change the to folder into which the repository was cloned.
+3. Install all dependencies `lerna bootstrap`
+4. Ensure that you have configured the AWS credentials using `aws configuration`
+5. Open the service in Visual Studio and run the application
+6. Start the web client `lerna run start:local`
+7. Navigate your browser to http://localhost:8080
 
 ### Deploy AWS infrastructure needed to support the application
 1. Change to the folder /devops
