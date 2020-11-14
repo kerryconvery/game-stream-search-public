@@ -1,5 +1,5 @@
 ﻿using System;
-namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken
+namespace GameStreamSearch.StreamPlatformApi.Twitch.Dto.Kraken
 {
     public class TwitchChannelDto
     {

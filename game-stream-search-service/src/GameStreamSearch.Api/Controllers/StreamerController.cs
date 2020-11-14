@@ -45,7 +45,7 @@ namespace GameStreamSearch.Api.Controllers
             {
                 Id = idProvider.GetNextId(),
                 Name = streamer.Name,
-                Platform = streamer.Platform,
+                StreamPlatform = streamer.Platform,
                 DateRegistered = timeProvider.GetNow(),
             };
 

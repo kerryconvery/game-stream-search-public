@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Application;
 using GameStreamSearch.Application.Dto;
-using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces;
 using Base64Url;
 using System.Security.Cryptography;
-using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
 using GameStreamSearch.Application.Exceptions;
 using GameStreamSearch.Application.Enums;
+using GameStreamSearch.StreamPlatformApi;
+using GameStreamSearch.StreamPlatformApi.Twitch.Dto.Kraken;
 
 namespace GameStreamSearch.StreamProviders
 {

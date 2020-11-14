@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
-using GameStreamSearch.StreamProviders.ProviderApi.DLive.Dto;
-using GameStreamSearch.StreamProviders.ProviderApi.DLive.Interfaces;
+using GameStreamSearch.StreamPlatformApi.DLive.Dto;
 using RestSharp;
 
-namespace GameStreamSearch.StreamProviders.ProviderApi.DLive
+namespace GameStreamSearch.StreamPlatformApi.DLive
 {
     public class DLiveGraphQLApi : IDLiveApi
     {

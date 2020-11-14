@@ -41,7 +41,7 @@ namespace GameStreamSearch.Repositories.InMemoryRepositories
 
         public Task<StreamerDto> GetStreamerByNameAndPlatform(string streamerName, StreamPlatformType streamingPlatform)
         {
-            var streamer = streamerStore.Values.FirstOrDefault(s => s.Name.CompareTo(streamerName) == 0 && s.Platform == streamingPlatform);
+            var streamer = streamerStore.Values.FirstOrDefault(s => s.Name.CompareTo(streamerName) == 0 && s.StreamPlatform == streamingPlatform);
 
             return Task.FromResult(streamer);
         }

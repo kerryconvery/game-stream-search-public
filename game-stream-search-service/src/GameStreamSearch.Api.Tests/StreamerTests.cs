@@ -82,7 +82,7 @@ namespace GameStreamSearch.Api.Tests
             Assert.AreEqual(value.Count(), 1);
             Assert.IsNotNull(value.First().Id);
             Assert.AreEqual(value.First().Name, streamer.Name);
-            Assert.AreEqual(value.First().Platform, streamer.Platform);
+            Assert.AreEqual(value.First().StreamPlatform, streamer.Platform);
             Assert.AreEqual(value.First().DateRegistered, registrationDate);
             Assert.AreEqual(createResult.Location, value.First().Id);
         }
@@ -114,9 +114,9 @@ namespace GameStreamSearch.Api.Tests
             var value = okAction.Value as IEnumerable<StreamerDto>;
 
             Assert.AreEqual(value.First().Name, twitchStreamer.Name);
-            Assert.AreEqual(value.First().Platform, twitchStreamer.Platform);
+            Assert.AreEqual(value.First().StreamPlatform, twitchStreamer.Platform);
             Assert.AreEqual(value.Last().Name, youtubeStreamer.Name);
-            Assert.AreEqual(value.Last().Platform, youtubeStreamer.Platform);
+            Assert.AreEqual(value.Last().StreamPlatform, youtubeStreamer.Platform);
         }
 
         [Test]

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3;
+using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
 
-namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces
+namespace GameStreamSearch.StreamPlatformApi
 {
     public enum VideoEventType
     {
@@ -21,7 +21,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces
         ViewCount
     }
 
-    public static class TypeExtensions
+    public static class YouTubeTypeExtensions
     {
         public static string GetAsString(this VideoEventType videoEventType)
         {

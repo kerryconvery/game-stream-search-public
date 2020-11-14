@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Application.Exceptions;
+using GameStreamSearch.StreamPlatformApi;
+using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
 using GameStreamSearch.StreamProviders;
 using GameStreamSearch.StreamProviders.Builders;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces;
 using Moq;
 using NUnit.Framework;
 

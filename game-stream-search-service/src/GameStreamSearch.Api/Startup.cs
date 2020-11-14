@@ -7,16 +7,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using GameStreamSearch.Application.Services;
 using GameStreamSearch.StreamProviders;
-using GameStreamSearch.StreamProviders.ProviderApi.Twitch;
 using GameStreamSearch.StreamProviders.Builders;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube;
-using GameStreamSearch.StreamProviders.ProviderApi.DLive;
 using GameStreamSearch.Application;
 using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application.Interactors;
 using GameStreamSearch.Application.Providers;
 using GameStreamSearch.Repositories.InMemoryRepositories;
 using Newtonsoft.Json.Converters;
+using GameStreamSearch.StreamPlatformApi.Twitch;
+using GameStreamSearch.StreamPlatformApi.YouTube;
+using GameStreamSearch.StreamPlatformApi.DLive;
 
 namespace GameStreamSearch.Api
 {

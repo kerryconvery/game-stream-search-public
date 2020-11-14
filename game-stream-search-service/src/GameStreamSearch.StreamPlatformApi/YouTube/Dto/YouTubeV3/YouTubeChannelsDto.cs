@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3
+namespace GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3
 {
     public class YouTubeChannelSnippetThumbnailDto
     {
