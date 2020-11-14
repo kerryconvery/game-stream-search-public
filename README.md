@@ -1,5 +1,5 @@
 # Game stream search
-Allows searching for game streams across multi platforms.  Supported platforms are Twitch, YouTube and DLive
+Allows searching for game streams across multi platforms.  Supported platforms are Twitch, YouTube and DLive  
 http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Requirements to run
