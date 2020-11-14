@@ -6,6 +6,8 @@ services:
     build: ./game-stream-search-service
     environment:
       - ASPNETCORE_URLS=http://+:5000
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     ports:
       - "5000:5000"
   app:

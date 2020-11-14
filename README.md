@@ -20,9 +20,11 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 * `lerna run test --stream` - run all unit tests
 * `lerna run test:integration --stream` - run the integration tests (web service must be running first)
 
-### How to run the application
+### How to run the application with docker
 1. Clone to repository to your local machine
-2. Ensure that you have configured AWS authentication
+2. In the application root folder, create the file .env file containing your AWS credentials
+    AWS_ACCESS_KEY_ID=xxxx
+    AWS_SECRET_ACCESS_KEY=xxxx
 3. Change the to folder into which the repository was cloned.
 4. Run the application `docker-compose up`
 5. Navigate your browser to http://localhost:8080
