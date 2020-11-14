@@ -1,4 +1,5 @@
 # Game stream search
+Allows searching for game streams across multi platforms.  Supported platforms are Twitch, YouTube and DLive
 http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Requirements to run
@@ -45,6 +46,16 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 1. Change to the folder /devops
 2. Deploy the application by running ```deploy-application-components.sh <env name> <build no>``` e.g ./deploy-application-components.sh prodA 123
 
+### Architecture
+[Architectural Diagram](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png)
+
+### Infrastructure
+* Cloud Provider: AWS
+* Frontend hosting: AWS S3 bucket static website
+* Service hosting: AWS Elastic Beanstalk
+* Container repository: AWS Elastic Container Repository
+* Secrets storage: AWS Systems manager paramater store with KMS encryption
+
 ### Future Improvements
 #### Application
 * Provide a way to discover new streamers
@@ -52,8 +63,8 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 #### Technical
 * Setup a CICD build pipeline
-* CloudFront CDN integration
+* Change frontend hosting to AWS CloudFront
 * Telemtry and service monitoring
 * Error logging frontend and backend
 * E2E UI Tests
-* Blue-Gree deployment
+* Blue-Green deployment
