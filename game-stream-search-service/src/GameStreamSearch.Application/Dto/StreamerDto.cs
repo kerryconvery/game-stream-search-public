@@ -7,8 +7,8 @@ namespace GameStreamSearch.Application.Dto
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public StreamPlatformType Platform { get; set; }
+        public StreamPlatformType StreamPlatform { get; set; }
         public DateTime DateRegistered { get; set; }
-        public string StreamingPlatformDisplayName => Platform.GetFriendlyName();
+        public string StreamPlatformDisplayName => StreamPlatform.GetFriendlyName();
     }
 }
