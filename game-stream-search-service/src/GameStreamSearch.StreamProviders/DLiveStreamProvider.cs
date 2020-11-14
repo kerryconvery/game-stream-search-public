@@ -105,6 +105,6 @@ namespace GameStreamSearch.StreamProviders
             };
         }
 
-        public StreamingPlatform Platform => StreamingPlatform.dlive;
+        public StreamPlatformType Platform => StreamPlatformType.dlive;
     }
 }

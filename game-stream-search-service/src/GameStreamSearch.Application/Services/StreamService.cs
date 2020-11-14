@@ -11,28 +11,28 @@ namespace GameStreamSearch.Application.Services
 {
     public class StreamService : IStreamService
     {
-        private Dictionary<StreamingPlatform, IStreamProvider> streamProviders;
+        private Dictionary<StreamPlatformType, IStreamProvider> streamProviders;
 
         public StreamService()
         {
-            streamProviders = new Dictionary<StreamingPlatform, IStreamProvider>();
+            streamProviders = new Dictionary<StreamPlatformType, IStreamProvider>();
         }
 
-        public Dictionary<StreamingPlatform, string> UnpackPageTokens(string encodedPaginations)
+        public Dictionary<StreamPlatformType, string> UnpackPageTokens(string encodedPaginations)
         {
             if (string.IsNullOrEmpty(encodedPaginations))
             {
-                return new Dictionary<StreamingPlatform, string>();
+                return new Dictionary<StreamPlatformType, string>();
             }
 
             var base64Decrypter = new Base64Decryptor(encodedPaginations, new FromBase64Transform());
 
             var jsonTokens = base64Decrypter.ReadVarString();
 
-            return JsonConvert.DeserializeObject<Dictionary<StreamingPlatform, string>>(jsonTokens);
+            return JsonConvert.DeserializeObject<Dictionary<StreamPlatformType, string>>(jsonTokens);
         }
 
-        public string PackPageTokens(Dictionary<StreamingPlatform, string> paginations)
+        public string PackPageTokens(Dictionary<StreamPlatformType, string> paginations)
         {
             if (!paginations.Any())
             {
@@ -50,7 +50,7 @@ namespace GameStreamSearch.Application.Services
 
         private string AggregateNextPageTokens(GameStreamsDto[] gameStreams)
         {
-            var pageTokens = new Dictionary<StreamingPlatform, string>();
+            var pageTokens = new Dictionary<StreamPlatformType, string>();
 
             for (int index = 0; index < gameStreams.Length; index++)
             {
@@ -95,11 +95,16 @@ namespace GameStreamSearch.Application.Services
             return this;
         }
 
-        public Task<StreamerChannelDto> GetStreamerChannel(string streamerName, StreamingPlatform streamingPlatform)
+        public Task<StreamerChannelDto> GetStreamerChannel(string streamerName, StreamPlatformType streamingPlatform)
         {
             var streamProvider = streamProviders[streamingPlatform];
 
             return streamProvider.GetStreamerChannel(streamerName);
+        }
+
+        public IEnumerable<StreamPlatformDto> GetStreamAllPlatforms()
+        {
+            return streamProviders.Keys.Select(k => new StreamPlatformDto { StreamPlatform = k });
         }
     }
 }

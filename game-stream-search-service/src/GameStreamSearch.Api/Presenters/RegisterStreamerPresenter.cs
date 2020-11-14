@@ -22,7 +22,7 @@ namespace GameStreamSearch.Api.Presenters
             Result = new CreatedResult(urlHelper.Link(nameof(controller.GetStreamerById), new GetStreamerByIdParams { Id = streamerId }), null);
         }
 
-        public void PresentStreamerDoesNotHaveAChannel(string streamerName, StreamingPlatform platform)
+        public void PresentStreamerDoesNotHaveAChannel(string streamerName, StreamPlatformType platform)
         {
 
             Result = new BadRequestObjectResult($"A channel for {streamerName} was not found on {platform.GetFriendlyName()}");

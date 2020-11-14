@@ -1,7 +1,7 @@
 ﻿using System;
 namespace GameStreamSearch.Application.Enums
 {
-    public enum StreamingPlatform
+    public enum StreamPlatformType
     {
         twitch,
         dlive,
@@ -10,13 +10,13 @@ namespace GameStreamSearch.Application.Enums
 
     public static class TypeExtensions
     {
-        public static string GetFriendlyName(this StreamingPlatform streamingPlatform)
+        public static string GetFriendlyName(this StreamPlatformType streamingPlatform)
         {
             switch(streamingPlatform)
             {
-                case StreamingPlatform.twitch: return "Twitch";
-                case StreamingPlatform.youtube: return "YouTube";
-                case StreamingPlatform.dlive: return "DLive";
+                case StreamPlatformType.twitch: return "Twitch";
+                case StreamPlatformType.youtube: return "YouTube";
+                case StreamPlatformType.dlive: return "DLive";
                 default: return streamingPlatform.ToString();
             }
         }

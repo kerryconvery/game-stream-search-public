@@ -9,6 +9,6 @@ namespace GameStreamSearch.Application.Dto
         [Required(ErrorMessage = "Please specify the streamers name")]
         public string Name { get; set; }
         
-        public StreamingPlatform Platform { get; set; }
+        public StreamPlatformType Platform { get; set; }
     }
 }

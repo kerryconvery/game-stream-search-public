@@ -11,6 +11,6 @@ namespace GameStreamSearch.Application
         Task SaveStreamer(StreamerDto streamer);
         Task<IEnumerable<StreamerDto>> GetStreamers();
         Task<StreamerDto> GetStreamerById(string streamerId);
-        Task<StreamerDto> GetStreamerByNameAndPlatform(string streamerName, StreamingPlatform streamingPlatform);
+        Task<StreamerDto> GetStreamerByNameAndPlatform(string streamerName, StreamPlatformType streamingPlatform);
     }
 }
