@@ -1,4 +1,5 @@
 # Game stream search
+Allows searching for game streams across multi platforms.  Supported platforms are Twitch, YouTube and DLive
 http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Requirements to run
@@ -44,6 +45,9 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 ### Deploy application to AWS
 1. Change to the folder /devops
 2. Deploy the application by running ```deploy-application-components.sh <env name> <build no>``` e.g ./deploy-application-components.sh prodA 123
+
+### Architecture
+[Architectural Diagram](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png)
 
 ### Infrastructure
 * Cloud Provider: AWS
