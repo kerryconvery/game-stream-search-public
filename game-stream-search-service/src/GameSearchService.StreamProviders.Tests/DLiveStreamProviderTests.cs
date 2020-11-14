@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Application.Exceptions;
+using GameStreamSearch.StreamPlatformApi;
+using GameStreamSearch.StreamPlatformApi.DLive.Dto;
 using GameStreamSearch.StreamProviders.Builders;
-using GameStreamSearch.StreamProviders.ProviderApi.DLive.Dto;
-using GameStreamSearch.StreamProviders.ProviderApi.DLive.Interfaces;
 using Moq;
 using NUnit.Framework;
 

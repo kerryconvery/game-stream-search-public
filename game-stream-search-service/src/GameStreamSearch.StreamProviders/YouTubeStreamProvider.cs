@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Interfaces;
-using GameStreamSearch.StreamProviders.ProviderApi.YouTube.Dto.YouTubeV3;
 using GameStreamSearch.StreamProviders.Builders;
 using GameStreamSearch.Application.Exceptions;
 using GameStreamSearch.Application.Enums;
+using GameStreamSearch.StreamPlatformApi;
+using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
 
 namespace GameStreamSearch.StreamProviders
 {

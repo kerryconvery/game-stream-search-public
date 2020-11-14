@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using GameStreamSearch.StreamProviders.ProviderApi.Twitch.Dto.Kraken;
+using GameStreamSearch.StreamPlatformApi.Twitch.Dto.Kraken;
 
-namespace GameStreamSearch.StreamProviders.ProviderApi.Twitch.Interfaces
+namespace GameStreamSearch.StreamPlatformApi
 {
     public interface ITwitchKrakenApi
     {

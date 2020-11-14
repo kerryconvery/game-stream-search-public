@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using GameStreamSearch.StreamProviders.ProviderApi.DLive.Dto;
+using GameStreamSearch.StreamPlatformApi.DLive.Dto;
 
-namespace GameStreamSearch.StreamProviders.ProviderApi.DLive.Interfaces
+namespace GameStreamSearch.StreamPlatformApi
 {
     public enum StreamSortOrder
     {
@@ -9,7 +9,7 @@ namespace GameStreamSearch.StreamProviders.ProviderApi.DLive.Interfaces
         Trending
     };
 
-    public static class TypeExtensions
+    public static class DLiveTypeExtensions
     {
 
         public static string GetAsString(this StreamSortOrder streamSortType)
