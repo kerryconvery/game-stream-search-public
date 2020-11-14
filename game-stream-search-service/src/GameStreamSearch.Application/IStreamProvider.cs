@@ -10,6 +10,6 @@ namespace GameStreamSearch.Application
         Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null);
         Task<StreamerChannelDto> GetStreamerChannel(string channelName);
 
-        StreamingPlatform Platform { get; }
+        StreamPlatformType Platform { get; }
     }
 }

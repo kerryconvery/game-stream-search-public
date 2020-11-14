@@ -66,7 +66,7 @@ namespace GameStreamSearch.Api.Tests
             var streamer = new RegisterStreamerDto
             {
                 Name = "Test Streamer",
-                Platform = StreamingPlatform.twitch,
+                Platform = StreamPlatformType.twitch,
             };
 
             streamServiceStub.Setup(s => s.GetStreamerChannel(streamer.Name, streamer.Platform)).ReturnsAsync(new StreamerChannelDto());
@@ -93,13 +93,13 @@ namespace GameStreamSearch.Api.Tests
             var twitchStreamer = new RegisterStreamerDto
             {
                 Name = "Test Streamer",
-                Platform = StreamingPlatform.twitch,
+                Platform = StreamPlatformType.twitch,
             };
 
             var youtubeStreamer = new RegisterStreamerDto
             {
                 Name = "Test Streamer",
-                Platform = StreamingPlatform.youtube,
+                Platform = StreamPlatformType.youtube,
             };
 
             streamServiceStub.Setup(s => s.GetStreamerChannel(twitchStreamer.Name, twitchStreamer.Platform)).ReturnsAsync(new StreamerChannelDto());
@@ -125,7 +125,7 @@ namespace GameStreamSearch.Api.Tests
             var streamer = new RegisterStreamerDto
             {
                 Name = "Existing Streamer",
-                Platform = StreamingPlatform.twitch,
+                Platform = StreamPlatformType.twitch,
             };
 
             streamServiceStub.Setup(s => s.GetStreamerChannel(streamer.Name, streamer.Platform)).ReturnsAsync(new StreamerChannelDto());
@@ -150,7 +150,7 @@ namespace GameStreamSearch.Api.Tests
             var streamer = new RegisterStreamerDto
             {
                 Name = "Fake Streamer",
-                Platform = StreamingPlatform.twitch,
+                Platform = StreamPlatformType.twitch,
             };
 
             streamServiceStub.Setup(s => s.GetStreamerChannel(streamer.Name, streamer.Platform)).Returns(Task.FromResult<StreamerChannelDto>(null));
@@ -166,7 +166,7 @@ namespace GameStreamSearch.Api.Tests
             var streamer = new RegisterStreamerDto
             {
                 Name = "New Streamer",
-                Platform = StreamingPlatform.twitch,
+                Platform = StreamPlatformType.twitch,
             };
 
             streamServiceStub.Setup(s => s.GetStreamerChannel(streamer.Name, streamer.Platform)).ThrowsAsync(new StreamProviderUnavailableException());
