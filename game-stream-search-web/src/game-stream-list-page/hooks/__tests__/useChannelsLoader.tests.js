@@ -43,7 +43,7 @@ describe('Channels loader hook', () => {
 
     try {
       await act(loadChannelsStub);
-    } catch{
+    } catch(e) {
       expect(onError).toHaveBeenCalled();
     }
   })

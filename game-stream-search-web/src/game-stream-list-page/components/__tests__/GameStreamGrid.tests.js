@@ -57,7 +57,7 @@ describe('Game stream grid', () => {
       },
     ]
 
-    const { container } = render(<GameStreamGrid streams={streams} isLoading numberOfLoadingTiles={1} />)
+    render(<GameStreamGrid streams={streams} isLoading numberOfLoadingTiles={1} />)
 
     const streamTiles = await waitFor(() => screen.getAllByText('test streamer'));
     const loadingTiles = screen.getAllByTestId('stream-loading-tile');
