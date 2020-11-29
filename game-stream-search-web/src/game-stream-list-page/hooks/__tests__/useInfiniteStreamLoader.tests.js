@@ -138,7 +138,7 @@ describe('Use game stream data hook', () => {
 
     try {
       await act(loadStreamsStub);
-    } catch{
+    } catch (e) {
       expect(onError).toHaveBeenCalled();
     }
   })
