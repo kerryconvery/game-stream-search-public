@@ -73,7 +73,7 @@ namespace GameSearchService.StreamProviders.Tests
             Assert.AreEqual(streams.Items.First().StreamTitle, liveStreams.streams.First().channel.status);
             Assert.AreEqual(streams.Items.First().StreamerName, liveStreams.streams.First().channel.display_name);
             Assert.AreEqual(streams.Items.First().StreamerAvatarUrl, liveStreams.streams.First().channel.logo);
-            Assert.AreEqual(streams.Items.First().StreamPlatformName, StreamPlatformType.twitch.GetFriendlyName());
+            Assert.AreEqual(streams.Items.First().StreamPlatformName, StreamPlatformType.Twitch.GetFriendlyName());
             Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.streams.First().preview.medium);
             Assert.AreEqual(streams.Items.First().StreamUrl, liveStreams.streams.First().channel.url);
             Assert.AreEqual(streams.Items.First().Views, liveStreams.streams.First().viewers);
@@ -95,7 +95,7 @@ namespace GameSearchService.StreamProviders.Tests
             Assert.AreEqual(streams.Items.First().StreamTitle, liveStreams.streams.First().channel.status);
             Assert.AreEqual(streams.Items.First().StreamerName, liveStreams.streams.First().channel.display_name);
             Assert.AreEqual(streams.Items.First().StreamerAvatarUrl, liveStreams.streams.First().channel.logo);
-            Assert.AreEqual(streams.Items.First().StreamPlatformName, StreamPlatformType.twitch.GetFriendlyName());
+            Assert.AreEqual(streams.Items.First().StreamPlatformName, StreamPlatformType.Twitch.GetFriendlyName());
             Assert.AreEqual(streams.Items.First().StreamThumbnailUrl, liveStreams.streams.First().preview.medium);
             Assert.AreEqual(streams.Items.First().StreamUrl, liveStreams.streams.First().channel.url);
             Assert.AreEqual(streams.Items.First().Views, liveStreams.streams.First().viewers);
@@ -251,18 +251,6 @@ namespace GameSearchService.StreamProviders.Tests
             var streamerChannel = await twitchStreamProvider.GetStreamerChannel("Test streamer");
 
             Assert.IsNull(streamerChannel);
-        }
-
-        [Test]
-        public void Should_Throw_An_Excepton_If_The_Provider_Returns_An_Error()
-        {
-            var twitchKrakenApiStub = new Mock<ITwitchKrakenApi>();
-
-            twitchKrakenApiStub.Setup(m => m.SearchChannels("Test streamer", 1, 0)).ReturnsAsync(new TwitchChannelsDto());
-
-            var twitchStreamProvider = new TwitchStreamProvider(twitchKrakenApiStub.Object);
-
-            Assert.ThrowsAsync<StreamProviderUnavailableException>(() => twitchStreamProvider.GetStreamerChannel("Test streamer"));
         }
     }
 }

@@ -1,11 +1,21 @@
 import React from 'react';
 import { node } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(() => ({
+  toolBar: {
+    position: 'sticky',
+    top: 0,
+    width: '100%',
+    zIndex: 1,
+    background: 'white',
+    paddingTop: '0.5rem',
+    paddingBottom: '0.5rem',
+    backgroundColor: 'white',
+    borderBottom: '1px outset white',
+  },
   content: {
-    backgroundColor: '#F8F9F9'
+    width: '100%',
   },
 }));
 
@@ -13,14 +23,14 @@ const StandardPageTemplate = ({ toolBar, children }) => {
   const classes = useStyles();
 
   return (
-    <Grid container spacing={5}>
-      <Grid item direction="row" container justify="center" alignItems="stretch">
+    <>
+      <div className={classes.toolBar}>
         {toolBar}
-      </Grid>
-      <Grid item xs={12} className={classes.content}>
+      </div>
+      <div className={classes.content}>
         {children}
-      </Grid>
-    </Grid>
+      </div>
+    </>
   )
 }
 

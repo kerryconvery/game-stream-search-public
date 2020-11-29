@@ -61,7 +61,9 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 2. Deploy the application by running ```deploy-application-components.sh <env name> <build no>``` e.g ./deploy-application-components.sh prodA 123
 
 ### Architecture
-[Architectural Diagram](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png)
+Onion + Clean Architecture
+
+![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png?raw=true)
 
 ### Infrastructure
 * Cloud Provider: AWS
@@ -72,7 +74,7 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Future Improvements
 #### Application
-* Provide a way to discover new streamers
+* Provide a way to discover new streamers (in progress)
 * Filter by langauge
 
 #### Technical

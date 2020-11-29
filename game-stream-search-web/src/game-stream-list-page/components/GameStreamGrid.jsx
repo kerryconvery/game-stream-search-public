@@ -1,18 +1,18 @@
 import React from 'react';
-import { node, string, number } from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
+import { shape, string, number, bool, arrayOf } from 'prop-types';
+import { makeStyles, styled } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
+import Link from './Link';
 
 const useStreamTileStyles = makeStyles(() => ({
   root: {
     'font-family': 'Helvetica',
     color: '#231E1D',
+    position: 'relative'
   },
   streamTitle: {
     display: '-webkit-box',
@@ -25,17 +25,10 @@ const useStreamTileStyles = makeStyles(() => ({
     marginTop: 0,
     marginBottom: '0.25rem',
   },
-  link: {
-    textDecoration: 'none',
-    color: 'inherit',
-    '&:hover > button': {
-      opacity: 0.7
-    }
-  },
   detailsContainer: {
     display: 'flex',
     flexDirection: 'row',
-    paddingTop: '1rem',
+    paddingTop: '0.5rem',
   },
   streamDetails: {
     paddingLeft: '0.5rem',
@@ -43,6 +36,9 @@ const useStreamTileStyles = makeStyles(() => ({
   streamSubDetails: {
     color: '#606060',
     fontSize: '14px',
+    ' & > div': {
+      paddingBottom: '0.2rem'
+    }
   },
   playButton: {
     color: 'white',
@@ -76,7 +72,7 @@ const StreamTile = ({
 
   return (
     <div className={classes.root}>
-      <a href={streamUrl} target='_blank' className={classes.link}>
+      <Link href={streamUrl} target='_blank'>
         <IconButton size="medium" className={classes.playButton}>
           <PlayCircleOutlineIcon className={classes.playButtonIcon} />
         </IconButton >
@@ -95,7 +91,7 @@ const StreamTile = ({
             </div>
           </div>
         </div>
-      </a>
+      </Link>
     </div>
   )
 }
@@ -114,9 +110,8 @@ const useLoadingTileStyles = makeStyles(() => ({
   detailsContainer: {
     display: 'flex',
     flexDirection: 'row',
-    paddingTop: '1rem',
+    paddingTop: '0.5rem',
     width: '100%',
-    height: '100%',
   },
   details: {
     paddingLeft: '0.5rem',
@@ -132,7 +127,7 @@ const LoadingTile = () => {
   const classes = useLoadingTileStyles();
 
   return (
-    <>
+    <div data-testid='stream-loading-tile'>
       <Skeleton variant='rect' height='60%' animation='wave' />
       <div className={classes.detailsContainer}>
         <Skeleton variant='circle' width={50} height={50} animation='wave' />
@@ -144,40 +139,70 @@ const LoadingTile = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export const getLoadingTiles = (size) => {
+const Grid = styled('div')({
+  display: 'flex',
+  flexWrap: 'wrap',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  overflow: 'hidden',
+  width: '100%'
+});
+
+const GridTile = styled('div')({
+  width:'20rem',
+  height:'19rem',
+  paddingLeft: '10px',
+  paddingRight: '10px',
+});
+
+const GameStreamGrid = ({ streams, isLoading, numberOfLoadingTiles }) => {
+  const streamTitle = streams.map((stream, index) => (
+    <GridTile key={index} >
+      <StreamTile {...stream} />
+    </GridTile>
+  ))
+
   const loadingTiles = [];
 
-  for (let index = 0; index < size; index++) {
-    loadingTiles.push(
-      <GridListTile key={index} data-testid='loading-tile'>
-        <LoadingTile />
-      </GridListTile>
-    )
+  if (isLoading) {
+    for (let index = 0; index < numberOfLoadingTiles; index++) {
+      loadingTiles.push(
+        <GridTile key={index}>
+          <LoadingTile />
+        </GridTile>
+      )
+    }
   }
 
-  return loadingTiles;
+  return (
+    <Grid>
+      {streamTitle}
+      {loadingTiles}
+    </Grid>
+  )
 }
 
-export const getStreamTiles = (streams) => (
-  streams.map((stream, index) => (
-    <GridListTile key={index}>  
-      <StreamTile {...stream} />
-    </GridListTile>
-  )
-))
-
-const GameStreamGrid = ({ children }) => (
-  <GridList cols={4} cellHeight={300} spacing={20}>
-    {children}
-  </GridList>
-)
-
 GameStreamGrid.propTypes = {
-  children: node.isRequired,
+  streams: arrayOf(shape({
+    streamTitle: string.isRequired,
+    streamerName: string.isRequired,
+    streamThumbnailUrl: string.isRequired,
+    streamUrl: string.isRequired,
+    streamerAvatarUrl: string.isRequired,
+    streamPlatformName: string.isRequired,
+    views: number.isRequired,
+  })),
+  isLoading: bool,
+  numberOfLoadingTiles: number.isRequired,
+}
+
+GameStreamGrid.defaultProps = {
+  streams: [],
+  isLoading: false,
 }
 
 export default GameStreamGrid;
