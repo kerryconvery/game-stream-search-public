@@ -3,7 +3,7 @@ import _get from 'lodash/get';
 import InfiniteScroll from 'react-infinite-scroller';
 import { useGameStreamApi } from '../api/gameStreamApi';
 import useEventBus from '../event-bus/eventBus';
-import { dispatchAlert, getErrorAlert } from '../notifications/alerts';
+import { postNotificationEvent, buildOfflineAlertEvent } from '../notifications/events';
 import useInfiniteStreamLoader from './hooks/useInfiniteStreamLoader';
 import GameStreamPageTemplate from './GameStreamPageTemplate';
 import GameStreamSearchBar from './components/GameStreamSearchBar';
@@ -15,7 +15,7 @@ const GameStreamListPage = () => {
   const { getStreams } = useGameStreamApi();
   const { dispatchEvent } = useEventBus();
 
-  const showErrorAlert = () => dispatchAlert(dispatchEvent, getErrorAlert());
+  const showErrorAlert = () => postNotificationEvent(dispatchEvent, buildOfflineAlertEvent());
 
   const streams = useInfiniteStreamLoader(getStreams, showErrorAlert);
 
