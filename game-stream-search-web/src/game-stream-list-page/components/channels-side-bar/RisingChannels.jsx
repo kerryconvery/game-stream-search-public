@@ -22,7 +22,7 @@ const RisingChannels = () => {
     setAnchorEl(null);
   };
 
-  const handleChannelAdded = (channels) => {
+  const handleChannelsUpdated = (channels) => {
     setAnchorEl(null);
     updateChannels(channels);
   }
@@ -53,7 +53,7 @@ const RisingChannels = () => {
           horizontal: 'center',
         }}
       >
-        <AddChannelForm onCancel={handleClose} afterChannelAdded={handleChannelAdded} />
+        <AddChannelForm onCancel={handleClose} onChannelsUpdated={handleChannelsUpdated} />
       </Popover>
       <ChannelList
         channels={channels}

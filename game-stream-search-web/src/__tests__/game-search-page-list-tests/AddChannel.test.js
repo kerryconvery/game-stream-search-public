@@ -113,10 +113,67 @@ describe('Add channel form', () => {
 
     await waitForElementToBeRemoved(() => screen.getByText('Add Channel'));
 
-    const addedChannel = await waitFor(() => screen.getByText("newchannel"));
+    const addedChannel = await waitFor(() => screen.getByText('newchannel'));
+
+    const notification = await waitFor(() => screen.queryByText('Channel newchannel added successfully'));
 
     expect(addChannelForm).not.toBeInTheDocument();
     expect(addedChannel).toBeInTheDocument();
+    expect(notification).toBeInTheDocument();
+  });
+
+  it('should update an exiting channel and close the form when the save button is pressed', async () => {
+    const channel = {
+      channelName: 'newchannel',
+      streamPlatformDisplayName: 'Twitch',
+      avatarUrl: '',
+      channelUrl: '',
+    };
+
+    const updateChannels = {
+      items: [channel]
+    }
+
+    nock('http://localhost:5000')
+      .defaultReplyHeaders({
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true' ,
+      })
+      .options('/api/channels/Twitch/newchannel')
+      .reply(200)
+      .put('/api/channels/Twitch/newchannel')
+      .reply(200, channel)
+      .get('/api/channels')
+      .reply(200, updateChannels);
+
+    renderApplication();
+
+    // We must wait for this to avoid updated state after the component is unmounted.
+    await waitFor(() => screen.getByTestId('streams-not-found'));
+
+    const addButton = screen.getByTitle('Add a new channel to the list');
+
+    fireEvent.click(addButton);
+
+    const addChannelForm = await waitFor(() => screen.getByText('Add Channel'));
+
+    const channelField = screen.getByLabelText('Channel name');
+
+    fireEvent.change(channelField, { target: { value: 'newchannel' } })
+
+    const saveButton = screen.getByText('Save');
+
+    fireEvent.click(saveButton);
+
+    await waitForElementToBeRemoved(() => screen.getByText('Add Channel'));
+
+    const addedChannel = await waitFor(() => screen.getByText('newchannel'));
+
+    const notification = await waitFor(() => screen.queryByText('Channel newchannel updated successfully'));
+
+    expect(addChannelForm).not.toBeInTheDocument();
+    expect(addedChannel).toBeInTheDocument();
+    expect(notification).toBeInTheDocument();
   });
 
   it('should display validation errors and not try to add the channel', async () => {
@@ -140,7 +197,7 @@ describe('Add channel form', () => {
     expect(validationError).toBeInTheDocument();
   });
 
-  it('should save the new channel and close the form when the save button is pressed', async () => {
+  it('should display errors returned by the service', async () => {
     const errorResponse = {
       errors: [
         {
