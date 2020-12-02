@@ -3,11 +3,10 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Base64Url;
 using GameStreamSearch.Application.Dto;
-using GameStreamSearch.Application;
 using GameStreamSearch.StreamProviders.Builders;
-using GameStreamSearch.Application.Exceptions;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.StreamPlatformApi;
+using GameStreamSearch.Application;
 
 namespace GameStreamSearch.StreamProviders
 {
@@ -48,7 +47,7 @@ namespace GameStreamSearch.StreamProviders
             return base64Encryptor.ToString();
         }
 
-        public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken = null)
+        public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptions filterOptions, int pageSize, string pageToken = null)
         {
             //DLive does not support filtering streams
             if (!string.IsNullOrEmpty(filterOptions.GameName))

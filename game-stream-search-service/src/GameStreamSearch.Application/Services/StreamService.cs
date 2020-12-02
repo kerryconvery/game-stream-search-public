@@ -9,7 +9,7 @@ using Base64Url;
 
 namespace GameStreamSearch.Application.Services
 {
-    public class StreamService
+    public class StreamService : IStreamService
     {
         private Dictionary<StreamPlatformType, IStreamProvider> streamProviders;
 
@@ -18,7 +18,7 @@ namespace GameStreamSearch.Application.Services
             streamProviders = new Dictionary<StreamPlatformType, IStreamProvider>();
         }
 
-        public Dictionary<StreamPlatformType, string> UnpackPageTokens(string encodedPaginations)
+        private Dictionary<StreamPlatformType, string> UnpackPageTokens(string encodedPaginations)
         {
             if (string.IsNullOrEmpty(encodedPaginations))
             {
@@ -32,7 +32,7 @@ namespace GameStreamSearch.Application.Services
             return JsonConvert.DeserializeObject<Dictionary<StreamPlatformType, string>>(jsonTokens);
         }
 
-        public string PackPageTokens(Dictionary<StreamPlatformType, string> paginations)
+        private string PackPageTokens(Dictionary<StreamPlatformType, string> paginations)
         {
             if (!paginations.Any())
             {
@@ -63,7 +63,7 @@ namespace GameStreamSearch.Application.Services
             return PackPageTokens(pageTokens);
         }
 
-        public async Task<GameStreamsDto> GetStreams(StreamFilterOptionsDto filterOptions, int pageSize, string pageToken)
+        public async Task<GameStreamsDto> GetStreams(StreamFilterOptions filterOptions, int pageSize, string pageToken)
         {
             var paginationTokens = UnpackPageTokens(pageToken);
 
