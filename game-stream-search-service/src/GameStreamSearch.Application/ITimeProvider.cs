@@ -1,5 +1,6 @@
 ﻿using System;
-namespace GameStreamSearch.Application
+
+namespace GameStreamSearch.Application.Providers
 {
     public interface ITimeProvider
     {

@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using GameStreamSearch.Application.Services;
 using GameStreamSearch.Application.Enums;
+using GameStreamSearch.Application.Providers;
 
 namespace GameStreamSearch.Application.Tests
 {
@@ -25,7 +26,7 @@ namespace GameStreamSearch.Application.Tests
         {
             var twitchStreamProviderStub = CreateStreamProviderStub(StreamPlatformType.Twitch);
             var youtubeStreamProviderStub = CreateStreamProviderStub(StreamPlatformType.YouTube);
-            var streamFilterOptions = new StreamFilterOptionsDto();
+            var streamFilterOptions = new StreamFilterOptions();
 
             twitchStreamProviderStub.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
                 .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } } );
@@ -46,7 +47,7 @@ namespace GameStreamSearch.Application.Tests
         public async Task Should_Return_An_Empty_List_When_No_Streams_Were_Found()
         {
             var twitchStreamProviderStub = CreateStreamProviderStub(StreamPlatformType.Twitch);
-            var streamFilterOptions = new StreamFilterOptionsDto();
+            var streamFilterOptions = new StreamFilterOptions();
 
             twitchStreamProviderStub.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
                 .ReturnsAsync(GameStreamsDto.Empty());
@@ -64,7 +65,7 @@ namespace GameStreamSearch.Application.Tests
         {
             var twitchStreamProviderStub = CreateStreamProviderStub(StreamPlatformType.Twitch);
             var youtubeStreamProviderStub = CreateStreamProviderStub(StreamPlatformType.YouTube);
-            var streamFilterOptions = new StreamFilterOptionsDto();
+            var streamFilterOptions = new StreamFilterOptions();
 
             twitchStreamProviderStub.Setup(m => m.GetLiveStreams(streamFilterOptions, It.IsAny<int>(), null))
                 .ReturnsAsync(new GameStreamsDto()
@@ -124,7 +125,7 @@ namespace GameStreamSearch.Application.Tests
         public async Task Should_Return_A_Stream_List_Sorted_By_Views()
         {
             var twitchStreamProviderStub = CreateStreamProviderStub(StreamPlatformType.Twitch);
-            var streamFilterOptions = new StreamFilterOptionsDto();
+            var streamFilterOptions = new StreamFilterOptions();
 
             twitchStreamProviderStub.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
                 .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() {

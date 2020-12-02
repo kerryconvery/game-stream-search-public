@@ -7,6 +7,7 @@ using GameStreamSearch.Application;
 using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Application.Interactors;
+using GameStreamSearch.Application.Providers;
 using GameStreamSearch.Application.Services;
 using GameStreamSearch.Repositories.InMemoryRepositories;
 using Microsoft.AspNetCore.Mvc;
