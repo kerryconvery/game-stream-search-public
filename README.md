@@ -73,12 +73,7 @@ Onion + Clean Architecture
 * Container repository: AWS Elastic Container Repository
 * Secrets storage: AWS Systems manager paramater store with KMS encryption
 
-### Future Improvements
-#### Application
-* Provide a way to discover new streamers (in progress)
-* Filter by langauge
-
-#### Technical
+### Future Technical Improvements
 * Setup a CICD build pipeline
 * Change frontend hosting to AWS CloudFront
 * Telemtry and service monitoring
