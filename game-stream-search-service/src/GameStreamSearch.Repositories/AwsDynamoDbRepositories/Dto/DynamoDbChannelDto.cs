@@ -9,19 +9,19 @@ namespace GameStreamSearch.Repositories.AwsDynamoDbRepositories.Dto
     public class DynamoDbChannelDto
     {
         [DynamoDBHashKey]
-        public string ChannelName { get; init; }
-
-        [DynamoDBRangeKey]
         public StreamPlatformType StreamPlatform { get; init; }
 
-        [DynamoDBProperty]
-        public DateTime DateRegistered { get; set; }
+        [DynamoDBRangeKey]
+        public string ChannelName { get; init; }
 
         [DynamoDBProperty]
-        public string AvatarUrl { get; set; }
+        public DateTime DateRegistered { get; init; }
 
         [DynamoDBProperty]
-        public string ChannelUrl { get; set; }
+        public string AvatarUrl { get; init; }
+
+        [DynamoDBProperty]
+        public string ChannelUrl { get; init; }
 
         public static DynamoDbChannelDto FromEntity(Channel channel)
         {
