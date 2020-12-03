@@ -9,31 +9,46 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName:
-        Fn::Sub: '${ApplicationName}-Channels'
+        Fn::Sub: 'Channels'
       BillingMode: PROVISIONED
       ProvisionedThroughput: 
         ReadCapacityUnits: '5'
         WriteCapacityUnits: '5'
       AttributeDefinitions:
         -
+          AttributeName: 'StreamPlatform'
+          AttributeType: 'N'
+        -
           AttributeName: 'ChannelName'
           AttributeType: 'S'
         -
-          AttributeName: 'StreamPlatform'
+          AttributeName: 'DateRegistered'
           AttributeType: 'S'
       KeySchema:
         -
-          AttributeName: 'ChannelName'
+          AttributeName: 'StreamPlatform'
           KeyType: 'HASH'
         -
-          AttributeName: 'StreamPlatform'
+          AttributeName: 'ChannelName'
           KeyType: 'RANGE'
+      LocalSecondaryIndexes:
+        -
+          IndexName: "DateRegisteredIndex"
+          KeySchema:
+            -
+              AttributeName: 'StreamPlatform'
+              KeyType: 'HASH'
+            -
+              AttributeName: 'DateRegistered'
+              KeyType: 'RANGE'
+          Projection: 
+            ProjectionType: 'ALL'
 
   DatabasePolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
       ManagedPolicyName:
-        Fn::Sub: '${ApplicationName}-database-read-write'
+        Fn::Sub: '${ApplicationName}-dynamodb-read-write'
       PolicyDocument:
         Version: 2012-10-17
         Statement:

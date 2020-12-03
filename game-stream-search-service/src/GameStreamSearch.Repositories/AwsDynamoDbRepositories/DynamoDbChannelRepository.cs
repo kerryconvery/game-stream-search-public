@@ -27,14 +27,14 @@ namespace GameStreamSearch.Repositories.AwsDynamoDbRepositories
 
         public async Task<Channel> Get(StreamPlatformType streamPlatform, string channelName)
         {
-            var channelDto = await awsDynamoDbTable.GetItem(channelName, streamPlatform.ToString());
+            var channelDto = await awsDynamoDbTable.GetItem(streamPlatform, channelName);
 
-            return channelDto.ToEntity();
+            return channelDto?.ToEntity();
         }
 
         public Task Remove(StreamPlatformType streamPlatform, string channelName)
         {
-            return awsDynamoDbTable.DeleteItem(channelName, streamPlatform.ToString());
+            return awsDynamoDbTable.DeleteItem(streamPlatform, channelName);
         }
 
         public async Task<ChannelListDto> SelectAllChannels()
@@ -43,14 +43,15 @@ namespace GameStreamSearch.Repositories.AwsDynamoDbRepositories
 
             ChannelListDto channelList = new ChannelListDto();
 
-            var channelDtos = channels.Select(c => new ChannelDto
-            {
-                ChannelName = c.ChannelName,
-                StreamPlatform = c.StreamPlatform,
-                StreamPlatformDisplayName = c.StreamPlatform.GetFriendlyName(),
-                AvatarUrl = c.AvatarUrl,
-                ChannelUrl = c.ChannelUrl,
-            });
+            var channelDtos = channels.OrderBy(c => c.DateRegistered)
+                .Select(c => new ChannelDto
+                {
+                    ChannelName = c.ChannelName,
+                    StreamPlatform = c.StreamPlatform,
+                    StreamPlatformDisplayName = c.StreamPlatform.GetFriendlyName(),
+                    AvatarUrl = c.AvatarUrl,
+                    ChannelUrl = c.ChannelUrl,
+                });
 
             return new ChannelListDto
             {

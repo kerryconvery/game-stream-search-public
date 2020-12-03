@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using GameStreamSearch.Repositories;
@@ -14,7 +15,13 @@ namespace GameStreamSearch.AwsDynamoDb
 
         public AwsDynamoDbTable()
         {
-            dynamoDbClient = new AmazonDynamoDBClient();
+            AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig
+            {
+                RegionEndpoint = RegionEndpoint.APSoutheast2,
+                
+            };
+
+            dynamoDbClient = new AmazonDynamoDBClient(clientConfig);
             dynamoDbContext = new DynamoDBContext(dynamoDbClient);
         }
 
@@ -28,23 +35,21 @@ namespace GameStreamSearch.AwsDynamoDb
             return dynamoDbContext.SaveAsync(item);
         }
 
-        public Task DeleteItem(string primaryKey, string sortKey)
+        public Task DeleteItem(object partitionKey, object rangeKey)
         {
-            return dynamoDbContext.DeleteAsync<T>(primaryKey, sortKey);
+            return dynamoDbContext.DeleteAsync<T>(partitionKey, rangeKey);
         }
 
-        public Task<T> GetItem(string primaryKey, string sortKey)
+        public Task<T> GetItem(object partitionKey, object rangeKey)
         {
-            return dynamoDbContext.LoadAsync<T>(primaryKey, sortKey);
+            return dynamoDbContext.LoadAsync<T>(partitionKey, rangeKey);
         }
 
         public async Task<IEnumerable<T>> GetAllItems()
         {
-            var batchGet = dynamoDbContext.CreateBatchGet<T>();
+            var scan = dynamoDbContext.ScanAsync<T>(null);
 
-            await batchGet.ExecuteAsync();
-
-            return batchGet.Results;
+            return await scan.GetRemainingAsync();
         }
 
         public void Dispose()
