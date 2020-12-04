@@ -9,7 +9,7 @@ import AddChannelForm from './add-channel-form/AddChannelForm';
 import { useGameStreamApi } from '../../../api/gameStreamApi';
 import useChannelsLoader from '../../hooks/useChannelsLoader';
 
-const RisingChannels = () => {
+const FeaturedChannels = () => {
   const { getChannels } = useGameStreamApi();
   const { channels, isLoading, updateChannels } = useChannelsLoader(getChannels, () => {});
   const [ anchorEl, setAnchorEl ] = React.useState(null);
@@ -31,7 +31,7 @@ const RisingChannels = () => {
 
   return (
     <SideBarPanel
-      title='Rising channels'
+      title='Featured channels'
       action={(
         <Tooltip title='Add a new channel to the list'>
           <IconButton color='primary' size='small' onClick={addButtonClick}>
@@ -64,4 +64,4 @@ const RisingChannels = () => {
   )
 }
 
-export default RisingChannels;
+export default FeaturedChannels;

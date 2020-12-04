@@ -5,7 +5,7 @@ import { ConfigurationProvider } from '../../providers/ConfigurationProvider';
 import App from '../../app';
 import '@testing-library/jest-dom/extend-expect';
 
-describe('Rising channels side bar', () => {
+describe('Featured channels side bar', () => {
   beforeEach(() => {
     nock('http://localhost:5000')
     .defaultReplyHeaders({
@@ -24,7 +24,7 @@ describe('Rising channels side bar', () => {
     )
   }
 
-  it('should display a list of rising channels on startup', async () => {
+  it('should display a list of Featured channels on startup', async () => {
     const channelList = {
       items: [
         {
@@ -48,8 +48,8 @@ describe('Rising channels side bar', () => {
 
     await waitFor(() => screen.getByTestId('streams-not-found'));
 
-    const risingChannel = await waitFor(() => screen.getByText("testchannel"));
+    const featuredChannel = await waitFor(() => screen.getByText("testchannel"));
 
-    expect(risingChannel).toBeInTheDocument();
+    expect(featuredChannel).toBeInTheDocument();
   })
 })
