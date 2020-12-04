@@ -14,26 +14,29 @@ readonly EB_DEPLOY_BUCKET_NAME=eb-$APPLICATION_NAME-deploy
 
 readonly EB_DEPLOYMENT_PACKAGE=eb-$APPLICATION_NAME-deploy-$2.zip
 
-echo "Build and tag the service image"
-docker build -t $ECR_REPOSIOTRY_URL/$ECR_REPOSIOTRY_NAME:$2 ../game-stream-search-service/.
+if [ -n "$1" ]
+then
+  echo "Build and tag the service image"
+  docker build -t $ECR_REPOSIOTRY_URL/$ECR_REPOSIOTRY_NAME:$2 ../game-stream-search-service/.
 
-echo "Log docker into ECR"
-aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSIOTRY_URL
+  echo "Log docker into ECR"
+  aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSIOTRY_URL
 
-echo "Push the service image to ECR"
-docker push $ECR_REPOSIOTRY_URL/$ECR_REPOSIOTRY_NAME:$2
+  echo "Push the service image to ECR"
+  docker push $ECR_REPOSIOTRY_URL/$ECR_REPOSIOTRY_NAME:$2
 
-echo "Generating Docker run file"
-sed -e "s/IMAGE/$ECR_REPOSIOTRY_URL\/$ECR_REPOSIOTRY_NAME:$2/g" Dockerrun.aws.json.template > Dockerrun.aws.json
+  echo "Generating Docker run file"
+  sed -e "s/IMAGE/$ECR_REPOSIOTRY_URL\/$ECR_REPOSIOTRY_NAME:$2/g" Dockerrun.aws.json.template > Dockerrun.aws.json
 
-echo "Creating elastic beanstalk deployment package"
-zip $EB_DEPLOYMENT_PACKAGE Dockerrun.aws.json
+  echo "Creating elastic beanstalk deployment package"
+  zip $EB_DEPLOYMENT_PACKAGE Dockerrun.aws.json
 
-echo "Uploading docker run file $EB_DEPLOYMENT_PACKAGE to $EB_DEPLOY_BUCKET_NAME key $EB_DEPLOYMENT_PACKAGE"
-aws s3api put-object --bucket $EB_DEPLOY_BUCKET_NAME --key $EB_DEPLOYMENT_PACKAGE --body $EB_DEPLOYMENT_PACKAGE >/dev/null
+  echo "Uploading docker run file $EB_DEPLOYMENT_PACKAGE to $EB_DEPLOY_BUCKET_NAME key $EB_DEPLOYMENT_PACKAGE"
+  aws s3api put-object --bucket $EB_DEPLOY_BUCKET_NAME --key $EB_DEPLOYMENT_PACKAGE --body $EB_DEPLOYMENT_PACKAGE >/dev/null
 
-echo "Deploy elastic beanstalk infrastructure"
-aws cloudformation deploy --stack-name $STACK_NAME --template-file ./cloudformation-templates/elastic-beanstalk-environment.yaml --parameter-overrides ApplicationName=$EB_APPLICATION_NAME EnvironmentCNAMEPrefix=$EB_ENVIRONMENT_CNAME_PREFIX DeploymentBucketKey=$EB_DEPLOYMENT_PACKAGE --capabilities CAPABILITY_NAMED_IAM
+  echo "Deploy elastic beanstalk infrastructure"
+  aws cloudformation deploy --stack-name $STACK_NAME --template-file ./cloudformation-templates/elastic-beanstalk-environment.yaml --parameter-overrides ApplicationName=$EB_APPLICATION_NAME EnvironmentCNAMEPrefix=$EB_ENVIRONMENT_CNAME_PREFIX DeploymentBucketKey=$EB_DEPLOYMENT_PACKAGE --capabilities CAPABILITY_NAMED_IAM
+fi
 
 echo "Building frontend bundle"
 npm run build:prod --prefix ../game-stream-search-web
