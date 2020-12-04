@@ -13,39 +13,11 @@ import { useGameStreamApi } from '../../../../api/gameStreamApi';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FIELD_CHANGED': {
-      return {
-        ...state,
-        formValues: action.formValues,
-      }
-    }
-    case 'ERRORS': {
-      return {
-        ...state,
-        errors: action.errors
-      }
-    }
-    case 'SAVING': {
-      return {
-        ...state,
-        submitted: true,
-        isSaving: true,
-      }
-    }
-    case 'SAVE_FAILED': {
-      return {
-        ...state,
-        errors: action.errors,
-        isSaving: false,
-      }
-    }
-    case 'SAVE_SUCCESS': {
-      return {
-        ...state,
-        errors: action.errors,
-        isSaving: false,
-      }
-    }
+    case 'FIELD_CHANGED': return { ...state, formValues: action.formValues }
+    case 'ERRORS': return { ...state, errors: action.errors }
+    case 'SAVING': return { ...state, submitted: true, isSaving: true }
+    case 'SAVE_FAILED': return { ...state, errors: action.errors, isSaving: false }
+    case 'SAVE_SUCCESS': return { ...state, errors: action.errors, isSaving: false }
   }
 }
 
