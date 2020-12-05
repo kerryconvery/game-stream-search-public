@@ -197,6 +197,33 @@ describe('Add channel form', () => {
     expect(validationError).toBeInTheDocument();
   });
 
+  it('should re-validate when a field is changed', async () => {
+    renderApplication();
+
+    // We must wait for this to avoid updated state after the component is unmounted.
+    await waitFor(() => screen.getByTestId('streams-not-found'));
+
+    const addButton = screen.getByTitle('Add a new channel to the list');
+
+    fireEvent.click(addButton);
+
+    await waitFor(() => screen.getByText('Add Channel'));
+
+    const saveButton = screen.getByText('Save');
+
+    fireEvent.click(saveButton);
+
+    const channelField = screen.getByLabelText('Channel name');
+
+    fireEvent.change(channelField, { target: { value: 'newchannel' } })
+
+    // await waitFor(() => screen.getByText('newchannel'));
+
+    const validationError = await waitFor(() => screen.queryByText('Please enter a channel name'));
+
+    expect(validationError).not.toBeInTheDocument();
+  });
+
   it('should display errors returned by the service', async () => {
     const errorResponse = {
       errors: [
