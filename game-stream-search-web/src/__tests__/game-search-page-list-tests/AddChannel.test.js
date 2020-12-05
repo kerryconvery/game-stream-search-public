@@ -217,8 +217,6 @@ describe('Add channel form', () => {
 
     fireEvent.change(channelField, { target: { value: 'newchannel' } })
 
-    // await waitFor(() => screen.getByText('newchannel'));
-
     const validationError = await waitFor(() => screen.queryByText('Please enter a channel name'));
 
     expect(validationError).not.toBeInTheDocument();

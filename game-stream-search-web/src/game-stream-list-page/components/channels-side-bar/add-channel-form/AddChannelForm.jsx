@@ -13,8 +13,7 @@ import { useGameStreamApi } from '../../../../api/gameStreamApi';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FIELD_CHANGED': return { ...state, formValues: action.formValues }
-    case 'ERRORS': return { ...state, errors: action.errors }
+    case 'FIELD_CHANGED': return { ...state, formValues: action.formValues, errors: action.errors }
     case 'SAVING': return { ...state, submitted: true, isSaving: true }
     case 'SAVE_FAILED': return { ...state, errors: action.errors, isSaving: false }
     case 'SAVE_SUCCESS': return { ...state, errors: action.errors, isSaving: false }
@@ -73,12 +72,8 @@ const AddChannelForm = ({ onCancel, onChannelsUpdated }) => {
     dispatch({ type: 'SAVE_SUCCESS' });
   };
 
-  const onChange = values => {
-    dispatch({ type: 'FIELD_CHANGED', formValues: values });
-
-    if (state.submitted) {
-      dispatch({ type: 'ERRORS', errors: validateForm(values) });
-    }
+  const onChange = (formValues, errors) => {
+    dispatch({ type: 'FIELD_CHANGED', formValues, errors });
   }
 
   return (
@@ -87,6 +82,7 @@ const AddChannelForm = ({ onCancel, onChannelsUpdated }) => {
       content={
         <AddChannelFormFields
           formValues={state.formValues}
+          validateOnChange={state.submitted}
           errors={state.errors}
           onChange={onChange} 
         />
