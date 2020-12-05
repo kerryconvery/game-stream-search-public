@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func, shape } from 'prop-types';
+import { string, func, shape, bool } from 'prop-types';
 import _trim from 'lodash/trim';
 import _get from 'lodash/get';
 import _isNil from 'lodash/isNil';
@@ -10,12 +10,18 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 
-const AddChannelFormFields = ({ formValues, errors, onChange }) => {
+const AddChannelFormFields = ({ formValues, errors, onChange, validateOnChange }) => {
   const onFormChange = field => (event) => {
-    onChange({
+    const values = {
       ...formValues,
       [field]: event.target.value,
-    })
+    };
+    
+    if (validateOnChange) {
+      onChange(values, validateForm(values));
+    } else {
+      onChange(values, errors);
+    }
   }
 
   return (
@@ -46,6 +52,7 @@ AddChannelFormFields.propTypes = {
     channelName: string,
     streamPlatform: string,
   }),
+  validateOnChange: bool.isRequired,
   errors: shape({
     channelName: string,
   }),
