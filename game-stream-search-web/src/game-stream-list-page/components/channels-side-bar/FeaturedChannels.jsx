@@ -5,6 +5,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Popover from '@material-ui/core/Popover';
 import ChannelList from './ChannelList';
 import SideBarPanel from './SideBarPanel';
+import AddChannelFormController from './add-channel-form/AddChannelFormController';
 import AddChannelForm from './add-channel-form/AddChannelForm';
 import { useGameStreamApi } from '../../../api/gameStreamApi';
 import useChannelsLoader from '../../hooks/useChannelsLoader';
@@ -53,7 +54,9 @@ const FeaturedChannels = () => {
           horizontal: 'center',
         }}
       >
-        <AddChannelForm onCancel={handleClose} onChannelsUpdated={handleChannelsUpdated} />
+        <AddChannelFormController onChannelsUpdated={handleChannelsUpdated}>
+          {props => <AddChannelForm {...props} onCancel={handleClose} />}
+        </AddChannelFormController>
       </Popover>
       <ChannelList
         channels={channels}

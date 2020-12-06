@@ -1,102 +1,94 @@
-import React, { useReducer } from 'react';
-import { func } from 'prop-types';
-import _isEmpty from 'lodash/isEmpty';
+import React from 'react';
+import { string, func, shape, bool } from 'prop-types';
+import _trim from 'lodash/trim';
+import _get from 'lodash/get';
+import _isNil from 'lodash/isNil';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
-import useEventBus from '../../../../event-bus/eventBus';
-import {
-  postNotificationEvent,
-  buildToastEvent
-} from '../../../../notifications/events';
 import FormTemplate, { SubmitButton } from '../../../../templates/FormTemplate';
-import AddChannelFormFields, { validateForm, mapApiErrorsToFields } from './AddChannelFormFields';
-import { useGameStreamApi } from '../../../../api/gameStreamApi';
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'FIELD_CHANGED': return { ...state, formValues: action.formValues, errors: action.errors }
-    case 'SAVING': return { ...state, submitted: true, isSaving: true }
-    case 'SAVE_FAILED': return { ...state, errors: action.errors, isSaving: false }
-    case 'SAVE_SUCCESS': return { ...state, errors: action.errors, isSaving: false }
-  }
-}
+const AddChannelForm = ({ formValues, errors, isSaving, onChange, onCancel, onSave }) => {
+  const onFormChange = field => (event) => {
+    const values = {
+      ...formValues,
+      [field]: event.target.value,
+    };
 
-const initialState = {
-  formValues: { streamPlatform: 'Twitch' },
-  errors: {},
-  isSaving: false,
-  submitted: false,
-}
-
-const AddChannelForm = ({ onCancel, onChannelsUpdated }) => {
-  const [ state, dispatch ] = useReducer(reducer, initialState)
-  const { StatusType, addChannel, getChannels } = useGameStreamApi();
-  const { dispatchEvent } = useEventBus();
-
-  const notifyChannelAdded = (channelName) => {
-    postNotificationEvent(dispatchEvent, buildToastEvent(`Channel ${channelName} added successfully`));
-  }
-
-  const notifyChannelUpdated = (channelName) => {
-    postNotificationEvent(dispatchEvent, buildToastEvent(`Channel ${channelName} updated successfully`));
-  }
-
-  const notifyChannelSaved = async (created, channelName) => {
-    const channels = await getChannels();
-    
-    if (created) {
-      notifyChannelAdded(channelName);
-    } else {
-      notifyChannelUpdated(channelName);
-    }
-
-    onChannelsUpdated(channels);
-  }
-
-  const onSave = async () => {
-    dispatch({ type: 'SAVING' });
-
-    const errors = validateForm(state.formValues);
-
-    if (!_isEmpty(errors)) {
-      return dispatch({ type: 'SAVE_FAILED', errors });
-    }
-
-    const result = await addChannel(state.formValues);
-
-    if (result.status === StatusType.BadRequest) {
-      return dispatch({ type: 'SAVE_FAILED', errors: mapApiErrorsToFields(result.errors) });
-    }
-
-    notifyChannelSaved(result.status === StatusType.Created, result.channel.channelName);
-
-    dispatch({ type: 'SAVE_SUCCESS' });
-  };
-
-  const onChange = (formValues, errors) => {
-    dispatch({ type: 'FIELD_CHANGED', formValues, errors });
+    onChange(values);
   }
 
   return (
     <FormTemplate
       title='Add Channel'
       content={
-        <AddChannelFormFields
-          formValues={state.formValues}
-          validateOnChange={state.submitted}
-          errors={state.errors}
-          onChange={onChange} 
-        />
+        <FormGroup>
+          <TextField
+            id='channel-name'
+            label='Channel name'
+            defaultValue={_get(formValues, 'channelName')}
+            autoFocus
+            onChange={onFormChange('channelName')}
+            helperText={_get(errors, 'channelName')}
+            error={!_isNil(_get(errors, 'channelName'))}
+          />
+          <FormControl margin='normal'>
+            <InputLabel>Streaming platform</InputLabel>
+            <Select value={_get(formValues, 'streamPlatform')} onChange={onFormChange('streamPlatform')}>
+              <MenuItem value='Twitch'>Twitch</MenuItem>
+              <MenuItem value='YouTube'>YouTube</MenuItem>
+              <MenuItem value='DLive'>DLive</MenuItem>
+            </Select>
+          </FormControl>
+        </FormGroup>
       }
-    >
-      <SubmitButton submitting={state.isSaving} onClick={onSave}>Save</SubmitButton>
+      >
+      <SubmitButton submitting={isSaving} onClick={onSave}>Save</SubmitButton>
       <Button onClick={onCancel}>Cancel</Button>
     </FormTemplate>
   )
 }
 
 AddChannelForm.propTypes = {
+  formValues: shape({
+    channelName: string,
+    streamPlatform: string,
+  }),
+  errors: shape({
+    channelName: string,
+  }),
+  isSaving: bool.isRequired,
+  onChange: func.isRequired,
+  onSave: func.isRequired,
   onCancel: func.isRequired,
-  onChannelsUpdated: func.isRequired,
 }
+
+export const validateForm = ({ channelName }) => {
+  const errors = {};
+
+  if (_trim(channelName) === '')
+  {
+    errors['channelName'] = 'Please enter a channel name';
+  }
+
+  return errors;
+}
+
+export const mapApiErrorsToFields = (apiErrors) => {
+  const fieldErrors = {};
+
+  apiErrors.forEach(error => {
+    if (error.errorCode === 'ChannelNotFoundOnPlatform') {
+      fieldErrors['channelName'] = error.errorMessage
+    }
+  })
+
+  return fieldErrors;
+}
+
 
 export default AddChannelForm;
