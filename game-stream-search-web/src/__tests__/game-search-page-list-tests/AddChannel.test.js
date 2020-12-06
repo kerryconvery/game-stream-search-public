@@ -29,7 +29,7 @@ describe('Add channel form', () => {
         'access-control-allow-credentials': 'true' ,
       })
       .get('/api/channels')
-      .reply(200, { items: [] });
+      .reply(200, { items: [] })
   })
 
   it('should display a form when the add button is pressed', async () => {
