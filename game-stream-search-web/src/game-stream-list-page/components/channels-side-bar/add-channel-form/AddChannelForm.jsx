@@ -47,7 +47,7 @@ const AddChannelForm = ({ formValues, errors, isSaving, onChange, onCancel, onSa
         </FormGroup>
       }
       >
-      <SubmitButton submitting={isSaving} onClick={onSave}>Save</SubmitButton>
+      <SubmitButton submitting={isSaving} onClick={() => onSave(formValues)}>Save</SubmitButton>
       <Button onClick={onCancel}>Cancel</Button>
     </FormTemplate>
   )
@@ -65,6 +65,13 @@ AddChannelForm.propTypes = {
   onChange: func.isRequired,
   onSave: func.isRequired,
   onCancel: func.isRequired,
+}
+
+AddChannelForm.defaultProps = {
+  formValues: {
+    streamPlatform: 'Twitch',
+  },
+  errors: {},
 }
 
 export const validateForm = ({ channelName }) => {
