@@ -19,8 +19,6 @@ const reducer = (state, action) => {
 }
 
 const initialState = {
-  formValues: { streamPlatform: 'Twitch' },
-  errors: {},
   isSaving: false,
   submitted: false,
 }
@@ -50,16 +48,16 @@ const AddChannelFormController = ({ onChannelsUpdated, children }) => {
     onChannelsUpdated(channels);
   }
 
-  const onSave = async () => {
+  const onSave = async (formValues) => {
     dispatch({ type: 'SAVING' });
 
-    const errors = validateForm(state.formValues);
+    const errors = validateForm(formValues);
 
     if (!_isEmpty(errors)) {
       return dispatch({ type: 'SAVE_FAILED', errors });
     }
 
-    const result = await addChannel(state.formValues);
+    const result = await addChannel(formValues);
 
     if (result.status === StatusType.BadRequest) {
       return dispatch({ type: 'SAVE_FAILED', errors: mapApiErrorsToFields(result.errors) });

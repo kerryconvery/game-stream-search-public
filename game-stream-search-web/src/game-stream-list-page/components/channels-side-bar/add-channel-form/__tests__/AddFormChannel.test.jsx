@@ -6,8 +6,6 @@ describe('Add Channel Form', () => {
   it('should match the snapshot', () => {
     const { container } = render(
       <AddChannelForm
-        formValues={{ streamPlatform: 'Twitch' }}
-        errors={{}}
         isSaving={false}
         onChange={jest.fn()}
         onSave={jest.fn()}
