@@ -97,5 +97,4 @@ export const mapApiErrorsToFields = (apiErrors) => {
   return fieldErrors;
 }
 
-
 export default AddChannelForm;
