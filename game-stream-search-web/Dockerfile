@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY ./ ./
 RUN npm install
-RUN npm run build
+RUN npm run build:local
 
 FROM nginx:1.19.2-alpine
 WORKDIR /app
