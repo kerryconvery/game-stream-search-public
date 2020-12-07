@@ -1,13 +1,6 @@
 import { useReducer } from 'react';
 import { func } from 'prop-types';
 import _isEmpty from 'lodash/isEmpty';
-import useEventBus from '../../../../event-bus/eventBus';
-import {
-  postNotificationEvent,
-  buildToastEvent
-} from '../../../../notifications/events';
-import { useGameStreamApi } from '../../../../api/gameStreamApi';
-import { validateForm, mapApiErrorsToFields } from './AddChannelForm';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -23,54 +16,32 @@ const initialState = {
   submitted: false,
 }
 
-const AddChannelFormController = ({ onChannelsUpdated, children }) => {
+const AddChannelFormController = ({ onValidateForm, onSaveForm, onSaveSuccess, children }) => {
   const [ state, dispatch ] = useReducer(reducer, initialState)
-  const { StatusType, addChannel, getChannels } = useGameStreamApi();
-  const { dispatchEvent } = useEventBus();
-
-  const notifyChannelAdded = (channelName) => {
-    postNotificationEvent(dispatchEvent, buildToastEvent(`Channel ${channelName} added successfully`));
-  }
-
-  const notifyChannelUpdated = (channelName) => {
-    postNotificationEvent(dispatchEvent, buildToastEvent(`Channel ${channelName} updated successfully`));
-  }
-
-  const notifyChannelSaved = async (created, channelName) => {
-    const channels = await getChannels();
-    
-    if (created) {
-      notifyChannelAdded(channelName);
-    } else {
-      notifyChannelUpdated(channelName);
-    }
-
-    onChannelsUpdated(channels);
-  }
 
   const onSave = async (formValues) => {
     dispatch({ type: 'SAVING' });
 
-    const errors = validateForm(formValues);
+    const errors = onValidateForm(formValues);
 
     if (!_isEmpty(errors)) {
       return dispatch({ type: 'SAVE_FAILED', errors });
     }
 
-    const result = await addChannel(formValues);
-
-    if (result.status === StatusType.BadRequest) {
-      return dispatch({ type: 'SAVE_FAILED', errors: mapApiErrorsToFields(result.errors) });
+    const result = await onSaveForm(formValues);
+    
+    if (!result.success) {
+      return dispatch({ type: 'SAVE_FAILED', errors: result.errors });
     }
 
-    notifyChannelSaved(result.status === StatusType.Created, result.channel.channelName);
+    onSaveSuccess(result, formValues);
 
     dispatch({ type: 'SAVE_SUCCESS' });
   };
 
   const onChange = (formValues) => {
     if (state.submitted) {
-      dispatch({ type: 'FIELD_CHANGED', formValues, errors: validateForm(formValues) });
+      dispatch({ type: 'FIELD_CHANGED', formValues, errors: onValidateForm(formValues) });
     } else {
       dispatch({ type: 'FIELD_CHANGED', formValues, errors: state.errors });
     }
@@ -86,7 +57,9 @@ const AddChannelFormController = ({ onChannelsUpdated, children }) => {
 }
 
 AddChannelFormController.propTypes = {
-  onChannelsUpdated: func.isRequired,
+  onValidateForm: func.isRequired,
+  onSaveForm: func.isRequired,
+  onSaveSuccess: func.isRequired,
   children: func.isRequired,
 }
 

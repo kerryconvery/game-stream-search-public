@@ -6,14 +6,20 @@ import Popover from '@material-ui/core/Popover';
 import ChannelList from './ChannelList';
 import SideBarPanel from './SideBarPanel';
 import AddChannelFormController from './add-channel-form/AddChannelFormController';
-import AddChannelForm from './add-channel-form/AddChannelForm';
+import AddChannelForm, { validateForm, mapApiErrorsToFields } from './add-channel-form/AddChannelForm';
 import { useGameStreamApi } from '../../../api/gameStreamApi';
 import useChannelsLoader from '../../hooks/useChannelsLoader';
+import useEventBus from '../../../event-bus/eventBus';
+import { postNotificationEvent, buildToastEvent } from '../../../notifications/events';
+
+const getSuccessEvent = (channelName, created) => 
+  buildToastEvent(`Channel ${channelName} ${created ? 'added' : 'updated'} successfully`);
 
 const FeaturedChannels = () => {
-  const { getChannels } = useGameStreamApi();
+  const { addChannel, getChannels, StatusType } = useGameStreamApi();
   const { channels, isLoading, updateChannels } = useChannelsLoader(getChannels, () => {});
   const [ anchorEl, setAnchorEl ] = React.useState(null);
+  const { dispatchEvent } = useEventBus();
 
   const addButtonClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,9 +29,24 @@ const FeaturedChannels = () => {
     setAnchorEl(null);
   };
 
-  const handleChannelsUpdated = (channels) => {
+  const handleChannelsUpdated = async (result, formValues) => {
     setAnchorEl(null);
+
+    const channels = await getChannels();
+
     updateChannels(channels);
+
+    postNotificationEvent(dispatchEvent, getSuccessEvent(formValues.channelName, result.created));
+  }
+
+  const handleSaveChannel = async (formValues) => {
+    const result = await addChannel(formValues);
+
+    return {
+      success: result.status !== StatusType.BadRequest,
+      created: result.status === StatusType.Created,
+      errors: result.status === StatusType.BadRequest ? mapApiErrorsToFields(result.errors) : undefined,
+    }
   }
 
   const open = Boolean(anchorEl);
@@ -54,7 +75,11 @@ const FeaturedChannels = () => {
           horizontal: 'center',
         }}
       >
-        <AddChannelFormController onChannelsUpdated={handleChannelsUpdated}>
+        <AddChannelFormController
+          onValidateForm={validateForm}
+          onSaveForm={handleSaveChannel}
+          onSaveSuccess={handleChannelsUpdated}
+        >
           {props => <AddChannelForm {...props} onCancel={handleClose} />}
         </AddChannelFormController>
       </Popover>
