@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameStreamSearch.Api.Contracts;
 using GameStreamSearch.Api.Controllers;
 using GameStreamSearch.Application;
 using GameStreamSearch.Application.Dto;
+using GameStreamSearch.Application.Entities;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Application.Interactors;
 using GameStreamSearch.Application.Providers;
 using GameStreamSearch.Application.Services;
-using GameStreamSearch.Repositories.InMemoryRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -22,8 +23,10 @@ namespace GameStreamSearch.Api.Tests
         private Mock<ITimeProvider> timeProviderStub;
         private Mock<IStreamProvider> youTubeStreamProviderStub;
         private Mock<IStreamProvider> twitchtreamProviderStub;
+        private Mock<IChannelRepository> channelRepositoryStub;
 
         private readonly DateTime registrationDate = DateTime.Now;
+        private List<Channel> dataStore;
 
         private readonly StreamerChannelDto youtubeChannelDto = new StreamerChannelDto
         {
@@ -44,6 +47,9 @@ namespace GameStreamSearch.Api.Tests
         [SetUp]
         public void Setup()
         {
+            dataStore = new List<Channel>();
+            channelRepositoryStub = new Mock<IChannelRepository>();
+
             youTubeStreamProviderStub = new Mock<IStreamProvider>();
             youTubeStreamProviderStub.SetupGet(s => s.Platform).Returns(StreamPlatformType.YouTube);
             youTubeStreamProviderStub.Setup(s => s.GetStreamerChannel(youtubeChannelDto.ChannelName)).ReturnsAsync(youtubeChannelDto);
@@ -56,10 +62,8 @@ namespace GameStreamSearch.Api.Tests
                 .RegisterStreamProvider(youTubeStreamProviderStub.Object)
                 .RegisterStreamProvider(twitchtreamProviderStub.Object);
 
-            IChannelRepository channelRepository = new InMemoryChannelRepository();
-
-            UpsertChannelInteractor addChannelInteractor = new UpsertChannelInteractor(channelRepository, streamService);
-            GetChannelInteractor getChannelInteractor = new GetChannelInteractor(channelRepository);
+            UpsertChannelInteractor addChannelInteractor = new UpsertChannelInteractor(channelRepositoryStub.Object, streamService);
+            GetChannelInteractor getChannelInteractor = new GetChannelInteractor(channelRepositoryStub.Object);
 
             timeProviderStub = new Mock<ITimeProvider>();
 
@@ -68,7 +72,7 @@ namespace GameStreamSearch.Api.Tests
             channelController = new ChannelsController(
                 addChannelInteractor,
                 getChannelInteractor,
-                channelRepository,
+                channelRepositoryStub.Object,
                 timeProviderStub.Object);
 
             Mock<IUrlHelper> urlHelper = new Mock<IUrlHelper>();
@@ -84,6 +88,8 @@ namespace GameStreamSearch.Api.Tests
         [Test]
         public async Task Should_Add_A_New_Channel()
         {
+            channelRepositoryStub.Setup(s => s.Get(StreamPlatformType.YouTube, "Youtube channel")).ReturnsAsync(() => null);
+
             var createResponse = await channelController.AddChannel(StreamPlatformType.YouTube, "Youtube channel");
             var createResult = createResponse as CreatedResult;
             var value = createResult.Value as ChannelDto;
@@ -101,6 +107,28 @@ namespace GameStreamSearch.Api.Tests
         [Test]
         public async Task Should_Allow_Adding_The_Same_Channel_For_Multiple_Platforms()
         {
+            channelRepositoryStub.Setup(s => s.Get(StreamPlatformType.Twitch, "Twitch channel")).ReturnsAsync(() => null);
+            channelRepositoryStub.Setup(s => s.Get(StreamPlatformType.YouTube, "Youtube channel")).ReturnsAsync(() => null);
+            channelRepositoryStub.Setup(s => s.SelectAllChannels()).ReturnsAsync(() =>
+            {
+                return new ChannelListDto
+                {
+                    Items = new List<ChannelDto>
+                    {
+                        new ChannelDto
+                        {
+                            ChannelName = "Twitch channel",
+                            StreamPlatform = StreamPlatformType.Twitch,
+                        },
+                        new ChannelDto
+                        {
+                            ChannelName = "Youtube channel",
+                            StreamPlatform = StreamPlatformType.YouTube,
+                        }
+                    }
+                };
+            });
+
             await channelController.AddChannel(StreamPlatformType.Twitch, "Twitch channel");
             await channelController.AddChannel(StreamPlatformType.YouTube, "Youtube channel");
 
@@ -116,8 +144,31 @@ namespace GameStreamSearch.Api.Tests
         }
 
         [Test]
-        public async Task Should_Update_The_Channel_And_Respond_With_The_Channel_If_The_Channel_Is_Already_Exists_For_The_Platform()
+        public async Task Should_Update_The_Channel_And_Respond_With_The_Channel_If_The_Channel_Already_Exists_For_The_Platform()
         {
+            channelRepositoryStub.Setup(s => s.Add(It.IsAny<Channel>())).Callback<Channel>(channel => dataStore.Add(channel));
+            channelRepositoryStub.Setup(s => s.Get(StreamPlatformType.YouTube, "Youtube channel")).ReturnsAsync(() => {
+                return dataStore.Count > 0 ? dataStore[0] : null;
+           });
+
+            channelRepositoryStub.Setup(s => s.Update(It.IsAny<Channel>())).Callback<Channel>(channel => dataStore[0] = channel);
+            channelRepositoryStub.Setup(s => s.SelectAllChannels()).ReturnsAsync(() => {
+                return new ChannelListDto
+                {
+                    Items = new List<ChannelDto>
+                    {
+                        new ChannelDto
+                        {
+                            ChannelName = dataStore[0].ChannelName,
+                            StreamPlatform = dataStore[0].StreamPlatform,
+                            AvatarUrl = dataStore[0].AvatarUrl,
+                            ChannelUrl = dataStore[0].ChannelUrl,
+                        }
+                    }
+                };
+            });
+
+
             StreamerChannelDto updatedChannelDto = new StreamerChannelDto
             {
                 ChannelName = "Youtube channel",

@@ -13,7 +13,6 @@ using Newtonsoft.Json.Converters;
 using GameStreamSearch.StreamPlatformApi.Twitch;
 using GameStreamSearch.StreamPlatformApi.YouTube;
 using GameStreamSearch.StreamPlatformApi.DLive;
-using GameStreamSearch.Repositories.InMemoryRepositories;
 using GameStreamSearch.Application.Interactors;
 using GameStreamSearch.Application;
 using GameStreamSearch.Repositories;
