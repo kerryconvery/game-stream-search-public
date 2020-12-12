@@ -8,7 +8,6 @@
     <ProjectReference Include="..\GameStreamSearch.Application\GameStreamSearch.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="InMemoryRepositories\" />
     <Folder Include="AwsDynamoDbRepositories\" />
     <Folder Include="AwsDynamoDbRepositories\Dto\" />
   </ItemGroup>
