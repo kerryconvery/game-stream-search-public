@@ -1,5 +1,5 @@
 import React from 'react';
-import { number, shape, string, bool, arrayOf } from 'prop-types';
+import { shape, string, bool, arrayOf } from 'prop-types';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -86,7 +86,7 @@ const useChannelListStyles = makeStyles({
   },
 })
 
-export const ChannelList = ({ channels, isLoading, numberOfLoadingTiles }) => {
+export const ChannelList = ({ channels, isLoading }) => {
   const classes = useChannelListStyles();
 
   const channelTitles = channels.map((channel, index) => (
@@ -97,7 +97,7 @@ export const ChannelList = ({ channels, isLoading, numberOfLoadingTiles }) => {
 
   if (isLoading)
   {
-    for (let index = 0; index < numberOfLoadingTiles; index++) {
+    for (let index = 0; index < 3; index++) {
       loadingTiles.push(<LoadingTile key={index} />);
     }
   }
@@ -120,7 +120,6 @@ ChannelList.propTypes = {
     channelUrl: string.isRequired,
   })),
   isLoading: bool,
-  numberOfLoadingTiles: number.isRequired,
 };
 
 ChannelList.defaultProps = {

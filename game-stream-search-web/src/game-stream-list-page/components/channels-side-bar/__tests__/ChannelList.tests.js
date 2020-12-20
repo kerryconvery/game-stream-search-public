@@ -19,13 +19,13 @@ describe('Channel List', () => {
       }
     ];
 
-    const { container } = render(<ChannelList channels={channels} numberOfLoadingTiles={2} />);
+    const { container } = render(<ChannelList channels={channels} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it('should render a list of loading tiles', () => {
-    const { container } = render(<ChannelList channels={[]} isLoading numberOfLoadingTiles={2} />);
+    const { container } = render(<ChannelList channels={[]} isLoading />);
 
     expect(container.firstChild).toMatchSnapshot();
   })

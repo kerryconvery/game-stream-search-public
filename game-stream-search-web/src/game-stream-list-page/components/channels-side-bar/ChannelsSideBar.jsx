@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FeaturedChannels from './FeaturedChannels';
+import FeaturedChannels from './featured-channels/FeaturedChannels';
 
 const useStyles = makeStyles({
   sidebarContent: {   
