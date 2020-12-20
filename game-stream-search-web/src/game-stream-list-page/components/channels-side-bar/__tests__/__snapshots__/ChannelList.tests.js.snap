@@ -146,6 +146,30 @@ exports[`Channel List should render a list of loading tiles 1`] = `
         </div>
       </div>
     </div>
+    <div
+      data-testid="channel-loading-tile"
+    >
+      <div
+        class="makeStyles-channelTile-10"
+      >
+        <span
+          class="MuiSkeleton-root MuiSkeleton-circle MuiSkeleton-wave"
+          style="width: 50px; height: 50px;"
+        />
+        <div
+          class="makeStyles-channelDetails-11"
+        >
+          <span
+            class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-wave"
+            style="width: 120px;"
+          />
+          <span
+            class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-wave"
+            style="width: 80px;"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
