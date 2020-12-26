@@ -1,7 +1,7 @@
 import React from 'react';
 import { node, bool, number } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import StandardPageTemplate from '../templates/StandardPageTemplate';
+import StandardPageTemplate from '../components/StandardPageTemplate';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
