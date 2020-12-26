@@ -103,11 +103,9 @@ export const ChannelList = ({ channels, isLoading }) => {
   }
 
   return (
-    <div>
     <div className={classes.channelList}>
       {channelTitles}
       {loadingTiles}
-    </div>
     </div>
   )
 }

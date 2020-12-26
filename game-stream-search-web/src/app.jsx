@@ -1,5 +1,5 @@
 import React from 'react';
-import ApplicationTemplate from './templates/ApplicationTemplate';
+import ApplicationTemplate from './components/ApplicationTemplate';
 import GameStreamListPage from './game-stream-list-page/GameStreamListPage';
 import AlertRenderer from './notifications/AlertRenderer';
 import ToastRenderer from './notifications/ToastRenderer';

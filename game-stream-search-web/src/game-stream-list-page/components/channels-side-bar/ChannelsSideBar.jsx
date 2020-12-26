@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FeaturedChannels from './featured-channels/FeaturedChannels';
+import FeaturedChannelsController from './featured-channels/FeaturedChannelsController'
+import FeaturedChannelsView from './featured-channels/FeaturedChannelsView';
 
 const useStyles = makeStyles({
   sidebarContent: {   
@@ -20,7 +21,9 @@ const ChannelsSideBar = () => {
 
   return (
     <div className={classes.sidebarContent}>
-      <FeaturedChannels />
+      <FeaturedChannelsController>
+        {props => <FeaturedChannelsView {...props} />}
+      </FeaturedChannelsController>
     </div>
   )
 }

@@ -16,7 +16,7 @@ const initialState = {
   submitted: false,
 }
 
-const AddChannelFormController = ({ onValidateForm, onSaveForm, onSaveSuccess, onCloseForm, children }) => {
+const FormController = ({ onValidateForm, onSaveForm, onSaveSuccess, children }) => {
   const [ state, dispatch ] = useReducer(reducer, initialState)
 
   const onSave = async (formValues) => {
@@ -37,8 +37,6 @@ const AddChannelFormController = ({ onValidateForm, onSaveForm, onSaveSuccess, o
     onSaveSuccess(result, formValues);
 
     dispatch({ type: 'SAVE_SUCCESS' });
-
-    onCloseForm();
   };
 
   const onChange = (formValues) => {
@@ -55,16 +53,14 @@ const AddChannelFormController = ({ onValidateForm, onSaveForm, onSaveSuccess, o
     isSaving: state.isSaving,
     onChange,
     onSave,
-    onCancel: onCloseForm,
   })
 }
 
-AddChannelFormController.propTypes = {
+FormController.propTypes = {
   onValidateForm: func.isRequired,
   onSaveForm: func.isRequired,
   onSaveSuccess: func.isRequired,
-  onCloseForm: func.isRequired,
   children: func.isRequired,
 }
 
-export default AddChannelFormController;
+export default FormController;

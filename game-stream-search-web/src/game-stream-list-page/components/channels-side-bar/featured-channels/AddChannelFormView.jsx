@@ -10,9 +10,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
-import FormTemplate, { SubmitButton } from '../../../../templates/FormTemplate';
+import FormTemplate, { SubmitButton } from '../../../../components/form/FormTemplate';
 
-const AddChannelForm = ({ formValues, errors, isSaving, onChange, onCancel, onSave }) => {
+const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, onSave }) => {
   const onFormChange = field => (event) => {
     const values = {
       ...formValues,
@@ -53,7 +53,7 @@ const AddChannelForm = ({ formValues, errors, isSaving, onChange, onCancel, onSa
   )
 }
 
-AddChannelForm.propTypes = {
+AddChannelFormView.propTypes = {
   formValues: shape({
     channelName: string,
     streamPlatform: string,
@@ -67,7 +67,7 @@ AddChannelForm.propTypes = {
   onCancel: func.isRequired,
 }
 
-AddChannelForm.defaultProps = {
+AddChannelFormView.defaultProps = {
   formValues: {
     streamPlatform: 'Twitch',
   },
@@ -97,4 +97,4 @@ export const mapApiErrorsToFields = (apiErrors) => {
   return fieldErrors;
 }
 
-export default AddChannelForm;
+export default AddChannelFormView;

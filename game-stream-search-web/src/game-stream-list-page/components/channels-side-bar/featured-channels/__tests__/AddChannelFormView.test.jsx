@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import AddChannelForm from '../AddChannelForm';
+import AddChannelFormView from '../AddChannelFormView';
 
 describe('Add Channel Form', () => {
   it('should match the snapshot', () => {
     const { container } = render(
-      <AddChannelForm
+      <AddChannelFormView
         isSaving={false}
         onChange={jest.fn()}
         onSave={jest.fn()}
