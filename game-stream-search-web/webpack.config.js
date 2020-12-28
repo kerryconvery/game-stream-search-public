@@ -18,11 +18,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'], // Process and embed css into the page
+        use: ['style-loader', 'css-loader'], // Process and embed css into the page
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg|png|cur)$/,
-        loaders: ['url-loader'],
+        use: ['url-loader'],
       },
     ],
   },
@@ -35,7 +35,7 @@ module.exports = {
     publicPath: '/'
   },
   devServer: {
-    historyApiFallback: true,
+    hot: true
   },
   plugins: [
     new CopyWebpackPlugin({
