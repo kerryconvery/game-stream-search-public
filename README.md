@@ -79,6 +79,7 @@ Onion + Clean Architecture
 * Frontend hosting: AWS S3 bucket static website
 * Service hosting: AWS Elastic Beanstalk
 * Container repository: AWS Elastic Container Repository
+* Database: DynamoDb
 * Secrets storage: AWS Systems manager paramater store with KMS encryption
 
 ### Future Technical Improvements
