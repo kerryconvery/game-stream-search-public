@@ -61,10 +61,18 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 1. Change to the folder /devops
 2. Deploy the application by running ```deploy-application-components.sh <env name> <build no>``` e.g ./deploy-application-components.sh prodA 123
 
-### Architecture
+### Backend Architecture
 Onion + Clean Architecture
 
 ![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png?raw=true)
+
+### Backend Philosophy
+![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Three-layer-service-architecture.png?raw=true)
+
+### Frontend Architecture
+
+![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/React-Architecture.png?raw=true)
+
 
 ### Infrastructure
 * Cloud Provider: AWS
