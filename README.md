@@ -68,7 +68,7 @@ Onion + Clean Architecture
 
 ### Frontend Architecture
 
-![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/React Architecture.png?raw=true)
+![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/React-Architecture.png?raw=true)
 
 
 ### Infrastructure
