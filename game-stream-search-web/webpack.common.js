@@ -34,9 +34,6 @@ module.exports = {
     filename: 'index.js',
     publicPath: '/'
   },
-  devServer: {
-    hot: true
-  },
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
@@ -47,5 +44,5 @@ module.exports = {
       'process.env.APP_ENV': JSON.stringify(process.env.APP_ENV),
     }),
   ],
-  mode: 'development',
+  mode: 'production'
 };
