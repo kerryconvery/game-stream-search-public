@@ -15,7 +15,10 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 
 ### Commands
 * `lerna bootstrap` - Install all dependencies
-* `lerna run build` - Build all components
+* `lerna run start:local` - Start a development build of the frontend pointing a backend api on localhost
+* `lerna run start:prod` - Start a production build of the frontend pointing a backend api on prod
+* `lerna run build:local` - Builds a production build of the frontend pointing a backend api on localhost
+* `lerna run build:prod` - Builds a production build of the frontend pointing a backend api on prod
 * `lerna run start:service --stream` - Builds and starts the backend service inside a docker container
 * `lerna run stop:service --stream` - Stops the running service
 * `lerna run test --stream` - run all unit tests
