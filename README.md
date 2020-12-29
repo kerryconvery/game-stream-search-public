@@ -69,7 +69,7 @@ Onion + Clean Architecture
 
 ![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png?raw=true)
 
-### Backend Philosophy
+### Backend Guiding Architecture
 ![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Three-layer-service-architecture.png?raw=true)
 
 ### Frontend Architecture
@@ -82,6 +82,7 @@ Onion + Clean Architecture
 * Frontend hosting: AWS S3 bucket static website
 * Service hosting: AWS Elastic Beanstalk
 * Container repository: AWS Elastic Container Repository
+* Database: DynamoDb
 * Secrets storage: AWS Systems manager paramater store with KMS encryption
 
 ### Future Technical Improvements
