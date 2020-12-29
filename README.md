@@ -66,6 +66,9 @@ Onion + Clean Architecture
 
 ![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png?raw=true)
 
+### Backend Philosophy
+![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Three-layer-service-architecture.png?raw=true)
+
 ### Frontend Architecture
 
 ![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/React-Architecture.png?raw=true)
