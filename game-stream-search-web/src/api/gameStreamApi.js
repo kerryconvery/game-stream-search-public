@@ -59,11 +59,19 @@ const getChannelsRequest = (baseUrl) => () => (
   }).then(res => res.data.items)
 );
 
+const mapHttpResponse = (httpResponse, mapApiErrorsToFields) => {
+  return {
+    success: httpResponse.status !== StatusType.BadRequest,
+    created: httpResponse.status === StatusType.Created,
+    errors: httpResponse.status === StatusType.BadRequest ? mapApiErrorsToFields(httpResponse.errors) : undefined,
+  }
+}
+
 export const useGameStreamApi = () => {
   const { streamSearchServiceUrl } = useConfiguration();
 
   return {
-    StatusType,
+    mapHttpResponse,
     getStreams: getStreamsRequest(streamSearchServiceUrl),
     addChannel: addChannelRequest(streamSearchServiceUrl),
     getChannels: getChannelsRequest(streamSearchServiceUrl), 
