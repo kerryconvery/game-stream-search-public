@@ -1,5 +1,4 @@
 import { useReducer } from 'react';
-import { func } from 'prop-types';
 import _isEmpty from 'lodash/isEmpty';
 
 const reducer = (state, action) => {
@@ -16,7 +15,7 @@ const initialState = {
   submitted: false,
 }
 
-const FormController = ({ onValidateForm, onSaveForm, onSaveSuccess, children }) => {
+const useFormController = (onValidateForm, onSaveForm, onSendSuccessNotification, onSaveSuccess) => {
   const [ state, dispatch ] = useReducer(reducer, initialState)
 
   const onSave = async (formValues) => {
@@ -34,6 +33,8 @@ const FormController = ({ onValidateForm, onSaveForm, onSaveSuccess, children })
       return dispatch({ type: 'SAVE_FAILED', errors: result.errors });
     }
 
+    onSendSuccessNotification(result, formValues);
+
     onSaveSuccess(result, formValues);
 
     dispatch({ type: 'SAVE_SUCCESS' });
@@ -47,7 +48,7 @@ const FormController = ({ onValidateForm, onSaveForm, onSaveSuccess, children })
     }
   }
 
-  return children({
+  return ({
     formValues: state.formValues,
     errors: state.errors,
     isSaving: state.isSaving,
@@ -56,11 +57,4 @@ const FormController = ({ onValidateForm, onSaveForm, onSaveSuccess, children })
   })
 }
 
-FormController.propTypes = {
-  onValidateForm: func.isRequired,
-  onSaveForm: func.isRequired,
-  onSaveSuccess: func.isRequired,
-  children: func.isRequired,
-}
-
-export default FormController;
+export default useFormController;
