@@ -18,11 +18,11 @@ const useStyles = makeStyles({
 
 const ChannelsSideBar = () => {
   const classes = useStyles();
-  const featureChannelsController = useFeaturedChannelsController();
+  const featuredChannelsController = useFeaturedChannelsController();
 
   return (
     <div className={classes.sidebarContent}>
-      <FeaturedChannelsView {...featureChannelsController} />}
+      <FeaturedChannelsView {...featuredChannelsController} />}
     </div>
   )
 }
