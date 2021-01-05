@@ -1,7 +1,8 @@
 import React from 'react';
 import _get from 'lodash/get';
 import InfiniteScroll from 'react-infinite-scroller';
-import { useGameStreamApi } from '../api/gameStreamApi';
+import { useStreamService } from '../providers/StreamServiceProvider';
+import { useTelemetryTracker } from '../providers/TelemetryTrackerProvider';
 import useEventBus from '../event-bus/eventBus';
 import { postNotificationEvent, buildOfflineAlertEvent } from '../notifications/events';
 import useInfiniteStreamLoader from './hooks/useInfiniteStreamLoader';
@@ -12,16 +13,22 @@ import NoStreamsFound from './components/NoStreamsFound';
 import ChannelsSideBar from './components/channels-side-bar/ChannelsSideBar';
 
 const GameStreamListPage = () => {
-  const { getStreams } = useGameStreamApi();
+  const { getStreams } = useStreamService();
   const { dispatchEvent } = useEventBus();
+  const { trackStreamOpened, trackStreamSearch } = useTelemetryTracker();
 
   const showErrorAlert = () => postNotificationEvent(dispatchEvent, buildOfflineAlertEvent());
 
   const streams = useInfiniteStreamLoader(getStreams, showErrorAlert);
 
+  const filterStreams = (gameName) => {
+    streams.filterStreams({ gameName });
+    trackStreamSearch({ gameName });
+  }
+
   return (
     <GameStreamPageTemplate
-      searchBar={<GameStreamSearchBar onGameChange={gameName => streams.filterStreams({ gameName })} />}
+      searchBar={<GameStreamSearchBar onGameChange={filterStreams} />}
       leftSideBar={<ChannelsSideBar />}
       notFoundNotice={<NoStreamsFound searchTerm={streams.filters.gameName} />}
       numberOfStreams={streams.items.length}
@@ -37,6 +44,7 @@ const GameStreamListPage = () => {
             streams={streams.items}
             isLoading={streams.isLoading}
             numberOfLoadingTiles={6}
+            onStreamOpened={trackStreamOpened}
           />
         </InfiniteScroll>
       </div>

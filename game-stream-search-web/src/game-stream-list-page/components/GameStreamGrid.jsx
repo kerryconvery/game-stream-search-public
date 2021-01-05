@@ -1,5 +1,5 @@
 import React from 'react';
-import { shape, string, number, bool, arrayOf } from 'prop-types';
+import { shape, string, number, bool, arrayOf, func } from 'prop-types';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import IconButton from '@material-ui/core/IconButton';
@@ -66,13 +66,14 @@ const StreamTile = ({
   streamerName,
   streamerAvatarUrl,
   streamPlatformName,
-  views }) => {
+  views,
+  onStreamOpened, }) => {
 
   const classes = useStreamTileStyles();
 
   return (
     <div className={classes.root}>
-      <Link href={streamUrl} target='_blank'>
+      <Link href={streamUrl} onClick={onStreamOpened} target='_blank'>
         <IconButton size="medium" className={classes.playButton}>
           <PlayCircleOutlineIcon className={classes.playButtonIcon} />
         </IconButton >
@@ -104,6 +105,7 @@ StreamTile.propTypes = {
   streamerAvatarUrl: string.isRequired,
   streamPlatformName: string.isRequired,
   views: number.isRequired,
+  onStreamOpened: func,
 }
 
 const useLoadingTileStyles = makeStyles(() => ({
@@ -159,10 +161,10 @@ const GridTile = styled('div')({
   paddingRight: '10px',
 });
 
-const GameStreamGrid = ({ streams, isLoading, numberOfLoadingTiles }) => {
+const GameStreamGrid = ({ streams, isLoading, numberOfLoadingTiles, onStreamOpened }) => {
   const streamTitle = streams.map((stream, index) => (
     <GridTile key={index} >
-      <StreamTile {...stream} />
+      <StreamTile {...stream} onStreamOpened={() => onStreamOpened(stream)} />
     </GridTile>
   ))
 
@@ -198,6 +200,7 @@ GameStreamGrid.propTypes = {
   })),
   isLoading: bool,
   numberOfLoadingTiles: number.isRequired,
+  onStreamOpened: func,
 }
 
 GameStreamGrid.defaultProps = {
