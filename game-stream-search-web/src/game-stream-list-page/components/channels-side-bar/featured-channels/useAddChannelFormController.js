@@ -1,4 +1,4 @@
-import useFormController from '../../../../components/form/useFormController';
+import useFormController from '../../../../shared-components/form/useFormController';
 import { validateForm, mapApiErrorsToFields } from './AddChannelFormView';
 import { useStreamService } from '../../../../providers/StreamServiceProvider';
 import useEventBus from '../../../../event-bus/eventBus';
