@@ -3,7 +3,6 @@ import _filter from 'lodash/filter';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Slide from '@material-ui/core/Slide';
-import pickProps from '../prop-utils/pickProps';
 import useEventBus from '../event-bus/eventBus';
 
 const ToastRenderer = () => {
@@ -13,12 +12,12 @@ const ToastRenderer = () => {
     setNotifications(notifications.concat(event));
   }
 
+  useEventBus({ toast: toastHandler });
+
   const handleClose = (notificationId) => () => {
     const visibleNotifications = _filter(notifications, n => n.id !== notificationId);
     setNotifications(visibleNotifications);
   }
-
-  useEventBus({ toast: toastHandler });
   
   return (
     notifications.map((notification) => (
@@ -32,7 +31,7 @@ const ToastRenderer = () => {
         open={notifications.open ? true : true}
         onClose={handleClose(notification.id)}
         autoHideDuration={3000}
-        TransitionComponent={props => <Slide {...pickProps(props, Slide.propTypes)} direction='up' />}
+        TransitionComponent={props => <Slide {...props} direction='up' />}
         message={notification.message}
       >
         <Alert severity="success">
