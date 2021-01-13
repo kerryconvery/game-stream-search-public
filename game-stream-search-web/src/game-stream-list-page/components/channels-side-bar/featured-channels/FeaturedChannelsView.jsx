@@ -1,6 +1,7 @@
 import React from 'react';
 import { func, object } from'prop-types';
 import _omit from 'lodash/omit';
+import pickProps from '../../../../prop-utils/pickProps';
 import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -37,9 +38,9 @@ const FeaturedChannelsView = ({ anchorElement, onOpen, onClose, ...props }) => {
             horizontal: 'center',
           }}
         >
-          <AddChannelForm {...props} onCancel={onClose} />
+          <AddChannelForm {...pickProps(props, AddChannelForm.propTypes)} onCancel={onClose} />
         </Popover>
-        <ChannelList {...props} />
+        <ChannelList {...pickProps(props, ChannelList.propTypes)} />
     </SideBarPanel>
   )
 }

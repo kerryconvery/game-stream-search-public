@@ -1,4 +1,4 @@
-export const autoMockObject  = (object) => {
+const autoMockObject  = (object) => {
   const mock = {};
 
   Object.keys(object).forEach(key => {
@@ -7,3 +7,5 @@ export const autoMockObject  = (object) => {
 
   return mock;
 }
+
+export default autoMockObject;

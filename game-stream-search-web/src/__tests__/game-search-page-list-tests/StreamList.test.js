@@ -6,7 +6,7 @@ import { StreamServiceProvider } from '../../providers/StreamServiceProvider';
 import { TelemetryTrackerProvider } from '../../providers/TelemetryTrackerProvider';
 import { getStreamServiceApi } from '../../api/streamServiceApi';
 import { getTelemetryTrackerApi } from '../../api/telemetryTrackerApi';
-import { autoMockObject } from '../../test-helpers/mocks';
+import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Game search page list', () => {
