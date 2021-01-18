@@ -7,6 +7,7 @@ using GameStreamSearch.StreamProviders.Builders;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.StreamPlatformApi;
 using GameStreamSearch.Application;
+using GameStreamSearch.Types;
 
 namespace GameStreamSearch.StreamProviders
 {
@@ -57,11 +58,11 @@ namespace GameStreamSearch.StreamProviders
 
             var pageOffset = GetPageOffset(pageToken);
 
-            var response = await dliveApi.GetLiveStreams(pageSize, pageOffset, StreamSortOrder.Trending);
+            var result = await dliveApi.GetLiveStreams(pageSize, pageOffset, StreamSortOrder.Trending);
 
             return new GameStreamsDto
             {
-                Items = response.data.livestreams.list.Select(s => new GameStreamDto
+                Items = result.data.livestreams.list.Select(s => new GameStreamDto
                 {
                     StreamTitle = s.title,
                     StreamerName = s.creator.displayName,
@@ -73,31 +74,33 @@ namespace GameStreamSearch.StreamProviders
                     Views = s.watchingCount,
 
                 }),
-                NextPageToken = GetNextPageToken(response.data.livestreams.list.Any(), pageSize, pageOffset),
+                NextPageToken = GetNextPageToken(result.data.livestreams.list.Any(), pageSize, pageOffset),
             };
         }
 
-        public async Task<StreamerChannelDto> GetStreamerChannel(string channelName)
+        public async Task<MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName)
         {
-            var response = await dliveApi.GetUserByDisplayName(channelName);
+            var result = await dliveApi.GetUserByDisplayName(channelName);
 
-            if (response.data.userByDisplayName == null)
+            if (result.IsNothing)
             {
-                return null;
+                return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
             }
 
-            if (!response.data.userByDisplayName.displayName.Equals(channelName, System.StringComparison.CurrentCultureIgnoreCase))
+            if (!result.Map(c => c.displayName.Equals(channelName, System.StringComparison.CurrentCultureIgnoreCase)).GetOrElse(false))
             {
-                return null;
+                return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
             }
 
-            return new StreamerChannelDto
-            {
-                ChannelName = response.data.userByDisplayName.displayName,
-                AvatarUrl = response.data.userByDisplayName.avatar,
-                ChannelUrl = urlBuilder.Build(response.data.userByDisplayName.displayName),
-                Platform = Platform,
-            };
+            return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(result.Map(c =>
+                new StreamerChannelDto
+                {
+                    ChannelName = c.displayName,
+                    AvatarUrl = c.avatar,
+                    ChannelUrl = urlBuilder.Build(c.displayName),
+                    Platform = Platform,
+                })
+            );
         }
 
         public StreamPlatformType Platform => StreamPlatformType.DLive;
