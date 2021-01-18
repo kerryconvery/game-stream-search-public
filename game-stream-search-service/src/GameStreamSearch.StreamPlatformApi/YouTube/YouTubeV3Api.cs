@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using GameStreamSearch.Types;
 using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
 using RestSharp;
 
@@ -86,7 +88,7 @@ namespace GameStreamSearch.StreamPlatformApi.YouTube
             return response.Data;
         }
 
-        public async Task<YouTubeChannelsDto> SearchChannelsByUsername(string username, int pageSize)
+        public async Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>> SearchChannelsByUsername(string username, int pageSize)
         {
             var client = new RestClient(this.googleApiUrl);
 
@@ -102,7 +104,12 @@ namespace GameStreamSearch.StreamPlatformApi.YouTube
 
             var response = await client.ExecuteAsync<YouTubeChannelsDto>(request);
 
-            return response.Data;
+            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                return MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Fail(YoutubeErrorType.ProviderNotAvailable);
+            }
+
+            return MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(response.Data.items);
         }
     }
 }
