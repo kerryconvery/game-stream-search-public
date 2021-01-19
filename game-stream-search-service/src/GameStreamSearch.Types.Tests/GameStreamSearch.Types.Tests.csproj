@@ -2,17 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DLive\" />
-    <Folder Include="Twitch\" />
-    <Folder Include="YouTube\" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="GraphQL.Client" Version="3.2.0" />
-    <PackageReference Include="RestSharp" Version="106.11.7" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\GameStreamSearch.Types\GameStreamSearch.Types.csproj" />
   </ItemGroup>

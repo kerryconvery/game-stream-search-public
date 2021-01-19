@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameStreamSearch.Application;
-using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application.Enums;
-using GameStreamSearch.Application.Exceptions;
 using GameStreamSearch.StreamPlatformApi;
 using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
 using GameStreamSearch.StreamProviders;
 using GameStreamSearch.StreamProviders.Builders;
+using GameStreamSearch.Types;
 using Moq;
 using NUnit.Framework;
 
 namespace GameSearchService.StreamProviders.Tests
 {
-    
+
     public class YouTubeStreamProviderTests
     {
         private YouTubeSearchDto liveStreams = new YouTubeSearchDto()
         {
-             items = new List<YouTubeSearchItemDto>
+            items = new List<YouTubeSearchItemDto>
              {
                  new YouTubeSearchItemDto
                  {
@@ -43,7 +42,7 @@ namespace GameSearchService.StreamProviders.Tests
                      }
                  }
              },
-             nextPageToken = "next page token"
+            nextPageToken = "next page token"
         };
 
         private YouTubeVideosDto videos = new YouTubeVideosDto
@@ -162,83 +161,99 @@ namespace GameSearchService.StreamProviders.Tests
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
-                new YouTubeChannelsDto
-                {
-                    items = new List<YouTubeChannelDto> {
-                        new YouTubeChannelDto {
-                            snippet = new YouTubeChannelSnippetDto
-                            {
-                                title = "Test Streamer",
-                                thumbnails = new YouTubeChannelSnippetThumbnailsDto
+                MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(
+                    new List<YouTubeChannelDto>
+                    {
+                        {
+                            new YouTubeChannelDto {
+                                snippet = new YouTubeChannelSnippetDto
                                 {
-                                    @default = new YouTubeChannelSnippetThumbnailDto
+                                    title = "Test Streamer",
+                                    thumbnails = new YouTubeChannelSnippetThumbnailsDto
                                     {
-                                        url = "test.url"
+                                        @default = new YouTubeChannelSnippetThumbnailDto
+                                        {
+                                            url = "test.url"
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                }
+                    })
+                );
+
+            var youTubeStreamProvider = new YouTubeStreamProvider(watchUrlBuilderStub.Object, channelUrlBuilderStub.Object, youTubeV3ApiStub.Object);
+
+            var streamerChannel = await youTubeStreamProvider.GetStreamerChannel("Test streamer");
+
+            Assert.IsNotNull(streamerChannel.Value);
+        }
+
+        [Test]
+        public async Task Should_Return_Nothing_If_A_Channel_Was_Found_But_The_Name_Does_Not_Match()
+        {
+            var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
+
+            youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
+                 MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(
+                     new List<YouTubeChannelDto>
+                     {
+                        {
+                            new YouTubeChannelDto {
+                                snippet = new YouTubeChannelSnippetDto
+                                {
+                                    title = "Test Streamer Two",
+                                    thumbnails = new YouTubeChannelSnippetThumbnailsDto
+                                    {
+                                        @default = new YouTubeChannelSnippetThumbnailDto
+                                        {
+                                            url = "test.url"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
+                );
+
+            var youTubeStreamProvider = new YouTubeStreamProvider(watchUrlBuilderStub.Object, channelUrlBuilderStub.Object, youTubeV3ApiStub.Object);
+
+            var streamerChannel = await youTubeStreamProvider.GetStreamerChannel("Test streamer");
+
+            Assert.IsTrue(streamerChannel.Value.IsNothing);
+        }
+
+        [Test]
+        public async Task Should_Return_Nothing_If_A_Channel_Was_Not_Found()
+        {
+            var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
+
+            youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
+                MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(Maybe<IEnumerable<YouTubeChannelDto>>.Nothing())
             );
 
             var youTubeStreamProvider = new YouTubeStreamProvider(watchUrlBuilderStub.Object, channelUrlBuilderStub.Object, youTubeV3ApiStub.Object);
 
             var streamerChannel = await youTubeStreamProvider.GetStreamerChannel("Test streamer");
 
-            Assert.IsNotNull(streamerChannel);
+            Assert.IsTrue(streamerChannel.Value.IsNothing);
         }
 
         [Test]
-        public async Task Should_Return_Null_If_A_Channel_Was_Found_But_The_Name_Does_Not_Match()
+        public async Task Should_Return_Provider_Not_Available_If_The_Streaming_Platform_Service_Is_Unavailable()
         {
+
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
-                new YouTubeChannelsDto
-                {
-                    items = new List<YouTubeChannelDto> {
-                        new YouTubeChannelDto {
-                            snippet = new YouTubeChannelSnippetDto
-                            {
-                                title = "Test Streamer Two",
-                                thumbnails = new YouTubeChannelSnippetThumbnailsDto
-                                {
-                                    @default = new YouTubeChannelSnippetThumbnailDto
-                                    {
-                                        url = "test.url"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Fail(YoutubeErrorType.ProviderNotAvailable)
             );
 
             var youTubeStreamProvider = new YouTubeStreamProvider(watchUrlBuilderStub.Object, channelUrlBuilderStub.Object, youTubeV3ApiStub.Object);
 
             var streamerChannel = await youTubeStreamProvider.GetStreamerChannel("Test streamer");
 
-            Assert.IsNull(streamerChannel);
-        }
-
-        [Test]
-        public async Task Should_Return_Null_If_A_Channel_Was_Not_Found()
-        {
-            var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
-
-            youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
-                new YouTubeChannelsDto
-                {
-                    items = null
-                }
-            );
-
-            var youTubeStreamProvider = new YouTubeStreamProvider( watchUrlBuilderStub.Object, channelUrlBuilderStub.Object, youTubeV3ApiStub.Object);
-
-            var streamerChannel = await youTubeStreamProvider.GetStreamerChannel("Test streamer");
-
-            Assert.IsNull(streamerChannel);
+            Assert.AreEqual(streamerChannel.Error, GetStreamerChannelErrorType.ProviderNotAvailable);
         }
     }
 }

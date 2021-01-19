@@ -7,6 +7,7 @@ const StatusType = {
   BadRequest: 'badRequest',
   NotFound: 'notFound',
   ServerError: 'serverError',
+  FailedDependency: 'failedDependency',
 }
 
 const httpStatusToStatusType = (httpStatus) => {
@@ -16,6 +17,7 @@ const httpStatusToStatusType = (httpStatus) => {
     case 400: return StatusType.BadRequest;
     case 500: return StatusType.ServerError;
     case 404: return StatusType.NotFound;
+    case 424: return StatusType.FailedDependency;
   }
 }
 
@@ -42,12 +44,14 @@ const addChannelRequest = (baseUrl) => (data) => (
       channel: res.data
     }
   ))
-  .catch(error => (
+  .catch(error => {
+    console.log('error', error);
+    return (
     {
       status: httpStatusToStatusType(error.response.status),
       errors: error.response.data.errors,
     }
-  ))
+  )})
 )
 
 const getChannelsRequest = (baseUrl) => () => (
@@ -60,9 +64,9 @@ const getChannelsRequest = (baseUrl) => () => (
 
 const mapHttpResponse = (httpResponse, mapApiErrorsToFields) => {
   return {
-    success: httpResponse.status !== StatusType.BadRequest,
-    created: httpResponse.status === StatusType.Created,
-    errors: httpResponse.status === StatusType.BadRequest ? mapApiErrorsToFields(httpResponse.errors) : undefined,
+    success: httpResponse.errors === undefined,
+    isCreated: httpResponse.status === StatusType.Created,
+    errors: httpResponse.errors ? mapApiErrorsToFields(httpResponse.errors) : undefined,
   }
 }
 

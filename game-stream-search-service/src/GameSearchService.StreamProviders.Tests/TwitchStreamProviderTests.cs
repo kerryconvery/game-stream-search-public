@@ -1,11 +1,9 @@
 using NUnit.Framework;
 using Moq;
-using GameStreamSearch.Application.Dto;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using GameStreamSearch.StreamProviders;
-using GameStreamSearch.Application.Exceptions;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.StreamPlatformApi.Twitch.Dto.Kraken;
 using GameStreamSearch.StreamPlatformApi;
@@ -208,7 +206,7 @@ namespace GameSearchService.StreamProviders.Tests
                     Channels = new List<TwitchChannelDto> { new TwitchChannelDto { display_name = "Test Streamer" } }
                 }
             );
-            
+
             var twitchStreamProvider = new TwitchStreamProvider(twitchKrakenApiStub.Object);
 
             var streamerChannel = await twitchStreamProvider.GetStreamerChannel("Test streamer");
@@ -217,7 +215,7 @@ namespace GameSearchService.StreamProviders.Tests
         }
 
         [Test]
-        public async Task Should_Return_Null_If_A_Channel_Was_Found_But_The_Name_Does_Not_Match()
+        public async Task Should_Return_Nothing_If_A_Channel_Was_Found_But_The_Name_Does_Not_Match()
         {
             var twitchKrakenApiStub = new Mock<ITwitchKrakenApi>();
 
@@ -232,11 +230,11 @@ namespace GameSearchService.StreamProviders.Tests
 
             var streamerChannel = await twitchStreamProvider.GetStreamerChannel("Test streamer");
 
-            Assert.IsNull(streamerChannel);
+            Assert.IsTrue(streamerChannel.Value.IsNothing);
         }
 
         [Test]
-        public async Task Should_Return_Null_If_A_Channel_Was_Not_Found()
+        public async Task Should_Return_Nothing_If_A_Channel_Was_Not_Found()
         {
             var twitchKrakenApiStub = new Mock<ITwitchKrakenApi>();
 
@@ -251,7 +249,7 @@ namespace GameSearchService.StreamProviders.Tests
 
             var streamerChannel = await twitchStreamProvider.GetStreamerChannel("Test streamer");
 
-            Assert.IsNull(streamerChannel);
+            Assert.IsTrue(streamerChannel.Value.IsNothing);
         }
     }
 }
