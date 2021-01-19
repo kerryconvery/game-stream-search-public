@@ -91,26 +91,26 @@ namespace GameStreamSearch.StreamProviders
             };
         }
 
-        public async Task<Result<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName)
+        public async Task<MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName)
         {
-            var result = await youTubeV3Api.SearchChannelsByUsername(channelName, 1);
+            var channelsResult = await youTubeV3Api.SearchChannelsByUsername(channelName, 1);
 
-            if (result.IsFailure)
+            if (channelsResult.IsFailure)
             {
-                return Result<StreamerChannelDto, GetStreamerChannelErrorType>.Fail(GetStreamerChannelErrorType.ProviderNotAvailable);
+                return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Fail(GetStreamerChannelErrorType.ProviderNotAvailable);
             }
 
-            if (result.Value.IsNothing)
+            if (channelsResult.Value.IsNothing)
             {
-                return Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
+                return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
             }
 
-            if (!result.Value.Map(v => v.First().snippet.title.Equals(channelName, System.StringComparison.CurrentCultureIgnoreCase)).GetOrElse(false))
+            if (!channelsResult.Value.Map(v => v.First().snippet.title.Equals(channelName, System.StringComparison.CurrentCultureIgnoreCase)).GetOrElse(false))
             {
-                return Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
+                return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
             }
 
-            return Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(result.Value.Map(channel =>
+            return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(channelsResult.Value.Map(channel =>
                 new StreamerChannelDto
                 {
                     ChannelName = channel.First().snippet.title,

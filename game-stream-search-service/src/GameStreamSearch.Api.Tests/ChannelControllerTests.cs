@@ -57,13 +57,13 @@ namespace GameStreamSearch.Api.Tests
             youTubeStreamProviderStub = new Mock<IStreamProvider>();
             youTubeStreamProviderStub.SetupGet(s => s.Platform).Returns(StreamPlatformType.YouTube);
             youTubeStreamProviderStub.Setup(s => s.GetStreamerChannel(youtubeChannelDto.ChannelName)).ReturnsAsync(
-                Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(youtubeChannelDto)
+                MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(youtubeChannelDto)
             );
 
             twitchtreamProviderStub = new Mock<IStreamProvider>();
             twitchtreamProviderStub.SetupGet(s => s.Platform).Returns(StreamPlatformType.Twitch);
             twitchtreamProviderStub.Setup(s => s.GetStreamerChannel(twitchChannelDto.ChannelName)).ReturnsAsync(
-                Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(twitchChannelDto));
+                MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(twitchChannelDto));
 
             StreamService streamService = new StreamService()
                 .RegisterStreamProvider(youTubeStreamProviderStub.Object)
@@ -173,12 +173,11 @@ namespace GameStreamSearch.Api.Tests
 
             youTubeStreamProviderStub
                 .Setup(s => s.GetStreamerChannel(updatedChannelDto.ChannelName))
-                .ReturnsAsync(Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(updatedChannelDto));
+                .ReturnsAsync(MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(updatedChannelDto));
 
             await channelController.AddChannel(StreamPlatformType.YouTube, "Youtube channel");
 
             var updateResponse = await channelController.AddChannel(StreamPlatformType.YouTube, "Youtube channel");
-
             var result = updateResponse as OkObjectResult;
 
             var getResponse = await channelController.GetChannel(StreamPlatformType.YouTube, "Youtube channel");
@@ -196,7 +195,7 @@ namespace GameStreamSearch.Api.Tests
         {
             twitchtreamProviderStub
                 .Setup(s => s.GetStreamerChannel("Fake Streamer"))
-                .ReturnsAsync(Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing()));
+                .ReturnsAsync(MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing()));
 
             var response = await channelController.AddChannel(StreamPlatformType.Twitch, "Fake Streamer");
             var result = response as BadRequestObjectResult;
@@ -212,7 +211,7 @@ namespace GameStreamSearch.Api.Tests
         {
             youTubeStreamProviderStub
                 .Setup(s => s.GetStreamerChannel("Fake Streamer"))
-                .ReturnsAsync(Result<StreamerChannelDto, GetStreamerChannelErrorType>.Fail(GetStreamerChannelErrorType.ProviderNotAvailable));
+                .ReturnsAsync(MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Fail(GetStreamerChannelErrorType.ProviderNotAvailable));
 
             var response = await channelController.AddChannel(StreamPlatformType.YouTube, "Fake Streamer");
             var result = response as ObjectResult;
