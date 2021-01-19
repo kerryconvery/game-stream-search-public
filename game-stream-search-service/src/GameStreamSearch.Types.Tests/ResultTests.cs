@@ -34,7 +34,7 @@ namespace GameStreamSearch.Types.Tests
         [Test]
         public void Should_Be_Success_With_A_Just_Value()
         {
-            var successResult = Result<int, TestErrorType>.Success(1);
+            var successResult = MaybeResult<int, TestErrorType>.Success(1);
 
             Assert.IsTrue(successResult.IsSuccess);
             Assert.IsTrue(successResult.Value.IsJust);
@@ -45,7 +45,7 @@ namespace GameStreamSearch.Types.Tests
         [Test]
         public void Should_Be_Fail_With_A_Nothing_Value()
         {
-            var successResult = Result<int, TestErrorType>.Fail(TestErrorType.Error);
+            var successResult = MaybeResult<int, TestErrorType>.Fail(TestErrorType.Error);
 
             Assert.IsTrue(successResult.IsFailure);
             Assert.IsTrue(successResult.Value.IsNothing);
@@ -57,7 +57,7 @@ namespace GameStreamSearch.Types.Tests
         public void Should_Be_Success_With_A_Maybe_Value()
         {
             var maybeValue = Maybe<int>.Just(1);
-            var successResult = Result<int, TestErrorType>.Success(maybeValue);
+            var successResult = MaybeResult<int, TestErrorType>.Success(maybeValue);
 
             Assert.IsTrue(successResult.IsSuccess);
             Assert.AreEqual(successResult.Value, maybeValue);

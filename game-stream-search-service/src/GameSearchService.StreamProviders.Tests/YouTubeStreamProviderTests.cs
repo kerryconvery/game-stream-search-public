@@ -161,7 +161,7 @@ namespace GameSearchService.StreamProviders.Tests
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
-                Result<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(
+                MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(
                     new List<YouTubeChannelDto>
                     {
                         {
@@ -195,7 +195,7 @@ namespace GameSearchService.StreamProviders.Tests
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
-                 Result<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(
+                 MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(
                      new List<YouTubeChannelDto>
                      {
                         {
@@ -229,7 +229,7 @@ namespace GameSearchService.StreamProviders.Tests
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
-                Result<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(Maybe<IEnumerable<YouTubeChannelDto>>.Nothing())
+                MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(Maybe<IEnumerable<YouTubeChannelDto>>.Nothing())
             );
 
             var youTubeStreamProvider = new YouTubeStreamProvider(watchUrlBuilderStub.Object, channelUrlBuilderStub.Object, youTubeV3ApiStub.Object);
@@ -246,7 +246,7 @@ namespace GameSearchService.StreamProviders.Tests
             var youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
 
             youTubeV3ApiStub.Setup(m => m.SearchChannelsByUsername("Test streamer", 1)).ReturnsAsync(
-                Result<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Fail(YoutubeErrorType.ProviderNotAvailable)
+                MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Fail(YoutubeErrorType.ProviderNotAvailable)
             );
 
             var youTubeStreamProvider = new YouTubeStreamProvider(watchUrlBuilderStub.Object, channelUrlBuilderStub.Object, youTubeV3ApiStub.Object);

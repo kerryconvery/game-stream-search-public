@@ -110,9 +110,9 @@ namespace GameStreamSearch.Api.Controllers
         [Route("channels/{platform}/{channelName}", Name = "GetChannel")]
         public async Task<IActionResult> GetChannel([FromRoute] StreamPlatformType platform, string channelName)
         {
-            var result = await channelRepository.Get(platform, channelName);
+            var getChannelResult = await channelRepository.Get(platform, channelName);
 
-            return result
+            return getChannelResult
                 .Map<IActionResult>(v => new OkObjectResult(ChannelDto.FromEntity(v)))
                 .GetOrElse(new NotFoundResult());
         }
