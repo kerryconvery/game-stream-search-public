@@ -78,21 +78,21 @@ namespace GameStreamSearch.StreamProviders
             };
         }
 
-        public async Task<MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName)
+        public async Task<Result<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName)
         {
             var result = await dliveApi.GetUserByDisplayName(channelName);
 
             if (result.IsNothing)
             {
-                return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
+                return Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
             }
 
             if (!result.Map(c => c.displayName.Equals(channelName, System.StringComparison.CurrentCultureIgnoreCase)).GetOrElse(false))
             {
-                return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
+                return Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(Maybe<StreamerChannelDto>.Nothing());
             }
 
-            return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(result.Map(c =>
+            return Result<StreamerChannelDto, GetStreamerChannelErrorType>.Success(result.Map(c =>
                 new StreamerChannelDto
                 {
                     ChannelName = c.displayName,

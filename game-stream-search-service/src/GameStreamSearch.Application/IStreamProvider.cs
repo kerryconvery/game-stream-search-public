@@ -13,13 +13,14 @@ namespace GameStreamSearch.Application
 
     public enum GetStreamerChannelErrorType
     {
+        None,
         ProviderNotAvailable,
     }
 
     public interface IStreamProvider
     {
         Task<GameStreamsDto> GetLiveStreams(StreamFilterOptions filterOptions, int pageSize, string pageToken = null);
-        Task<MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName);
+        Task<Result<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName);
 
         StreamPlatformType Platform { get; }
     }

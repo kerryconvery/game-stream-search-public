@@ -25,6 +25,7 @@ namespace GameStreamSearch.StreamPlatformApi
 
     public enum YoutubeErrorType
     {
+        None,
         ProviderNotAvailable,
     }
 
@@ -51,6 +52,6 @@ namespace GameStreamSearch.StreamPlatformApi
         Task<YouTubeSearchDto> SearchGamingVideos(string query, VideoEventType eventType, VideoSortType order, int pageSize, string pageToken);
         Task<YouTubeChannelsDto> GetChannels(string[] channelIds);
         Task<YouTubeVideosDto> GetVideos(string[] videoIds);
-        Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>> SearchChannelsByUsername(string username, int pageSize);
+        Task<Result<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>> SearchChannelsByUsername(string username, int pageSize);
     }
 }
