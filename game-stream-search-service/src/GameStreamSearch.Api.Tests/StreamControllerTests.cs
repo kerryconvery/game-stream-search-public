@@ -61,7 +61,7 @@ namespace GameStreamSearch.Api.Tests
             youTubeStreamProviderStub.Setup(s => s.GetLiveStreams(It.Is<StreamFilterOptions>(o => o.GameName == "stream 2"), 1, null)).ReturnsAsync(filtereGameStreeams);
             youTubeStreamProviderStub.Setup(s => s.GetLiveStreams(It.Is<StreamFilterOptions>(o => o.GameName == null), 1, "page two")).ReturnsAsync(nextPageGameStreeams);
 
-            StreamService streamService = new StreamService()
+            ProviderAggregationService streamService = new ProviderAggregationService()
                 .RegisterStreamProvider(youTubeStreamProviderStub.Object);
 
             streamController = new StreamsController(streamService);

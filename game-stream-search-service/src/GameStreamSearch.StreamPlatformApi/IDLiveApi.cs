@@ -10,9 +10,8 @@ namespace GameStreamSearch.StreamPlatformApi
         Trending
     };
 
-    public static class DLiveTypeExtensions
+    public static class DLiveTypeExtension
     {
-
         public static string GetAsString(this StreamSortOrder streamSortType)
         {
             return streamSortType.ToString().ToUpper();

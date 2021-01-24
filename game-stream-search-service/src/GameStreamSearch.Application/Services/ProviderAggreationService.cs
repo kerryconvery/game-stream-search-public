@@ -10,11 +10,11 @@ using GameStreamSearch.Types;
 
 namespace GameStreamSearch.Application.Services
 {
-    public class StreamService : IStreamService
+    public class ProviderAggregationService: IStreamService, IChannelService
     {
         private Dictionary<StreamPlatformType, IStreamProvider> streamProviders;
 
-        public StreamService()
+        public ProviderAggregationService()
         {
             streamProviders = new Dictionary<StreamPlatformType, IStreamProvider>();
         }
@@ -55,7 +55,7 @@ namespace GameStreamSearch.Application.Services
 
             for (int index = 0; index < gameStreams.Length; index++)
             {
-                if (gameStreams[index].NextPageToken != null)
+                if (!string.IsNullOrEmpty(gameStreams[index].NextPageToken))
                 {
                     pageTokens.Add(streamProviders.Values.ElementAt(index).Platform, gameStreams[index].NextPageToken);
                 }
@@ -89,7 +89,7 @@ namespace GameStreamSearch.Application.Services
             };
         }
 
-        public StreamService RegisterStreamProvider(IStreamProvider streamProvider)
+        public ProviderAggregationService RegisterStreamProvider(IStreamProvider streamProvider)
         {
             streamProviders.Add(streamProvider.Platform, streamProvider);
 
@@ -101,11 +101,6 @@ namespace GameStreamSearch.Application.Services
             var streamProvider = streamProviders[streamingPlatform];
 
             return streamProvider.GetStreamerChannel(streamerName);
-        }
-
-        public IEnumerable<StreamPlatformDto> GetStreamAllPlatforms()
-        {
-            return streamProviders.Keys.Select(k => new StreamPlatformDto { StreamPlatform = k });
         }
     }
 }

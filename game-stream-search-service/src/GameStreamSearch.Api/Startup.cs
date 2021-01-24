@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using GameStreamSearch.Application.Services;
 using GameStreamSearch.StreamProviders;
-using GameStreamSearch.StreamProviders.Builders;
 using GameStreamSearch.Application.Providers;
 using Newtonsoft.Json.Converters;
 using GameStreamSearch.StreamPlatformApi.Twitch;
@@ -64,23 +63,25 @@ namespace GameStreamSearch.Api
             services.AddControllers()
                 .AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
-            services.AddScoped<IStreamService, StreamService>(service =>
+            services.AddScoped(service =>
             {
-                return new StreamService()
+                return new ProviderAggregationService()
                     .RegisterStreamProvider(new TwitchStreamProvider(
                             new TwitchKrakenApi(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"])
                     ))
                     .RegisterStreamProvider(new YouTubeStreamProvider(
-                            new YouTubeWatchUrlBuilder(Configuration["YouTube:WatchUrl"]),
-                            new YouTubeChannelUrlBuilder(Configuration["YouTube:ChannelUrl"]),
+                            Configuration["YouTube:WebUrl"],
                             new YouTubeV3Api(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"])
                     ))
                     .RegisterStreamProvider(new DLiveStreamProvider(
-                            new DLiveWatchUrlBuilder(Configuration["DLive:WatchUrl"]),
+                            Configuration["DLive:WebUrl"],
                             new DLiveGraphQLApi(Configuration["DLive:Apiurl"])));
             });
 
-            services.AddScoped<IUpsertChannelCommand, UpsertChannelCommand>();
+            services.AddScoped<IStreamService>(x => x.GetRequiredService<ProviderAggregationService>());
+            services.AddScoped<IChannelService>(x => x.GetRequiredService<ProviderAggregationService>());
+
+            services.AddScoped<UpsertChannelCommand>();
             
             services.AddScoped<ITimeProvider, UtcTimeProvider>();
 

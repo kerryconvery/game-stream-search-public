@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Application.Dto;
-using GameStreamSearch.StreamProviders.Builders;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.StreamPlatformApi;
 using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
@@ -13,14 +12,12 @@ namespace GameStreamSearch.StreamProviders
 {
     public class YouTubeStreamProvider : IStreamProvider
     {
-        private readonly IYouTubeWatchUrlBuilder urlBuilder;
-        private readonly IYouTubeChannelUrlBuilder channelUrlBuilder;
+        private readonly string youTubeBaseUrl;
         private readonly IYouTubeV3Api youTubeV3Api;
 
-        public YouTubeStreamProvider(IYouTubeWatchUrlBuilder watchUrlBuilder, IYouTubeChannelUrlBuilder channelUrlBuilder, IYouTubeV3Api youTubeV3Api)
+        public YouTubeStreamProvider(string youTubeBaseUrl, IYouTubeV3Api youTubeV3Api)
         {
-            this.urlBuilder = watchUrlBuilder;
-            this.channelUrlBuilder = channelUrlBuilder;
+            this.youTubeBaseUrl = youTubeBaseUrl;
             this.youTubeV3Api = youTubeV3Api;
         }
 
@@ -39,7 +36,7 @@ namespace GameStreamSearch.StreamProviders
                     StreamTitle = v.snippet.title,
                     StreamThumbnailUrl = v.snippet.thumbnails.medium.url,
                     StreamerAvatarUrl = channelSnippet?.thumbnails.@default.url,
-                    StreamUrl = urlBuilder.Build(v.id.videoId),
+                    StreamUrl = $"{youTubeBaseUrl}/watch?v={v.id.videoId}",
                     StreamPlatformName = Platform.GetFriendlyName(),
                     IsLive = true,
                     Views = streamDetails != null ? streamDetails.concurrentViewers : 0,
@@ -115,7 +112,7 @@ namespace GameStreamSearch.StreamProviders
                 {
                     ChannelName = channel.First().snippet.title,
                     AvatarUrl = channel.First().snippet.thumbnails.@default.url,
-                    ChannelUrl = channelUrlBuilder.Build(channel.First().snippet.title),
+                    ChannelUrl = $"{youTubeBaseUrl}/user/{channel.First().snippet.title}",
                     Platform = Platform,
                 })
             );

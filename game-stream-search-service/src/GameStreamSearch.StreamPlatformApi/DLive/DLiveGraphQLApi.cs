@@ -10,7 +10,7 @@ namespace GameStreamSearch.StreamPlatformApi.DLive
         private readonly string dliveGraphQLApiUrl;
 
         public DLiveGraphQLApi(string dliveGraphQLApiUrl)
-        {;
+        {
             this.dliveGraphQLApiUrl = dliveGraphQLApiUrl;
         }
 

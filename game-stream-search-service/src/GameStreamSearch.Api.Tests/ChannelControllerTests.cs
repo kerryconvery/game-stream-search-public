@@ -65,7 +65,7 @@ namespace GameStreamSearch.Api.Tests
             twitchtreamProviderStub.Setup(s => s.GetStreamerChannel(twitchChannelDto.ChannelName)).ReturnsAsync(
                 MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(twitchChannelDto));
 
-            StreamService streamService = new StreamService()
+            ProviderAggregationService streamService = new ProviderAggregationService()
                 .RegisterStreamProvider(youTubeStreamProviderStub.Object)
                 .RegisterStreamProvider(twitchtreamProviderStub.Object);
 
@@ -73,7 +73,7 @@ namespace GameStreamSearch.Api.Tests
 
             timeProviderStub.Setup(s => s.GetNow()).Returns(registrationDate);
 
-            IUpsertChannelCommand upsertChannelCommand = new UpsertChannelCommand(channelRepositoryStub.Object, streamService);
+            var upsertChannelCommand = new UpsertChannelCommand(channelRepositoryStub.Object, streamService);
 
             channelController = new ChannelsController(
                 upsertChannelCommand,

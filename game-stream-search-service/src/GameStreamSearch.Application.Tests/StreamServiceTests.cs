@@ -33,7 +33,7 @@ namespace GameStreamSearch.Application.Tests
             youtubeStreamProviderStub.Setup(m => m.GetLiveStreams(streamFilterOptions, 2, null))
                 .ReturnsAsync(new GameStreamsDto() { Items = new List<GameStreamDto>() { new GameStreamDto() } } );
 
-            var streamService = new StreamService()
+            var streamService = new ProviderAggregationService()
                 .RegisterStreamProvider(twitchStreamProviderStub.Object)
                 .RegisterStreamProvider(youtubeStreamProviderStub.Object);
 
@@ -51,7 +51,7 @@ namespace GameStreamSearch.Application.Tests
             twitchStreamProviderStub.Setup(m => m.GetLiveStreams(streamFilterOptions, 1, null))
                 .ReturnsAsync(GameStreamsDto.Empty());
 
-            var streamService = new StreamService()
+            var streamService = new ProviderAggregationService()
                 .RegisterStreamProvider(twitchStreamProviderStub.Object);
 
             var streams = await streamService.GetStreams(streamFilterOptions, 1, null);
@@ -106,7 +106,7 @@ namespace GameStreamSearch.Application.Tests
                     }
                 });
 
-            var streamService = new StreamService()
+            var streamService = new ProviderAggregationService()
                 .RegisterStreamProvider(twitchStreamProviderStub.Object)
                 .RegisterStreamProvider(youtubeStreamProviderStub.Object);
 
@@ -132,7 +132,7 @@ namespace GameStreamSearch.Application.Tests
                     new GameStreamDto() { Views = 2 }
                 } });
 
-            var streamService = new StreamService()
+            var streamService = new ProviderAggregationService()
                 .RegisterStreamProvider(twitchStreamProviderStub.Object);
 
             var streams = await streamService.GetStreams(streamFilterOptions, 2, null);

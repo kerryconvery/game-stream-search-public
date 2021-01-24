@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Base64Url;
 using GameStreamSearch.Application.Dto;
-using GameStreamSearch.StreamProviders.Builders;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.StreamPlatformApi;
 using GameStreamSearch.Application;
@@ -13,12 +12,12 @@ namespace GameStreamSearch.StreamProviders
 {
     public class DLiveStreamProvider : IStreamProvider
     {
-        private readonly IDLiveWatchUrlBuilder urlBuilder;
+        private readonly string baseUrl;
         private readonly IDLiveApi dliveApi;
 
-        public DLiveStreamProvider(IDLiveWatchUrlBuilder urlBuilder, IDLiveApi dliveApi)
+        public DLiveStreamProvider(string baseUrl, IDLiveApi dliveApi)
         {
-            this.urlBuilder = urlBuilder;
+            this.baseUrl = baseUrl;
             this.dliveApi = dliveApi;
         }
 
@@ -68,11 +67,10 @@ namespace GameStreamSearch.StreamProviders
                     StreamerName = s.creator.displayName,
                     StreamThumbnailUrl = s.thumbnailUrl,
                     StreamerAvatarUrl = s.creator.avatar,
-                    StreamUrl = urlBuilder.Build(s.creator.displayName),
+                    StreamUrl = $"{baseUrl}/{s.creator.displayName}",
                     StreamPlatformName = Platform.GetFriendlyName(),
                     IsLive = true,
                     Views = s.watchingCount,
-
                 }),
                 NextPageToken = GetNextPageToken(liveStreamsResult.data.livestreams.list.Any(), pageSize, pageOffset),
             };
@@ -97,7 +95,7 @@ namespace GameStreamSearch.StreamProviders
                 {
                     ChannelName = c.displayName,
                     AvatarUrl = c.avatar,
-                    ChannelUrl = urlBuilder.Build(c.displayName),
+                    ChannelUrl = $"{baseUrl}/{c.displayName}",
                     Platform = Platform,
                 })
             );
