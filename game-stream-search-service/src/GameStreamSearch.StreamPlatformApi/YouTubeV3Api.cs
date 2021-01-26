@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Types;
-using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
+using GameStreamSearch.StreamProviders.Dto.YouTube.YouTubeV3;
 using RestSharp;
 
-namespace GameStreamSearch.StreamPlatformApi.YouTube
+namespace GameStreamSearch.StreamProviders.Dto
 {
     public class YouTubeV3Api : IYouTubeV3Api
     {
@@ -17,7 +17,7 @@ namespace GameStreamSearch.StreamPlatformApi.YouTube
             this.googleApiKey = googleApiKey;
         }
 
-        public async Task<YouTubeSearchDto> SearchGamingVideos(string query, VideoEventType eventType, VideoSortType order, int pageSize, string pageToken)
+        public async Task<MaybeResult<YouTubeSearchDto, YouTubeErrorType>> SearchGamingVideos(string query, VideoEventType eventType, VideoSortType order, int pageSize, string pageToken)
         {
             var client = new RestClient(this.googleApiUrl);
 
@@ -37,10 +37,16 @@ namespace GameStreamSearch.StreamPlatformApi.YouTube
 
             var response = await client.ExecuteAsync<YouTubeSearchDto>(request);
 
-            return response.Data;
+
+            if (response.ResponseStatus == ResponseStatus.Error || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                return MaybeResult<YouTubeSearchDto, YouTubeErrorType>.Fail(YouTubeErrorType.ProviderNotAvailable);
+            }
+
+            return MaybeResult<YouTubeSearchDto, YouTubeErrorType>.Success(response.Data);
         }
 
-        public async Task<YouTubeChannelsDto> GetChannels(string[] channelIds)
+        public async Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>> GetChannels(string[] channelIds)
         {
             var client = new RestClient(this.googleApiUrl);
 
@@ -61,10 +67,15 @@ namespace GameStreamSearch.StreamPlatformApi.YouTube
 
             var response = await client.ExecuteAsync<YouTubeChannelsDto>(request);
 
-            return response.Data;
+            if (response.ResponseStatus == ResponseStatus.Error || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                return MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>.Fail(YouTubeErrorType.ProviderNotAvailable);
+            }
+
+            return MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>.Success(response.Data.items);
         }
 
-        public async Task<YouTubeVideosDto> GetVideos(string[] videoIds)
+        public async Task<MaybeResult<IEnumerable<YouTubeVideoDto>, YouTubeErrorType>> GetVideos(string[] videoIds)
         {
             var client = new RestClient(this.googleApiUrl);
 
@@ -85,10 +96,15 @@ namespace GameStreamSearch.StreamPlatformApi.YouTube
 
             var response = await client.ExecuteAsync<YouTubeVideosDto>(request);
 
-            return response.Data;
+            if (response.ResponseStatus == ResponseStatus.Error || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                return MaybeResult<IEnumerable<YouTubeVideoDto>, YouTubeErrorType>.Fail(YouTubeErrorType.ProviderNotAvailable);
+            }
+
+            return MaybeResult<IEnumerable<YouTubeVideoDto>, YouTubeErrorType>.Success(response.Data.items);
         }
 
-        public async Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>> SearchChannelsByUsername(string username, int pageSize)
+        public async Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>> SearchChannelsByUsername(string username, int pageSize)
         {
             var client = new RestClient(this.googleApiUrl);
 
@@ -104,12 +120,12 @@ namespace GameStreamSearch.StreamPlatformApi.YouTube
 
             var response = await client.ExecuteAsync<YouTubeChannelsDto>(request);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            if (response.ResponseStatus == ResponseStatus.Error || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
             {
-                return MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Fail(YoutubeErrorType.ProviderNotAvailable);
+                return MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>.Fail(YouTubeErrorType.ProviderNotAvailable);
             }
 
-            return MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>.Success(response.Data.items);
+            return MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>.Success(response.Data.items);
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameStreamSearch.Types;
-using GameStreamSearch.StreamPlatformApi.YouTube.Dto.YouTubeV3;
+using GameStreamSearch.StreamProviders.Dto.YouTube.YouTubeV3;
 
-namespace GameStreamSearch.StreamPlatformApi
+namespace GameStreamSearch.StreamProviders
 {
     public enum VideoEventType
     {
@@ -23,7 +23,7 @@ namespace GameStreamSearch.StreamPlatformApi
         ViewCount
     }
 
-    public enum YoutubeErrorType
+    public enum YouTubeErrorType
     {
         None,
         ProviderNotAvailable,
@@ -49,9 +49,9 @@ namespace GameStreamSearch.StreamPlatformApi
 
     public interface IYouTubeV3Api
     {
-        Task<YouTubeSearchDto> SearchGamingVideos(string query, VideoEventType eventType, VideoSortType order, int pageSize, string pageToken);
-        Task<YouTubeChannelsDto> GetChannels(string[] channelIds);
-        Task<YouTubeVideosDto> GetVideos(string[] videoIds);
-        Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YoutubeErrorType>> SearchChannelsByUsername(string username, int pageSize);
+        Task<MaybeResult<YouTubeSearchDto, YouTubeErrorType>> SearchGamingVideos(string query, VideoEventType eventType, VideoSortType order, int pageSize, string pageToken);
+        Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>> GetChannels(string[] channelIds);
+        Task<MaybeResult<IEnumerable<YouTubeVideoDto>, YouTubeErrorType>> GetVideos(string[] videoIds);
+        Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>> SearchChannelsByUsername(string username, int pageSize);
     }
 }
