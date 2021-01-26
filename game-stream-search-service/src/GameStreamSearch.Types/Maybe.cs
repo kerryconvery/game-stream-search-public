@@ -29,9 +29,9 @@ namespace GameStreamSearch.Types
                 throw new ArgumentNullException(nameof(mapper));
 
             if (hasValue)
-                return Maybe<TResult>.Just(mapper(value));
+                return Maybe<TResult>.ToMaybe(mapper(value));
             else
-                return Maybe<TResult>.Nothing();
+                return Maybe<TResult>.Nothing;
         }
 
         public T GetOrElse(T elseValue)
@@ -56,21 +56,18 @@ namespace GameStreamSearch.Types
         }
 
         public bool IsNothing => !hasValue;
-        public bool IsJust => hasValue;
+        public bool IsSome => hasValue;
 
         public static Maybe<T> ToMaybe(T? value)
         {
-            return value != null ? Just(value) : Nothing();
+            return value != null ? Some(value) : Nothing;
         }
 
-        public static Maybe<T> Just(T value)
+        public static Maybe<T> Some(T value)
         {
             return new Maybe<T>(value);
         }
 
-        public static Maybe<T> Nothing()
-        {
-            return new Maybe<T>();
-        }
+        public static Maybe<T> Nothing => new Maybe<T>();
     }
 }

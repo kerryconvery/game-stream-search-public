@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GameStreamSearch.Api.Contracts;
 using GameStreamSearch.Application;
+using GameStreamSearch.Application.Commands;
 using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Application.Providers;
@@ -20,12 +21,12 @@ namespace GameStreamSearch.Api.Controllers
     [Route("api")]
     public class ChannelsController : ControllerBase
     {
-        private readonly IUpsertChannelCommand upsertChannelCommand;
+        private readonly UpsertChannelCommand upsertChannelCommand;
         private readonly IChannelRepository channelRepository;
         private readonly ITimeProvider timeProvider;
 
         public ChannelsController(
-            IUpsertChannelCommand upsertChannelCommand,
+            UpsertChannelCommand upsertChannelCommand,
             IChannelRepository channelRepository,
             ITimeProvider timeProvider)
         {

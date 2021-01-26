@@ -1,24 +1,40 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GameStreamSearch.Application.Entities;
-using GameStreamSearch.Types;
+using GameStreamSearch.Application.Enums;
+using GameStreamSearch.Application.Services;
 
 namespace GameStreamSearch.Application.Commands
 {
-    public class UpsertChannelCommand: IUpsertChannelCommand
+    public enum UpsertChannelResult
+    {
+        ChannelNotFoundOnPlatform,
+        ChannelAdded,
+        ChannelUpdated,
+        PlatformServiceIsNotAvailable,
+    }
+
+    public class UpsertChannelRequest
+    {
+        public string ChannelName { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public StreamPlatformType StreamPlatform { get; set; }
+    }
+
+    public class UpsertChannelCommand
     {
         private readonly IChannelRepository channelRepository;
-        private readonly IStreamService streamService;
+        private readonly IChannelService channelService;
 
-        public UpsertChannelCommand(IChannelRepository channelRepository, IStreamService streamService)
+        public UpsertChannelCommand(IChannelRepository channelRepository, IChannelService channelService)
         {
             this.channelRepository = channelRepository;
-            this.streamService = streamService;
+            this.channelService = channelService;
         }
 
         public async Task<UpsertChannelResult> Invoke(UpsertChannelRequest request)
         {
-            var streamChannelResult = await streamService.GetStreamerChannel(request.ChannelName, request.StreamPlatform);
+            var streamChannelResult = await channelService.GetStreamerChannel(request.ChannelName, request.StreamPlatform);
 
             if (streamChannelResult.IsFailure)
             {
@@ -30,20 +46,13 @@ namespace GameStreamSearch.Application.Commands
                 return UpsertChannelResult.ChannelNotFoundOnPlatform;
             }
 
-            var streamChannel = streamChannelResult.Value.Unwrap();
-
-            var channel = new Channel
-            {
-                ChannelName = request.ChannelName,
-                StreamPlatform = request.StreamPlatform,
-                DateRegistered = request.RegistrationDate,
-                AvatarUrl = streamChannel.AvatarUrl,
-                ChannelUrl = streamChannel.ChannelUrl,
-            };
+            var channel = streamChannelResult.Value
+                .Map(streamChannel => streamChannel.ToChannel(request.RegistrationDate))
+                .Unwrap();
 
             var existingChannel = await channelRepository.Get(request.StreamPlatform, request.ChannelName);
 
-            if (existingChannel.IsJust)
+            if (existingChannel.IsSome)
             {
                 await channelRepository.Update(channel);
 
