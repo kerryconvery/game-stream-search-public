@@ -6,8 +6,8 @@ import { useTelemetryTracker } from '../providers/TelemetryTrackerProvider';
 import useEventBus from '../event-bus/eventBus';
 import { postNotificationEvent, buildOfflineAlertEvent } from '../notifications/events';
 import useInfiniteStreamLoader from './hooks/useInfiniteStreamLoader';
-import GameStreamPageTemplate from './GameStreamPageTemplate';
-import GameStreamSearchBar from './components/GameStreamSearchBar';
+import GameStreamPageView from './GameStreamPageView';
+import GameSearchInput  from './components/GameSearchInput';
 import GameStreamGrid from './components/GameStreamGrid';
 import NoStreamsFound from './components/NoStreamsFound';
 import ChannelsSideBar from './components/channels-side-bar/ChannelsSideBar';
@@ -27,8 +27,8 @@ const GameStreamListPage = () => {
   }
 
   return (
-    <GameStreamPageTemplate
-      searchBar={<GameStreamSearchBar onGameChange={filterStreams} />}
+    <GameStreamPageView
+      searchBar={<GameSearchInput onGameChange={filterStreams} />}
       leftSideBar={<ChannelsSideBar />}
       notFoundNotice={<NoStreamsFound searchTerm={streams.filters.gameName} />}
       numberOfStreams={streams.items.length}
@@ -48,7 +48,7 @@ const GameStreamListPage = () => {
           />
         </InfiniteScroll>
       </div>
-    </GameStreamPageTemplate>
+    </GameStreamPageView>
   )
 }
 

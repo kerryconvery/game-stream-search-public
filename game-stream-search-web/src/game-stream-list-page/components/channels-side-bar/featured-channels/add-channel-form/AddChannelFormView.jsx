@@ -11,7 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import FormTemplate, { SubmitButton } from '../../../../shared-components/form/FormTemplate';
+import FormTemplate, { SubmitButton } from '../../../../../shared-components/form/FormTemplate';
 
 const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, onSave }) => {
   const onFormChange = field => (event) => {

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GameStreamInput = ({ onGameChange }) => {
+const GameSearchInput = ({ onGameChange }) => {
   const [ input, setInput ] = useState('');
   
   const classes = useStyles();
@@ -63,8 +63,8 @@ const GameStreamInput = ({ onGameChange }) => {
   );
 };
 
-GameStreamInput.propTypes = {
+GameSearchInput.propTypes = {
   onGameChange: func.isRequired,
 }
 
-export default GameStreamInput;
+export default GameSearchInput;

@@ -3,7 +3,7 @@ import { shape, string, bool, arrayOf, func } from 'prop-types';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Skeleton from '@material-ui/lab/Skeleton';
-import Link from '../Link';
+import Link from '../../../shared-components/Link';
 
 const useChannelTileStyles = makeStyles({
   hover: {
@@ -87,7 +87,7 @@ const useChannelListStyles = makeStyles({
   },
 })
 
-export const ChannelList = ({ channels, isLoading, onChannelOpened }) => {
+export const ChannelListView = ({ channels, isLoading, onChannelOpened }) => {
   const classes = useChannelListStyles();
 
   const channelTitles = channels.map((channel, index) => (
@@ -111,7 +111,7 @@ export const ChannelList = ({ channels, isLoading, onChannelOpened }) => {
   )
 }
 
-ChannelList.propTypes = {
+ChannelListView.propTypes = {
   channels: arrayOf(shape({
     channelName: string.isRequired,
     streamPlatformDisplayName: string.isRequired,
@@ -122,9 +122,9 @@ ChannelList.propTypes = {
   onChannelOpened: func,
 };
 
-ChannelList.defaultProps = {
+ChannelListView.defaultProps = {
   streams: [],
   isLoading: false,
 };
 
-export default ChannelList;
+export default ChannelListView;

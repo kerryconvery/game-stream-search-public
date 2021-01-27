@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
-import Link from './Link';
+import Link from '../../shared-components/Link';
 
 const useStreamTileStyles = makeStyles(() => ({
   root: {

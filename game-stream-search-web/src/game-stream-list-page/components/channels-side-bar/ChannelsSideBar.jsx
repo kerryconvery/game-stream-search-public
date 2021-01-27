@@ -1,9 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import pickProps from '../../../prop-utils/pickProps';
-import useFeaturedChannelsController from './featured-channels/useFeaturedChannelsController';
-import FeaturedChannelsView from './featured-channels/FeaturedChannelsView';
-import { useTelemetryTracker } from '../../../providers/TelemetryTrackerProvider';
+import FeaturedChannelsSideBar from './featured-channels/FeeaturedChannelsSideBar';
 
 const useStyles = makeStyles({
   sidebarContent: {   
@@ -20,15 +17,10 @@ const useStyles = makeStyles({
 
 const ChannelsSideBar = () => {
   const classes = useStyles();
-  const featuredChannelsController = useFeaturedChannelsController();
-  const { trackFeaturedChannelOpened } = useTelemetryTracker();
 
   return (
     <div className={classes.sidebarContent}>
-      <FeaturedChannelsView
-        {...pickProps(featuredChannelsController, FeaturedChannelsView.propTypes)}
-        onChannelOpened={trackFeaturedChannelOpened} 
-      />
+      <FeaturedChannelsSideBar />
     </div>
   )
 }
