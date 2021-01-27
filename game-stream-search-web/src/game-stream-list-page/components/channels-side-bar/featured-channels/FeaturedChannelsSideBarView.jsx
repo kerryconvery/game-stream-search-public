@@ -6,7 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Popover from '@material-ui/core/Popover';
 import SideBarPanel from '../../../../shared-components/SideBarPanel';
 
-const FeaturedChannelsSideBarView = ({ addChannelForm, children }) => {
+const FeaturedChannelsSideBarView = ({ addChannelForm, channelList }) => {
   const [ anchorElement, setAnchorElement ] = useState(null);
 
   const onOpenForm = event => setAnchorElement(event.currentTarget);
@@ -40,14 +40,14 @@ const FeaturedChannelsSideBarView = ({ addChannelForm, children }) => {
         >
           {addChannelForm({ onCloseForm })}
         </Popover>
-        {children}
+        {channelList}
     </SideBarPanel>
   )
 }
 
 FeaturedChannelsSideBarView.propTypes = {
   addChannelForm: func.isRequired,
-  children: node.isRequired,
+  channelList: node.isRequired,
 };
 
 export default FeaturedChannelsSideBarView;

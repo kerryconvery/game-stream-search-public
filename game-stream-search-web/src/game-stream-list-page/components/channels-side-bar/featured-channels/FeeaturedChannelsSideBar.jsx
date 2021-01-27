@@ -24,13 +24,14 @@ const FeaturedChannelSideBar = () => {
           onSaveSuccess={onChannelsUpdated}
         />
       )}
-    >
-      <ChannelListView
-        channels={channels}
-        isLoading={isLoading}
-        onChannelOpened={trackFeaturedChannelOpened}
-      />
-    </FeaturedChannelsSideBarView>
+      channelList={
+        <ChannelListView
+          channels={channels}
+          isLoading={isLoading}
+          onChannelOpened={trackFeaturedChannelOpened}
+        />
+      }
+    />
   )
 }
 
