@@ -50,7 +50,7 @@ namespace GameStreamSearch.Application.Commands
                 .Map(streamChannel => streamChannel.ToChannel(request.RegistrationDate))
                 .Unwrap();
 
-            var existingChannel = await channelRepository.Get(request.StreamPlatform, request.ChannelName);
+            var existingChannel = await channelRepository.Get(channel.StreamPlatform, channel.ChannelName);
 
             if (existingChannel.IsSome)
             {

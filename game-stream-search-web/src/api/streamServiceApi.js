@@ -45,7 +45,6 @@ const addChannelRequest = (baseUrl) => (data) => (
     }
   ))
   .catch(error => {
-    console.log('error', error);
     return (
     {
       status: httpStatusToStatusType(error.response.status),

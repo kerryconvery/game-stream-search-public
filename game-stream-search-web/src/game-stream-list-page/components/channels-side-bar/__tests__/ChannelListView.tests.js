@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import ChannelList from '../ChannelList';
+import ChannelListView from '../ChannelListView';
 
 describe('Channel List', () => {
   it('should render a list of channels without loading tiles', () => {
@@ -19,13 +19,13 @@ describe('Channel List', () => {
       }
     ];
 
-    const { container } = render(<ChannelList channels={channels} />);
+    const { container } = render(<ChannelListView channels={channels} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it('should render a list of loading tiles', () => {
-    const { container } = render(<ChannelList channels={[]} isLoading />);
+    const { container } = render(<ChannelListView channels={[]} isLoading />);
 
     expect(container.firstChild).toMatchSnapshot();
   })

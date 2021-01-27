@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const GameStreamPageTemplate = ({
+const GameStreamPageView = ({
   children,
   searchBar,
   leftSideBar,
@@ -54,7 +54,7 @@ const GameStreamPageTemplate = ({
   )
 }
 
-GameStreamPageTemplate.propTypes = {
+GameStreamPageView.propTypes = {
   children: node.isRequired,
   searchBar: node.isRequired,
   leftSideBar: node.isRequired,
@@ -63,4 +63,4 @@ GameStreamPageTemplate.propTypes = {
   isLoadingStreams: bool.isRequired,
 }
 
-export default GameStreamPageTemplate;
+export default GameStreamPageView;
