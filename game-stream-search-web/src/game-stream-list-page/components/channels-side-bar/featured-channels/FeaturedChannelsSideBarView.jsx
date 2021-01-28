@@ -16,32 +16,35 @@ const FeaturedChannelsSideBarView = ({ addChannelForm, channelList }) => {
 
   return (
     <SideBarPanel
-        title='Featured channels'
-        action={(
-          <Tooltip title='Add a new channel to the list'>
-            <IconButton color='primary' size='small' onClick={onOpenForm}>
-              <Add />
-            </IconButton>
-          </Tooltip>
-        )}
-      >
-        <Popover
-          open={open}
-          anchorEl={anchorElement}
-          onClose={onCloseForm}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          {addChannelForm({ onCloseForm })}
-        </Popover>
-        {channelList}
-    </SideBarPanel>
+      title='Featured channels'
+      action={(
+        <Tooltip title='Add a new channel to the list'>
+          <IconButton color='primary' size='small' onClick={onOpenForm}>
+            <Add />
+          </IconButton>
+        </Tooltip>
+      )}
+      mainContent={
+        <>
+          <Popover
+            open={open}
+            anchorEl={anchorElement}
+            onClose={onCloseForm}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            {addChannelForm({ onCloseForm })}
+          </Popover>
+          {channelList}
+        </>
+      }
+    />
   )
 }
 
