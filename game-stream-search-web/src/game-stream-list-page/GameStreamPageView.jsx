@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
       paddingTop: '1rem',
     },
   },
-  mainContent: {
+  pageContent: {
     gridColumnStart: 2,
     gridColumnEnd: 2,
     gridRowStart: 1,
@@ -42,12 +42,12 @@ const GameStreamPageView = ({
   return (
     <StandardPageTemplate
       toolBar={searchBar}
-      mainContent={
+      pageContent={
         <div className={classes.gridContainer}>
           <div className={classes.sideBar}>
             {leftSideBar}
           </div>
-          <div className={classes.mainContent}>
+          <div className={classes.pageContent}>
             {!hasStreams && notFoundNotice}
             {hasStreams && streamList}
           </div>

@@ -24,7 +24,7 @@ const FeaturedChannelsSideBarView = ({ addChannelForm, channelList }) => {
           </IconButton>
         </Tooltip>
       )}
-      mainContent={
+      panelContent={
         <>
           <Popover
             open={open}
