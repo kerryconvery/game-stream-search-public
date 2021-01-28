@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const SideBarPanel = ({ mainContent, title, action }) => {
+const SideBarPanel = ({ panelContent, title, action }) => {
   const classes = useStyles();
 
   return (
@@ -36,7 +36,7 @@ const SideBarPanel = ({ mainContent, title, action }) => {
           {action}
         </div>
       </div>
-      {mainContent}
+      {panelContent}
     </div>
   )
 }
@@ -44,7 +44,7 @@ const SideBarPanel = ({ mainContent, title, action }) => {
 SideBarPanel.propTypes = {
   title: string.isRequired,
   action: node,
-  mainContent: node.isRequired,
+  panelContent: node.isRequired,
 }
 
 export default SideBarPanel;

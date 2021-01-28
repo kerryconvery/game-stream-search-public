@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const StandardPageTemplate = ({ toolBar, mainContent }) => {
+const StandardPageTemplate = ({ toolBar, pageContent }) => {
   const classes = useStyles();
 
   return (
@@ -28,7 +28,7 @@ const StandardPageTemplate = ({ toolBar, mainContent }) => {
         {toolBar}
       </div>
       <div className={classes.content}>
-        {mainContent}
+        {pageContent}
       </div>
     </>
   )
@@ -36,7 +36,7 @@ const StandardPageTemplate = ({ toolBar, mainContent }) => {
 
 StandardPageTemplate.propTypes = {
   toolBar: node,
-  mainContent: node.isRequired,
+  pageContent: node.isRequired,
 }
 
 export default StandardPageTemplate;
