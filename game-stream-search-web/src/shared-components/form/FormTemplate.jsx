@@ -22,17 +22,17 @@ const useFormTemplateStyles = makeStyles({
   },
 });
 
-const FormTemplate = ({ title, content, children }) => {
+const FormTemplate = ({ title, formContent, formActions }) => {
   const classes = useFormTemplateStyles();
 
   return (
     <Card className={classes.card}>
       <CardHeader className={classes.title} title={title} />
       <CardContent className={classes.formContent}>
-        {content}
+        {formContent}
       </CardContent>
       <CardActions>
-        {children}
+        {formActions}
       </CardActions>
     </Card>
   )
@@ -40,8 +40,8 @@ const FormTemplate = ({ title, content, children }) => {
 
 FormTemplate.propTypes = {
   title: string.isRequired,
-  content: node.isRequired,
-  children: node.isRequired,
+  formContent: node.isRequired,
+  formActions: node.isRequired,
 }
 
 const useSubmitButtonStyles = makeStyles({

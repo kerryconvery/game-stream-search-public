@@ -26,7 +26,7 @@ const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, 
   return (
     <FormTemplate
       title='Add Channel'
-      content={
+      formContent={
         <FormGroup>
           <TextField
             id='channel-name'
@@ -52,10 +52,13 @@ const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, 
           </FormControl>
         </FormGroup>
       }
-      >
-      <SubmitButton submitting={isSaving} onClick={() => onSave(formValues)}>Save</SubmitButton>
-      <Button onClick={onCancel}>Cancel</Button>
-    </FormTemplate>
+      formActions={
+        <>
+          <SubmitButton submitting={isSaving} onClick={() => onSave(formValues)}>Save</SubmitButton>
+          <Button onClick={onCancel}>Cancel</Button>
+        </>
+      }
+    />
   )
 }
 

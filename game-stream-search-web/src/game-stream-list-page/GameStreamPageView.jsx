@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const GameStreamPageView = ({
-  children,
+  streamList,
   searchBar,
   leftSideBar,
   notFoundNotice,
@@ -40,22 +40,25 @@ const GameStreamPageView = ({
   const hasStreams = numberOfStreams > 0 || isLoadingStreams;
 
   return (
-    <StandardPageTemplate toolBar={searchBar} >
-      <div className={classes.gridContainer}>
-        <div className={classes.sideBar}>
-          {leftSideBar}
+    <StandardPageTemplate
+      toolBar={searchBar}
+      mainContent={
+        <div className={classes.gridContainer}>
+          <div className={classes.sideBar}>
+            {leftSideBar}
+          </div>
+          <div className={classes.mainContent}>
+            {!hasStreams && notFoundNotice}
+            {hasStreams && streamList}
+          </div>
         </div>
-        <div className={classes.mainContent}>
-          {!hasStreams && notFoundNotice}
-          {hasStreams && children}
-        </div>
-      </div>
-    </StandardPageTemplate>
+      }
+    />
   )
 }
 
 GameStreamPageView.propTypes = {
-  children: node.isRequired,
+  streamList: node.isRequired,
   searchBar: node.isRequired,
   leftSideBar: node.isRequired,
   notFoundNotice: node.isRequired,
