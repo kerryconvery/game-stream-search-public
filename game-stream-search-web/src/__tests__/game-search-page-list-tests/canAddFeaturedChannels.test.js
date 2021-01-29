@@ -10,60 +10,6 @@ import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Can add featured channels', () => {
-  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
-
-  const addChannelFormName = 'Add Channel';
-
-  const renderApplication = () => {
-    render(
-      <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
-        <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
-          <App />
-        </TelemetryTrackerProvider>
-      </StreamServiceProvider>
-    )
-
-    // We must wait for this to avoid updated state after the component is unmounted.
-    return waitFor(() => screen.getByTestId('streams-not-found'));
-  }
-
-  const openTheAddChannelForm = async () => {
-    await renderApplication();
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    return waitFor(() => screen.getByText(addChannelFormName));
-  }
-
-  const setChannelFieldValue = (channelName) => {
-    const channelField = screen.getByLabelText('Channel name');
-
-    fireEvent.change(channelField, { target: { value: channelName } })
-  }
-  
-  const clickTheCancelButton = () => {
-    const cancelButton = screen.getByText('Cancel');
-    fireEvent.click(cancelButton);
-
-    return waitForElementToBeRemoved(() => screen.getByText(addChannelFormName));
-  }
-
-  const clickTheSaveButton = () => {
-    const saveButton = screen.getByText('Save');
-
-    fireEvent.click(saveButton);
-  }
-
-  const addANewChannel = async (channelName) => {
-    await openTheAddChannelForm();
-
-    setChannelFieldValue(channelName);
-
-    clickTheSaveButton();
-  }
-
   beforeEach(() => {
     nock('http://localhost:5000')
     .defaultReplyHeaders({
@@ -239,4 +185,57 @@ describe('Can add featured channels', () => {
 
     expect(errorMessage).toBeInTheDocument();
   });
+
+  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
+  const addChannelFormName = 'Add Channel';
+
+  const renderApplication = () => {
+    render(
+      <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
+        <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
+          <App />
+        </TelemetryTrackerProvider>
+      </StreamServiceProvider>
+    )
+
+    // We must wait for this to avoid updated state after the component is unmounted.
+    return waitFor(() => screen.getByTestId('streams-not-found'));
+  }
+
+  const openTheAddChannelForm = async () => {
+    await renderApplication();
+
+    const addButton = screen.getByTitle('Add a new channel to the list');
+
+    fireEvent.click(addButton);
+
+    return waitFor(() => screen.getByText(addChannelFormName));
+  }
+
+  const setChannelFieldValue = (channelName) => {
+    const channelField = screen.getByLabelText('Channel name');
+
+    fireEvent.change(channelField, { target: { value: channelName } })
+  }
+  
+  const clickTheCancelButton = () => {
+    const cancelButton = screen.getByText('Cancel');
+    fireEvent.click(cancelButton);
+
+    return waitForElementToBeRemoved(() => screen.getByText(addChannelFormName));
+  }
+
+  const clickTheSaveButton = () => {
+    const saveButton = screen.getByText('Save');
+
+    fireEvent.click(saveButton);
+  }
+
+  const addANewChannel = async (channelName) => {
+    await openTheAddChannelForm();
+
+    setChannelFieldValue(channelName);
+
+    clickTheSaveButton();
+  }
 });

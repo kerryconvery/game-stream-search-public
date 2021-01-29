@@ -20,20 +20,6 @@ describe('Can search for streams', () => {
     .reply(200, { items: [] });
   });
 
-  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
-
-  const Application = () => (
-    <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
-      <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
-        <App />
-      </TelemetryTrackerProvider>
-    </StreamServiceProvider>
-  );
-
-  const renderApplication = () => {
-    return render(<Application />);
-  }
-
   it('should display the searched for game stream and trigger the stream searched telemetry event', async () => {
     const streams = {
       items: [{
@@ -113,4 +99,18 @@ describe('Can search for streams', () => {
     
     expect(noStreamsFound).toBeInTheDocument();
   });
+
+  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
+
+  const Application = () => (
+    <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
+      <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
+        <App />
+      </TelemetryTrackerProvider>
+    </StreamServiceProvider>
+  );
+
+  const renderApplication = () => {
+    return render(<Application />);
+  }
 });

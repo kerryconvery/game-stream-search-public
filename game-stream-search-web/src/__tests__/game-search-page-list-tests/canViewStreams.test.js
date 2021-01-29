@@ -20,20 +20,6 @@ describe('When viewing streams', () => {
     .reply(200, { items: [] });
   });
 
-  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
-
-  const Application = () => (
-    <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
-      <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
-        <App />
-      </TelemetryTrackerProvider>
-    </StreamServiceProvider>
-  );
-
-  const renderApplication = () => {
-    return render(<Application />);
-  }
-
   it('should render streams without errors', async () => {
     const streams = {
       items: [{
@@ -150,4 +136,18 @@ describe('When viewing streams', () => {
     
     expect(telemetryTrackerApiMock.trackStreamOpened).toHaveBeenCalled();
   });
+
+  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
+
+  const Application = () => (
+    <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
+      <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
+        <App />
+      </TelemetryTrackerProvider>
+    </StreamServiceProvider>
+  );
+
+  const renderApplication = () => {
+    return render(<Application />);
+  }
 });

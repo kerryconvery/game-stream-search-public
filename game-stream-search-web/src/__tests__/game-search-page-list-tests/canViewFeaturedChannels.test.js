@@ -20,20 +20,6 @@ describe('Can view featured channels', () => {
     .reply(200, { items: [] });
   });
 
-  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
-
-  const renderApplication = () => {
-    render(
-      <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
-        <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
-          <App />
-        </TelemetryTrackerProvider>
-      </StreamServiceProvider>
-    )
-
-    return waitFor(() => screen.getByTestId('streams-not-found'));
-  };
-
   it('should display a list of Featured channels on startup', async () => {
     const channelList = {
       items: [
@@ -89,4 +75,18 @@ describe('Can view featured channels', () => {
 
     expect(telemetryTrackerApiMock.trackFeaturedChannelOpened).toHaveBeenCalled();
   });
+
+  const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
+
+  const renderApplication = () => {
+    render(
+      <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
+        <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
+          <App />
+        </TelemetryTrackerProvider>
+      </StreamServiceProvider>
+    )
+
+    return waitFor(() => screen.getByTestId('streams-not-found'));
+  };
 })
