@@ -15,7 +15,7 @@ const initialState = {
   submitted: false,
 }
 
-const FormController = ({ children, onValidateForm, onSaveForm, onSaveSuccess }) => {
+const useFormController = (onValidateForm, onSaveForm, onSaveSuccess) => {
   const [ state, dispatch ] = useReducer(reducer, initialState)
 
   const onSave = async (formValues) => {
@@ -46,13 +46,13 @@ const FormController = ({ children, onValidateForm, onSaveForm, onSaveSuccess })
     }
   }
 
-  return children({
+  return {
     formValues: state.formValues,
     errors: state.errors,
     isSaving: state.isSaving,
     onChange,
     onSave,
-  })
+  };
 }
 
-export default FormController;
+export default useFormController;
