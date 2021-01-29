@@ -10,16 +10,6 @@ import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Can search for streams', () => {
-  beforeEach(() => {
-    nock('http://localhost:5000')
-    .defaultReplyHeaders({
-      'access-control-allow-origin': '*',
-      'access-control-allow-credentials': 'true' ,
-    })
-    .get('/api/channels')
-    .reply(200, { items: [] });
-  });
-
   it('should display the searched for game stream and trigger the stream searched telemetry event', async () => {
     const streams = {
       items: [{
@@ -98,6 +88,16 @@ describe('Can search for streams', () => {
     const noStreamsFound = await waitFor(() => screen.getByTestId('streams-not-found'));
     
     expect(noStreamsFound).toBeInTheDocument();
+  });
+
+  beforeEach(() => {
+    nock('http://localhost:5000')
+    .defaultReplyHeaders({
+      'access-control-allow-origin': '*',
+      'access-control-allow-credentials': 'true' ,
+    })
+    .get('/api/channels')
+    .reply(200, { items: [] });
   });
 
   const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));

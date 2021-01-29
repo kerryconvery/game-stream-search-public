@@ -10,24 +10,6 @@ import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Can add featured channels', () => {
-  beforeEach(() => {
-    nock('http://localhost:5000')
-    .defaultReplyHeaders({
-      'access-control-allow-origin': '*',
-      'access-control-allow-credentials': 'true' 
-    })
-    .get('/api/streams?pageSize=10')
-    .reply(200, { items: [] });
-
-    nock('http://localhost:5000')
-      .defaultReplyHeaders({
-        'access-control-allow-origin': '*',
-        'access-control-allow-credentials': 'true' ,
-      })
-      .get('/api/channels')
-      .reply(200, { items: [] })
-  })
-
   it('should display a form when the add button is pressed', async () => {
     const addChannelForm = await openTheAddChannelForm();
 
@@ -186,6 +168,24 @@ describe('Can add featured channels', () => {
     expect(errorMessage).toBeInTheDocument();
   });
 
+  beforeEach(() => {
+    nock('http://localhost:5000')
+    .defaultReplyHeaders({
+      'access-control-allow-origin': '*',
+      'access-control-allow-credentials': 'true' 
+    })
+    .get('/api/streams?pageSize=10')
+    .reply(200, { items: [] });
+
+    nock('http://localhost:5000')
+      .defaultReplyHeaders({
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true' ,
+      })
+      .get('/api/channels')
+      .reply(200, { items: [] })
+  })
+  
   const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
   const addChannelFormName = 'Add Channel';
 
