@@ -29,7 +29,7 @@ describe('Event bus subscribers', () => {
 
     const { result, unmount } = renderHook(() => useEventBus(subscribers));
 
-   unmount();
+    unmount();
 
     result.current.dispatchEvent('subscriberA', 'test event A');
     

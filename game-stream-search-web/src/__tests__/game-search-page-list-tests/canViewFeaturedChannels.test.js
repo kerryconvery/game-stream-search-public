@@ -9,7 +9,7 @@ import { getTelemetryTrackerApi } from '../../api/telemetryTrackerApi';
 import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
-describe('Featured channels side bar', () => {
+describe('Can view featured channels', () => {
   beforeEach(() => {
     nock('http://localhost:5000')
     .defaultReplyHeaders({
@@ -23,13 +23,15 @@ describe('Featured channels side bar', () => {
   const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
 
   const renderApplication = () => {
-    return render(
+    render(
       <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
         <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
           <App />
         </TelemetryTrackerProvider>
       </StreamServiceProvider>
     )
+
+    return waitFor(() => screen.getByTestId('streams-not-found'));
   };
 
   it('should display a list of Featured channels on startup', async () => {
@@ -52,9 +54,7 @@ describe('Featured channels side bar', () => {
       .get('/api/channels')
       .reply(200, channelList);
 
-    renderApplication();
-
-    await waitFor(() => screen.getByTestId('streams-not-found'));
+    await renderApplication();
 
     const featuredChannel = await waitFor(() => screen.getByText("testchannel"));
 
@@ -81,9 +81,7 @@ describe('Featured channels side bar', () => {
       .get('/api/channels')
       .reply(200, channelList);
 
-    renderApplication();
-
-    await waitFor(() => screen.getByTestId('streams-not-found'));
+    await renderApplication();
 
     const featuredChannel = await waitFor(() => screen.getByText("testchannel"));
 
