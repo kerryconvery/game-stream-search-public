@@ -1,6 +1,6 @@
 import React from 'react';
 import { func } from 'prop-types';
-import FormController from '../../../../../shared-components/form/FormController';
+import useFormController from '../../../../../shared-components/form/useFormController';
 import AddChannelFormView, { validateForm, mapApiErrorsToFields } from './AddChannelFormView';
 import { useStreamService } from '../../../../../providers/StreamServiceProvider';
 import useEventBus from '../../../../../event-bus/eventBus';
@@ -27,21 +27,17 @@ const AddChannelForm = ({ onClose, onSaveSuccess }) => {
     return mapHttpResponse(response, mapApiErrorsToFields);
   }
 
+  const formController = useFormController(validateForm, saveChannel, handleSaveSuccess);
+
   return (
-    <FormController
-      onValidateForm={validateForm}
-      onSaveForm={saveChannel}
-      onSaveSuccess={handleSaveSuccess}
-    >
-      {props => <AddChannelFormView
-        formValues={props.formValues}
-        errors={props.errors}
-        isSaving={props.isSaving}
-        onChange={props.onChange}
-        onSave={props.onSave}
-        onCancel={onClose}
-      />}
-    </FormController>
+    <AddChannelFormView
+      formValues={formController.formValues}
+      errors={formController.errors}
+      isSaving={formController.isSaving}
+      onChange={formController.onChange}
+      onSave={formController.onSave}
+      onCancel={onClose}
+    />
   )
 }
 
