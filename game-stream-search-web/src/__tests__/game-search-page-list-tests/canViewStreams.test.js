@@ -10,16 +10,6 @@ import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('When viewing streams', () => {
-  beforeEach(() => {
-    nock('http://localhost:5000')
-    .defaultReplyHeaders({
-      'access-control-allow-origin': '*',
-      'access-control-allow-credentials': 'true' ,
-    })
-    .get('/api/channels')
-    .reply(200, { items: [] });
-  });
-
   it('should render streams without errors', async () => {
     const streams = {
       items: [{
@@ -137,6 +127,16 @@ describe('When viewing streams', () => {
     expect(telemetryTrackerApiMock.trackStreamOpened).toHaveBeenCalled();
   });
 
+  beforeEach(() => {
+    nock('http://localhost:5000')
+    .defaultReplyHeaders({
+      'access-control-allow-origin': '*',
+      'access-control-allow-credentials': 'true' ,
+    })
+    .get('/api/channels')
+    .reply(200, { items: [] });
+  });
+  
   const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
 
   const Application = () => (

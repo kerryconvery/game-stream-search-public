@@ -10,16 +10,6 @@ import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Can view featured channels', () => {
-  beforeEach(() => {
-    nock('http://localhost:5000')
-    .defaultReplyHeaders({
-      'access-control-allow-origin': '*',
-      'access-control-allow-credentials': 'true' 
-    })
-    .get('/api/streams?pageSize=10')
-    .reply(200, { items: [] });
-  });
-
   it('should display a list of Featured channels on startup', async () => {
     const channelList = {
       items: [
@@ -74,6 +64,16 @@ describe('Can view featured channels', () => {
     fireEvent.click(featuredChannel);
 
     expect(telemetryTrackerApiMock.trackFeaturedChannelOpened).toHaveBeenCalled();
+  });
+  
+  beforeEach(() => {
+    nock('http://localhost:5000')
+    .defaultReplyHeaders({
+      'access-control-allow-origin': '*',
+      'access-control-allow-credentials': 'true' 
+    })
+    .get('/api/streams?pageSize=10')
+    .reply(200, { items: [] });
   });
 
   const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
