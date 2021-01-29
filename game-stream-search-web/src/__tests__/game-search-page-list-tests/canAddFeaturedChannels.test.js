@@ -9,17 +9,59 @@ import { getTelemetryTrackerApi } from '../../api/telemetryTrackerApi';
 import autoMockObject from '../../test-utils/autoMockObject';
 import '@testing-library/jest-dom/extend-expect';
 
-describe('Add channel form', () => {
+describe('Can add featured channels', () => {
   const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));
-  
+
+  const addChannelFormName = 'Add Channel';
+
   const renderApplication = () => {
-    return render(
+    render(
       <StreamServiceProvider streamServiceApi={getStreamServiceApi("http://localhost:5000/api")} >
         <TelemetryTrackerProvider telemetryTrackerApi={telemetryTrackerApiMock}>
           <App />
         </TelemetryTrackerProvider>
       </StreamServiceProvider>
     )
+
+    // We must wait for this to avoid updated state after the component is unmounted.
+    return waitFor(() => screen.getByTestId('streams-not-found'));
+  }
+
+  const openTheAddChannelForm = async () => {
+    await renderApplication();
+
+    const addButton = screen.getByTitle('Add a new channel to the list');
+
+    fireEvent.click(addButton);
+
+    return waitFor(() => screen.getByText(addChannelFormName));
+  }
+
+  const setChannelFieldValue = (channelName) => {
+    const channelField = screen.getByLabelText('Channel name');
+
+    fireEvent.change(channelField, { target: { value: channelName } })
+  }
+  
+  const clickTheCancelButton = () => {
+    const cancelButton = screen.getByText('Cancel');
+    fireEvent.click(cancelButton);
+
+    return waitForElementToBeRemoved(() => screen.getByText(addChannelFormName));
+  }
+
+  const clickTheSaveButton = () => {
+    const saveButton = screen.getByText('Save');
+
+    fireEvent.click(saveButton);
+  }
+
+  const addANewChannel = async (channelName) => {
+    await openTheAddChannelForm();
+
+    setChannelFieldValue(channelName);
+
+    clickTheSaveButton();
   }
 
   beforeEach(() => {
@@ -41,37 +83,15 @@ describe('Add channel form', () => {
   })
 
   it('should display a form when the add button is pressed', async () => {
-    renderApplication();
-
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    const addChannelForm = await waitFor(() => screen.getByText('Add Channel'));
+    const addChannelForm = await openTheAddChannelForm();
 
     expect(addChannelForm).toBeInTheDocument();
   });
 
   it('should close the add channel form when the cancel button is pressed', async () => {
-    renderApplication();
+    const addChannelForm = await openTheAddChannelForm();
 
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    const addChannelForm = await waitFor(() => screen.getByText('Add Channel'));
-
-    const cancelButton = screen.getByText('Cancel');
-
-    fireEvent.click(cancelButton);
-
-    await waitForElementToBeRemoved(() => screen.getByText('Add Channel'));
+    await clickTheCancelButton();
 
     expect(addChannelForm).not.toBeInTheDocument();
   });
@@ -100,32 +120,12 @@ describe('Add channel form', () => {
       .get('/api/channels')
       .reply(200, updateChannels);
 
-    renderApplication();
-
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    const addChannelForm = await waitFor(() => screen.getByText('Add Channel'));
-
-    const channelField = screen.getByLabelText('Channel name');
-
-    fireEvent.change(channelField, { target: { value: 'newchannel' } })
-
-    const saveButton = screen.getByText('Save');
-
-    fireEvent.click(saveButton);
-
-    await waitForElementToBeRemoved(() => screen.getByText('Add Channel'));
+    await addANewChannel('newchannel');
+    await waitForElementToBeRemoved(() => screen.getByText(addChannelFormName));
 
     const addedChannel = await waitFor(() => screen.getByText('newchannel'));
-
     const notification = await waitFor(() => screen.queryByText('Channel newchannel added successfully'));
 
-    expect(addChannelForm).not.toBeInTheDocument();
     expect(addedChannel).toBeInTheDocument();
     expect(notification).toBeInTheDocument();
   });
@@ -154,51 +154,20 @@ describe('Add channel form', () => {
       .get('/api/channels')
       .reply(200, updateChannels);
 
-    renderApplication();
-
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    const addChannelForm = await waitFor(() => screen.getByText('Add Channel'));
-
-    const channelField = screen.getByLabelText('Channel name');
-
-    fireEvent.change(channelField, { target: { value: 'newchannel' } })
-
-    const saveButton = screen.getByText('Save');
-
-    fireEvent.click(saveButton);
-
-    await waitForElementToBeRemoved(() => screen.getByText('Add Channel'));
+    await addANewChannel('newchannel');
+    await waitForElementToBeRemoved(() => screen.getByText(addChannelFormName));
 
     const addedChannel = await waitFor(() => screen.getByText('newchannel'));
-
     const notification = await waitFor(() => screen.queryByText('Channel newchannel updated successfully'));
 
-    expect(addChannelForm).not.toBeInTheDocument();
     expect(addedChannel).toBeInTheDocument();
     expect(notification).toBeInTheDocument();
   });
 
   it('should display validation errors and not try to add the channel', async () => {
-    renderApplication();
+    await openTheAddChannelForm();
 
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    await waitFor(() => screen.getByText('Add Channel'));
-
-    const saveButton = screen.getByText('Save');
-
-    fireEvent.click(saveButton);
+    clickTheSaveButton();
 
     const validationError = await waitFor(() => screen.getByText('Please enter a channel name'));
 
@@ -206,24 +175,11 @@ describe('Add channel form', () => {
   });
 
   it('should re-validate when a field is changed', async () => {
-    renderApplication();
+    await openTheAddChannelForm();
 
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
+    clickTheSaveButton();
 
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    await waitFor(() => screen.getByText('Add Channel'));
-
-    const saveButton = screen.getByText('Save');
-
-    fireEvent.click(saveButton);
-
-    const channelField = screen.getByLabelText('Channel name');
-
-    fireEvent.change(channelField, { target: { value: 'newchannel' } })
+    setChannelFieldValue('newchannel');
 
     const validationError = await waitFor(() => screen.queryByText('Please enter a channel name'));
 
@@ -250,24 +206,7 @@ describe('Add channel form', () => {
       .put('/api/channels/Twitch/newchannel')
       .reply(400, errorResponse)
 
-    renderApplication();
-
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    await waitFor(() => screen.getByText('Add Channel'));
-
-    const channelField = screen.getByLabelText('Channel name');
-
-    fireEvent.change(channelField, { target: { value: 'newchannel' } })
-
-    const saveButton = screen.getByText('Save');
-
-    fireEvent.click(saveButton);
+    await addANewChannel('newchannel');
 
     const errorMessage = await waitFor(() => screen.getByText('channel not found on twitch'));
 
@@ -294,24 +233,7 @@ describe('Add channel form', () => {
       .put('/api/channels/Twitch/newchannel')
       .reply(400, errorResponse)
 
-    renderApplication();
-
-    // We must wait for this to avoid updated state after the component is unmounted.
-    await waitFor(() => screen.getByTestId('streams-not-found'));
-
-    const addButton = screen.getByTitle('Add a new channel to the list');
-
-    fireEvent.click(addButton);
-
-    await waitFor(() => screen.getByText('Add Channel'));
-
-    const channelField = screen.getByLabelText('Channel name');
-
-    fireEvent.change(channelField, { target: { value: 'newchannel' } })
-
-    const saveButton = screen.getByText('Save');
-
-    fireEvent.click(saveButton);
+    await addANewChannel('newchannel');
 
     const errorMessage = await waitFor(() => screen.getByText('streaming service is not available'));
 
