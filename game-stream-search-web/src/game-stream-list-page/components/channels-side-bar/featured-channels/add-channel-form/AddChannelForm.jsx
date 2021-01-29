@@ -4,21 +4,14 @@ import useFormController from '../../../../../shared-components/form/useFormCont
 import AddChannelFormView, { validateForm, mapApiErrorsToFields } from './AddChannelFormView';
 import { useStreamService } from '../../../../../providers/StreamServiceProvider';
 import useEventBus from '../../../../../event-bus/eventBus';
-import { postNotificationEvent, buildToastEvent } from '../../../../../notifications/events';
+import { notifyFeaturedChannelsUpdated } from '../../../../../notifications/events';
 
 const AddChannelForm = ({ onClose, onSaveSuccess }) => {
   const { addChannel, mapHttpResponse } = useStreamService();
   const { dispatchEvent } = useEventBus();
 
-  const sendSuccessNotifcation = (result, formValues) => {
-    postNotificationEvent(
-      dispatchEvent,
-      buildToastEvent(`Channel ${formValues.channelName} ${result.isCreated ? 'added' : 'updated'} successfully`),
-    );
-  }
-
   const handleSaveSuccess = (result, formValues) => {
-    sendSuccessNotifcation(result, formValues);
+    notifyFeaturedChannelsUpdated(formValues.channelName, result.isCreated, dispatchEvent);
     onSaveSuccess();
     onClose();
   }

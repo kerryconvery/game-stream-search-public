@@ -4,7 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { useStreamService } from '../providers/StreamServiceProvider';
 import { useTelemetryTracker } from '../providers/TelemetryTrackerProvider';
 import useEventBus from '../event-bus/eventBus';
-import { postNotificationEvent, buildOfflineAlertEvent } from '../notifications/events';
+import { notifyApplicationIsOffline } from '../notifications/events';
 import useInfiniteStreamLoader from './hooks/useInfiniteStreamLoader';
 import GameStreamPageView from './GameStreamPageView';
 import GameSearchInput  from './components/GameSearchInput';
@@ -17,9 +17,7 @@ const GameStreamListPage = () => {
   const { dispatchEvent } = useEventBus();
   const { trackStreamOpened, trackStreamSearch } = useTelemetryTracker();
 
-  const showErrorAlert = () => postNotificationEvent(dispatchEvent, buildOfflineAlertEvent());
-
-  const streams = useInfiniteStreamLoader(getStreams, showErrorAlert);
+  const streams = useInfiniteStreamLoader(getStreams, notifyApplicationIsOffline(dispatchEvent));
 
   const filterStreams = (gameName) => {
     streams.filterStreams({ gameName });
