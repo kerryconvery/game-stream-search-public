@@ -3,7 +3,12 @@ import _isEmpty from 'lodash/isEmpty';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FIELD_CHANGED': return { ...state, formValues: action.formValues, errors: action.errors }
+    case 'FIELD_CHANGED': {
+      if (state.submitted) {
+        return { ...state, formValues: action.formValues, errors: action.errors }
+      }
+      return { ...state, formValues: action.formValues }
+    }
     case 'SAVING': return { ...state, submitted: true, isSaving: true }
     case 'SAVE_FAILED': return { ...state, errors: action.errors, isSaving: false }
     case 'SAVE_SUCCESS': return { ...state, errors: action.errors, isSaving: false }
@@ -39,11 +44,7 @@ const useFormController = (onValidateForm, onSaveForm, onSaveSuccess) => {
   };
 
   const onChange = (formValues) => {
-    if (state.submitted) {
-      dispatch({ type: 'FIELD_CHANGED', formValues, errors: onValidateForm(formValues) });
-    } else {
-      dispatch({ type: 'FIELD_CHANGED', formValues, errors: state.errors });
-    }
+    dispatch({ type: 'FIELD_CHANGED', formValues, errors: onValidateForm(formValues) });
   }
 
   return {
