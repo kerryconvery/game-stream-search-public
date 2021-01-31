@@ -30,11 +30,6 @@ namespace GameStreamSearch.AwsDynamoDb
             return dynamoDbContext.SaveAsync(item);
         }
 
-        public Task UpdateItem(T item)
-        {
-            return dynamoDbContext.SaveAsync(item);
-        }
-
         public Task DeleteItem(object partitionKey, object rangeKey)
         {
             return dynamoDbContext.DeleteAsync<T>(partitionKey, rangeKey);
