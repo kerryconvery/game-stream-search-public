@@ -1,22 +1,10 @@
-import { useReducer, useEffect } from 'react';
+import { useEffect } from 'react';
+import useReducers from '../../shared-components/hooks/useReducers';
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'CHANNELS_LOADED': {
-      return {
-        ...state,
-        channels: action.channels,
-        isLoading: false
-      }
-    }
-    case 'UPDATE_CHANNELS': {
-      return {
-        ...state,
-        channels: action.channels,
-      }
-    }
-  }
-}
+const reducers = state => ({
+  channelLoaded: channels => ({ ...state, channels, isLoading: false }),
+  updateChannels: channels => ({ ...state, channels }),
+})
 
 const initialState = {
   channels: [],
@@ -24,13 +12,11 @@ const initialState = {
 }
 
 const useChannelsLoader = (onLoadChannels, onLoadError) => {
-  const [ state, dispatch ] = useReducer(reducer, initialState);
-
-  const updateChannels = channels => dispatch({ type: 'UPDATE_CHANNELS', channels });
+  const { state, channelLoaded, updateChannels } = useReducers(reducers, initialState);
 
   useEffect(() => {
     onLoadChannels()
-      .then(channels => dispatch({ type: 'CHANNELS_LOADED', channels }))
+      .then(channelLoaded)
       .catch(onLoadError)
   }, [])
 
