@@ -14,4 +14,14 @@ describe('When getting live streams', () => {
     expect(response.status).toEqual(200);
     expect(response.data.items.length).toEqual(3);
   });
+
+  it('should return http status code 200 when getting channels, if any', async () => {
+    const response = await axios({
+      url: `${baseUrl}/channels`,
+      method: 'get',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    expect(response.status).toEqual(200);
+  });
 });
