@@ -15,12 +15,12 @@ namespace GameSearchService.StreamProviders.Tests
     public class TwitchStreamProviderTests
     {
 
-        private Mock<ITwitchKrakenApi> twitchKrakenApiStub;
+        private Mock<ITwitchKrakenGateway> twitchKrakenApiStub;
 
         [SetUp]
         public void Setup()
         {
-            twitchKrakenApiStub = new Mock<ITwitchKrakenApi>();
+            twitchKrakenApiStub = new Mock<ITwitchKrakenGateway>();
         }
 
         private List<TwitchStreamDto> liveStreamsPage1 = new List<TwitchStreamDto>

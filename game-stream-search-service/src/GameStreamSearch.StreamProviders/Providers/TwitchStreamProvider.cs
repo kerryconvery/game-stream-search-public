@@ -12,9 +12,9 @@ namespace GameStreamSearch.StreamProviders
 {
     public class TwitchStreamProvider : StreamProvider, IStreamProvider
     {
-        private readonly ITwitchKrakenApi twitchStreamApi;
+        private readonly ITwitchKrakenGateway twitchStreamApi;
 
-        public TwitchStreamProvider(ITwitchKrakenApi twitchStreamApi)
+        public TwitchStreamProvider(ITwitchKrakenGateway twitchStreamApi)
         {
             this.twitchStreamApi = twitchStreamApi;
         }

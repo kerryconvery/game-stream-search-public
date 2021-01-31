@@ -11,7 +11,7 @@ namespace GameStreamSearch.StreamProviders
         ProviderNotAvailable,
     }
 
-    public interface ITwitchKrakenApi
+    public interface ITwitchKrakenGateway
     {
         Task<MaybeResult<IEnumerable<TwitchStreamDto>, TwitchErrorType>> SearchStreams(string searchTerm, int pageSize, int pageOffset);
         Task<MaybeResult<IEnumerable<TwitchStreamDto>, TwitchErrorType>> GetLiveStreams(int pageSize, int pageOffset);

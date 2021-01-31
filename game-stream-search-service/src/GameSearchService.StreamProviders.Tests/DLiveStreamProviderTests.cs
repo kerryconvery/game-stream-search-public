@@ -13,12 +13,12 @@ namespace GameStreamSearch.StreamProviders.Tests
     [TestFixture]
     public class DLiveStreamProviderTests
     {
-        private Mock<IDLiveApi> dliveApiStub;
+        private Mock<IDLiveGraphQLGateway> dliveApiStub;
 
         [SetUp]
         public void Setup()
         {
-            dliveApiStub = new Mock<IDLiveApi>();
+            dliveApiStub = new Mock<IDLiveGraphQLGateway>();
         }
 
         [Test]

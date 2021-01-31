@@ -65,15 +65,15 @@ namespace GameStreamSearch.Api
             {
                 return new ProviderAggregationService()
                     .RegisterStreamProvider(new TwitchStreamProvider(
-                            new TwitchKrakenApi(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"])
+                            new TwitchKrakenGateway(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"])
                     ))
                     .RegisterStreamProvider(new YouTubeStreamProvider(
                             Configuration["YouTube:WebUrl"],
-                            new YouTubeV3Api(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"])
+                            new YouTubeV3Gateway(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"])
                     ))
                     .RegisterStreamProvider(new DLiveStreamProvider(
                             Configuration["DLive:WebUrl"],
-                            new DLiveGraphQLApi(Configuration["DLive:Apiurl"])));
+                            new DLiveGraphQLGateway(Configuration["DLive:Apiurl"])));
             });
 
             services.AddScoped<IStreamService>(x => x.GetRequiredService<ProviderAggregationService>());
@@ -83,8 +83,8 @@ namespace GameStreamSearch.Api
             
             services.AddScoped<ITimeProvider, UtcTimeProvider>();
 
-            services.AddSingleton<IAwsDynamoDbTable<DynamoDbChannelDto>, AwsDynamoDbTable<DynamoDbChannelDto>>();
-            services.AddSingleton<IChannelRepository, DynamoDbChannelRepository>();
+            services.AddSingleton<IAwsDynamoDbGateway<DynamoDbChannelDto>, AwsDynamoDbGateway<DynamoDbChannelDto>>();
+            services.AddSingleton<IChannelRepository, ChannelRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

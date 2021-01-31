@@ -12,9 +12,9 @@ namespace GameStreamSearch.StreamProviders
     public class YouTubeStreamProvider : IStreamProvider
     {
         private readonly string youTubeWebUrl;
-        private readonly IYouTubeV3Api youTubeV3Api;
+        private readonly IYouTubeV3Gateway youTubeV3Api;
 
-        public YouTubeStreamProvider(string youTubeWebUrl, IYouTubeV3Api youTubeV3Api)
+        public YouTubeStreamProvider(string youTubeWebUrl, IYouTubeV3Gateway youTubeV3Api)
         {
             this.youTubeWebUrl = youTubeWebUrl;
             this.youTubeV3Api = youTubeV3Api;

@@ -5,11 +5,11 @@ using RestSharp;
 
 namespace GameStreamSearch.StreamProviders.Dto
 {
-    public class DLiveGraphQLApi : IDLiveApi
+    public class DLiveGraphQLGateway : IDLiveGraphQLGateway
     {
         private readonly string dliveGraphQLApiUrl;
 
-        public DLiveGraphQLApi(string dliveGraphQLApiUrl)
+        public DLiveGraphQLGateway(string dliveGraphQLApiUrl)
         {
             this.dliveGraphQLApiUrl = dliveGraphQLApiUrl;
         }

@@ -24,7 +24,7 @@ namespace GameStreamSearch.StreamProviders
         }
     }
 
-    public interface IDLiveApi
+    public interface IDLiveGraphQLGateway
     {
         Task<MaybeResult<DLiveStreamDto, DLiveErrorType>> GetLiveStreams(int pageSize, int pageOffset, StreamSortOrder sortOrder);
         Task<MaybeResult<DLiveUserDto, DLiveErrorType>> GetUserByDisplayName(string displayName);

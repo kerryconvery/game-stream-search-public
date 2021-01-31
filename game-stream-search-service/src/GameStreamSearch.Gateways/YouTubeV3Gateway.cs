@@ -6,12 +6,12 @@ using RestSharp;
 
 namespace GameStreamSearch.StreamProviders.Dto
 {
-    public class YouTubeV3Api : IYouTubeV3Api
+    public class YouTubeV3Gateway : IYouTubeV3Gateway
     {
         private readonly string googleApiUrl;
         private readonly string googleApiKey;
 
-        public YouTubeV3Api(string googleApiUrl, string googleApiKey)
+        public YouTubeV3Gateway(string googleApiUrl, string googleApiKey)
         {
             this.googleApiUrl = googleApiUrl;
             this.googleApiKey = googleApiKey;

@@ -12,9 +12,9 @@ namespace GameStreamSearch.StreamProviders
     public class DLiveStreamProvider : StreamProvider, IStreamProvider
     {
         private readonly string dliveWebUrl;
-        private readonly IDLiveApi dliveApi;
+        private readonly IDLiveGraphQLGateway dliveApi;
 
-        public DLiveStreamProvider(string dliveWebUrl, IDLiveApi dliveApi)
+        public DLiveStreamProvider(string dliveWebUrl, IDLiveGraphQLGateway dliveApi)
         {
             this.dliveWebUrl = dliveWebUrl;
             this.dliveApi = dliveApi;

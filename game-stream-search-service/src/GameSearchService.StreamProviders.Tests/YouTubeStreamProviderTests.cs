@@ -15,12 +15,12 @@ namespace GameSearchService.StreamProviders.Tests
     [TestFixture]
     public class YouTubeStreamProviderTests
     {
-        private Mock<IYouTubeV3Api> youTubeV3ApiStub;
+        private Mock<IYouTubeV3Gateway> youTubeV3ApiStub;
 
         [SetUp]
         public void Setup()
         {
-            youTubeV3ApiStub = new Mock<IYouTubeV3Api>();
+            youTubeV3ApiStub = new Mock<IYouTubeV3Gateway>();
         }
 
         private YouTubeSearchDto liveStreams = new YouTubeSearchDto()
