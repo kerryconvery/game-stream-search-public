@@ -8,12 +8,12 @@ using GameStreamSearch.Repositories;
 
 namespace GameStreamSearch.AwsDynamoDb
 {
-    public class AwsDynamoDbTable<T> : IAwsDynamoDbTable<T>, IDisposable
+    public class AwsDynamoDbGateway<T> : IAwsDynamoDbGateway<T>, IDisposable
     {
         private DynamoDBContext dynamoDbContext;
         private AmazonDynamoDBClient dynamoDbClient;
 
-        public AwsDynamoDbTable()
+        public AwsDynamoDbGateway()
         {
             AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig
             {

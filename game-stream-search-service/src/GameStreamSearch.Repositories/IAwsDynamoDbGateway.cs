@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace GameStreamSearch.Repositories
 {
-    public interface IAwsDynamoDbTable<T>
+    public interface IAwsDynamoDbGateway<T>
     {
         Task PutItem(T document);
         Task<T> GetItem(object partitionKey, object rangeKey);

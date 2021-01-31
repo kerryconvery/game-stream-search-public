@@ -10,11 +10,11 @@ using GameStreamSearch.Types;
 
 namespace GameStreamSearch.Repositories.AwsDynamoDbRepositories
 {
-    public class DynamoDbChannelRepository : IChannelRepository
+    public class ChannelRepository : IChannelRepository
     {
-        private readonly IAwsDynamoDbTable<DynamoDbChannelDto> awsDynamoDbTable;
+        private readonly IAwsDynamoDbGateway<DynamoDbChannelDto> awsDynamoDbTable;
 
-        public DynamoDbChannelRepository(IAwsDynamoDbTable<DynamoDbChannelDto> awsDynamoDbTable)
+        public ChannelRepository(IAwsDynamoDbGateway<DynamoDbChannelDto> awsDynamoDbTable)
         {
             this.awsDynamoDbTable = awsDynamoDbTable;
         }

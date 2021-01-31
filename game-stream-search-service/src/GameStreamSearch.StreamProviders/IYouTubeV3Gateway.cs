@@ -47,7 +47,7 @@ namespace GameStreamSearch.StreamProviders
         }
     }
 
-    public interface IYouTubeV3Api
+    public interface IYouTubeV3Gateway
     {
         Task<MaybeResult<YouTubeSearchDto, YouTubeErrorType>> SearchGamingVideos(string query, VideoEventType eventType, VideoSortType order, int pageSize, string pageToken);
         Task<MaybeResult<IEnumerable<YouTubeChannelDto>, YouTubeErrorType>> GetChannels(string[] channelIds);

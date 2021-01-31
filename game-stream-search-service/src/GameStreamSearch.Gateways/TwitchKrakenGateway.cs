@@ -6,12 +6,12 @@ using RestSharp;
 
 namespace GameStreamSearch.StreamProviders.Dto
 {
-    public class TwitchKrakenApi : ITwitchKrakenApi
+    public class TwitchKrakenGateway : ITwitchKrakenGateway
     {
         private readonly string twitchApiUrl;
         private readonly string twitchClientId;
 
-        public TwitchKrakenApi(string twitchApiUrl, string twitchClientId)
+        public TwitchKrakenGateway(string twitchApiUrl, string twitchClientId)
         {
             this.twitchApiUrl = twitchApiUrl;
             this.twitchClientId = twitchClientId;
