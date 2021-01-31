@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import useReducers from '../../shared-components/hooks/useReducers';
 
-const reducers = state => ({
+const createReducers = state => ({
   streamsLoaded: (items, nextPageToken) => (
     { ...state, items: state.items.concat(items), nextPageToken, isLoading: false }
   ),
@@ -29,12 +29,12 @@ const initialState = {
 };
 
 const useInfiniteStreamLoader = (onLoadStreams, onLoadError, initialFilters = {}) => {
-  const {
+  const [
     state,
     streamsLoaded,
     filterStreams,
-    loadMoreStreams
-  } = useReducers(reducers, { ...initialState, filters: initialFilters });
+    loadMoreStreams,
+  ] = useReducers(createReducers, { ...initialState, filters: initialFilters });
 
   const hasMoreStreams = state.nextPageToken !== null && !state.isLoading;
   
@@ -49,8 +49,8 @@ const useInfiniteStreamLoader = (onLoadStreams, onLoadError, initialFilters = {}
     isLoading: state.isLoading,
     filters: state.filters,
     hasMoreStreams,
-    loadMoreStreams,
-    filterStreams,
+    loadMoreStreams: loadMoreStreams,
+    filterStreams: filterStreams,
   };
 }
 

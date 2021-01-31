@@ -1,31 +1,25 @@
 import { useReducer, useCallback, useMemo } from 'react';
 
-const useReducers = (reducers, initialState) => {
+const useReducers = (createReducers, initialState) => {
   const internalReducer = useCallback((state, action) => {
-    const reducerMethods = reducers(state);
+    const reducerMethods = createReducers(state);
 
     return reducerMethods[action.reducerKey](...action.props)
   });
 
   const [ state, dispatch ] = useReducer(internalReducer, initialState);
 
-  const memorisedReducers = useMemo(() => {
+  const actions = useMemo(() => {
     const proxyReducer = (key, dispatch) => (...props) => {
       dispatch({ reducerKey: key, props });
     }
 
-    const proxyReducers = {};
-
-    const reducerMethods = reducers();
+    const reducerMethods = createReducers();
     
-    Object.keys(reducerMethods).forEach((key) => {
-      proxyReducers[key] = proxyReducer(key, dispatch);
-    });
-
-    return proxyReducers;
+    return Object.keys(reducerMethods).map(key => proxyReducer(key, dispatch));
   });
 
-  return { state, ...memorisedReducers };
+  return [ state, ...actions ];
 }
 
 export default useReducers
