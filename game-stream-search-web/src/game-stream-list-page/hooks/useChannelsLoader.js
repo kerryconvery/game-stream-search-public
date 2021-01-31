@@ -3,7 +3,7 @@ import useReducers from '../../shared-components/hooks/useReducers';
 
 const createReducers = state => ({
   channelLoaded: channels => ({ ...state, channels, isLoading: false }),
-  setChannels: channels => ({ ...state, channels }),
+  updateChannels: channels => ({ ...state, channels }),
 })
 
 const initialState = {
@@ -12,7 +12,7 @@ const initialState = {
 }
 
 const useChannelsLoader = (onLoadChannels, onLoadError) => {
-  const [ state, channelLoaded, setChannels ] = useReducers(createReducers, initialState);
+  const [ state, channelLoaded, updateChannels ] = useReducers(createReducers, initialState);
 
   useEffect(() => {
     onLoadChannels()
@@ -23,7 +23,7 @@ const useChannelsLoader = (onLoadChannels, onLoadError) => {
   return {
     channels: state.channels,
     isLoading: state.isLoading,
-    updateChannels: setChannels,
+    updateChannels,
   };
 }
 
