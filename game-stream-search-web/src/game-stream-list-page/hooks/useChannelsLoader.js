@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import useReducers from '../../shared-components/hooks/useReducers';
 
-const reducers = state => ({
+const createReducers = state => ({
   channelLoaded: channels => ({ ...state, channels, isLoading: false }),
   updateChannels: channels => ({ ...state, channels }),
 })
@@ -12,7 +12,7 @@ const initialState = {
 }
 
 const useChannelsLoader = (onLoadChannels, onLoadError) => {
-  const { state, channelLoaded, updateChannels } = useReducers(reducers, initialState);
+  const [ state, channelLoaded, updateChannels ] = useReducers(createReducers, initialState);
 
   useEffect(() => {
     onLoadChannels()

@@ -1,7 +1,7 @@
 import _isEmpty from 'lodash/isEmpty';
 import useReducers from '../hooks/useReducers';
 
-const reducers = state => ({
+const createReducers = state => ({
   formChanged: (formValues, errors) => {
     if (state.submitted) {
       return { ...state, formValues, errors,}
@@ -19,7 +19,7 @@ const initialState = {
 }
 
 const useFormController = (onValidateForm, onSaveForm, onSaveSuccess) => {
-  const { state, formChanged, saving, saveSuccess, saveFailed } = useReducers(reducers, initialState);
+  const [ state, formChanged, saving, saveFailed, saveSuccess ] = useReducers(createReducers, initialState);
 
   const onSave = async (formValues) => {
     saving();
