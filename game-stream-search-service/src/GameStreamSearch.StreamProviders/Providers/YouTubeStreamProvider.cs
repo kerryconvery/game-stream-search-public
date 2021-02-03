@@ -58,7 +58,7 @@ namespace GameStreamSearch.StreamProviders
             }
 
             var streamDetails = videosResult.Value
-                    .Map(videos => videos.ToDictionary(v => v.id, v => v.liveStreamingDetails))
+                    .Select(videos => videos.ToDictionary(v => v.id, v => v.liveStreamingDetails))
                     .GetOrElse(new Dictionary<string, YouTubeVideoLiveStreamingDetailsDto>());
 
             return Result<Dictionary<string, YouTubeVideoLiveStreamingDetailsDto>, YouTubeErrorType>.Success(streamDetails);
@@ -77,26 +77,16 @@ namespace GameStreamSearch.StreamProviders
             }
 
             var channelSnippets = channelsResults.Value
-                    .Map(channels => channels.ToDictionary(c => c.id, c => c.snippet))
+                    .Select(channels => channels.ToDictionary(c => c.id, c => c.snippet))
                     .GetOrElse(new Dictionary<string, YouTubeChannelSnippetDto>());
 
             return Result<Dictionary<string, YouTubeChannelSnippetDto>, YouTubeErrorType>.Success(channelSnippets);
         }
 
-        public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptions filterOptions, int pageSize, string pageToken)
+        public async Task<GameStreamsDto> AssembleGameStreams(YouTubeSearchDto videos)
         {
-            var liveVideosResult = await youTubeV3Api.SearchGamingVideos(
-                filterOptions.GameName, VideoEventType.Live, VideoSortType.ViewCount, pageSize, pageToken);
-
-            if (liveVideosResult.IsFailure || liveVideosResult.Value.IsNothing)
-            {
-                return GameStreamsDto.Empty;
-            }
-
-            var liveVideos = liveVideosResult.Value.Unwrap();
-
-            var getChannelSnippetsTask = GetChannelSnippets(liveVideos.items);
-            var getLiveStreamDetailsTask = GetLiveStreamDetails(liveVideos.items);
+            var getChannelSnippetsTask = GetChannelSnippets(videos.items);
+            var getLiveStreamDetailsTask = GetLiveStreamDetails(videos.items);
 
             var channelSnippets = await getChannelSnippetsTask;
             var liveStreamDetails = await getLiveStreamDetailsTask;
@@ -108,9 +98,24 @@ namespace GameStreamSearch.StreamProviders
 
             return new GameStreamsDto
             {
-                Items = MapAsLiveStream(liveVideos.items, channelSnippets.Value, liveStreamDetails.Value),
-                NextPageToken = liveVideos.nextPageToken,
+                Items = MapAsLiveStream(videos.items, channelSnippets.Value, liveStreamDetails.Value),
+                NextPageToken = videos.nextPageToken,
             };
+        }
+
+        public async Task<GameStreamsDto> GetLiveStreams(StreamFilterOptions filterOptions, int pageSize, string pageToken)
+        {
+            var liveVideosResult = await youTubeV3Api.SearchGamingVideos(
+                filterOptions.GameName, VideoEventType.Live, VideoSortType.ViewCount, pageSize, pageToken);
+
+            if (liveVideosResult.IsFailure)
+            {
+                return GameStreamsDto.Empty;
+            }
+
+            return await liveVideosResult.Value
+                .Select(liveVideos => AssembleGameStreams(liveVideos))
+                .GetOrElse(Task.FromResult(GameStreamsDto.Empty));
         }
 
         public async Task<MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string channelName)
@@ -122,7 +127,7 @@ namespace GameStreamSearch.StreamProviders
                 return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Fail(GetStreamerChannelErrorType.ProviderNotAvailable);
             }
 
-            var channel = channelsResult.Value.Map(channels => channels
+            var channel = channelsResult.Value.Select(channels => channels
                 .Select(channel => channel.ToStreamerChannelDto(youTubeWebUrl))
                 .FirstOrDefault()
             );

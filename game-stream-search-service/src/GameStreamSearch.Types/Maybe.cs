@@ -23,7 +23,7 @@ namespace GameStreamSearch.Types
             hasValue = true;
         }
 
-        public Maybe<TResult> Map<TResult>(Func<T, TResult> mapper)
+        public Maybe<TResult> Select<TResult>(Func<T, TResult> mapper)
         {
             if (mapper == null)
                 throw new ArgumentNullException(nameof(mapper));
@@ -43,16 +43,6 @@ namespace GameStreamSearch.Types
                 return value;
             else
                 return elseValue;
-        }
-
-        public T Unwrap()
-        {
-            if (IsNothing)
-            {
-                throw new InvalidOperationException();
-            }
-
-            return value;
         }
 
         public bool IsNothing => !hasValue;

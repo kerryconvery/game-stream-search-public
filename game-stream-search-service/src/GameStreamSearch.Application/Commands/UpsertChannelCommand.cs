@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GameStreamSearch.Application.Entities;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Application.Services;
+using GameStreamSearch.Types;
 
 namespace GameStreamSearch.Application.Commands
 {
@@ -32,24 +33,8 @@ namespace GameStreamSearch.Application.Commands
             this.channelService = channelService;
         }
 
-        public async Task<UpsertChannelResult> Invoke(UpsertChannelRequest request)
+        private async Task<UpsertChannelResult> UpsertChannel(Channel channel)
         {
-            var streamChannelResult = await channelService.GetStreamerChannel(request.ChannelName, request.StreamPlatform);
-
-            if (streamChannelResult.IsFailure)
-            {
-                return UpsertChannelResult.PlatformServiceIsNotAvailable;
-            }
-
-            if (streamChannelResult.Value.IsNothing)
-            {
-                return UpsertChannelResult.ChannelNotFoundOnPlatform;
-            }
-
-            var channel = streamChannelResult.Value
-                .Map(streamChannel => streamChannel.ToChannel(request.RegistrationDate))
-                .Unwrap();
-
             var existingChannel = await channelRepository.Get(channel.StreamPlatform, channel.ChannelName);
 
             if (existingChannel.IsSome)
@@ -63,5 +48,21 @@ namespace GameStreamSearch.Application.Commands
 
             return UpsertChannelResult.ChannelAdded;
         }
+
+        public async Task<UpsertChannelResult> Invoke(UpsertChannelRequest request)
+        {
+            var streamChannelResult = await channelService.GetStreamerChannel(request.ChannelName, request.StreamPlatform);
+
+            if (streamChannelResult.IsFailure)
+            {
+                return UpsertChannelResult.PlatformServiceIsNotAvailable;
+            }
+
+            return await streamChannelResult.Value
+                .Select(s => s.ToChannel(request.RegistrationDate))
+                .Select(c => UpsertChannel(c))
+                .GetOrElse(Task.FromResult(UpsertChannelResult.ChannelNotFoundOnPlatform));
+        }
+
     }
 }
