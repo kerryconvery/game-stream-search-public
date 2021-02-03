@@ -83,7 +83,7 @@ namespace GameStreamSearch.StreamProviders
             return Result<Dictionary<string, YouTubeChannelSnippetDto>, YouTubeErrorType>.Success(channelSnippets);
         }
 
-        public async Task<GameStreamsDto> AssembleGameStreams(YouTubeSearchDto videos)
+        private async Task<GameStreamsDto> AssembleGameStreams(YouTubeSearchDto videos)
         {
             var getChannelSnippetsTask = GetChannelSnippets(videos.items);
             var getLiveStreamDetailsTask = GetLiveStreamDetails(videos.items);
