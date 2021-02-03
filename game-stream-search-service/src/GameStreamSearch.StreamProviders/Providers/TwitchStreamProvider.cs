@@ -58,7 +58,7 @@ namespace GameStreamSearch.StreamProviders
                 return GameStreamsDto.Empty;
             }
 
-            return liveStreamsResult.Value.Map(liveStreams =>
+            return liveStreamsResult.Value.Select(liveStreams =>
             {
                 var nextPageToken = GetNextPageToken(liveStreams.Any(), pageSize, pageOffset);
 
@@ -79,7 +79,7 @@ namespace GameStreamSearch.StreamProviders
                 return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Fail(GetStreamerChannelErrorType.ProviderNotAvailable);
             }
 
-            var streamerChannel = channelsResult.Value.Map(result => result.Channels
+            var streamerChannel = channelsResult.Value.Select(result => result.Channels
                 .Where(channel => channel.display_name.Equals(channelName, System.StringComparison.CurrentCultureIgnoreCase))
                 .Select(channel => channel.ToStreamerChannelDto())
                 .FirstOrDefault()

@@ -52,7 +52,7 @@ namespace GameStreamSearch.StreamProviders
                 return GameStreamsDto.Empty;
             }
 
-            return liveStreamsResult.Value.Map(result =>
+            return liveStreamsResult.Value.Select(result =>
                 new GameStreamsDto
                 {
                     Items = result.data.livestreams.list.Select(MapToGameStream),
@@ -70,7 +70,7 @@ namespace GameStreamSearch.StreamProviders
                 return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Fail(GetStreamerChannelErrorType.ProviderNotAvailable);
             }
 
-            var streamerChannel = userResult.Value.Map(channel => channel.ToStreamerChannelDto(dliveWebUrl));
+            var streamerChannel = userResult.Value.Select(channel => channel.ToStreamerChannelDto(dliveWebUrl));
 
             return MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>.Success(streamerChannel);
         }
