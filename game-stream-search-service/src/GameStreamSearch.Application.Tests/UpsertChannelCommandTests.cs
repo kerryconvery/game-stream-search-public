@@ -120,14 +120,7 @@ namespace GameStreamSearch.Application.Tests
 
         private void SetChannelRepositoryToReturnAChannel(string channelName)
         {
-            var existingChannel = new Channel
-            {
-                ChannelName = channelName,
-                DateRegistered = DateTime.Now,
-                StreamPlatform = StreamPlatformType.YouTube,
-                AvatarUrl = "https://avatar.url",
-                ChannelUrl = "https://channel.url",
-            };
+            var existingChannel = new Channel(channelName, StreamPlatformType.YouTube, DateTime.Now, "https://avatar.url", "https://channel.url");
 
             channelRepositoryMock.Setup(m => m.Get(It.IsAny<StreamPlatformType>(), It.IsAny<string>()))
                 .ReturnsAsync(Maybe<Channel>.Some(existingChannel));

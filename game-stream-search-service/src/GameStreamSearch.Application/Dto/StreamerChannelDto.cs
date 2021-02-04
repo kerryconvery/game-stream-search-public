@@ -13,14 +13,7 @@ namespace GameStreamSearch.Application.Dto
 
         public Channel ToChannel(DateTime dateRegistered)
         {
-            return new Channel
-            {
-                ChannelName = ChannelName,
-                StreamPlatform = Platform,
-                DateRegistered = dateRegistered,
-                AvatarUrl = AvatarUrl,
-                ChannelUrl = ChannelUrl,
-            };
+            return new Channel(ChannelName, Platform, dateRegistered, AvatarUrl, ChannelUrl);
         }
     }
 }

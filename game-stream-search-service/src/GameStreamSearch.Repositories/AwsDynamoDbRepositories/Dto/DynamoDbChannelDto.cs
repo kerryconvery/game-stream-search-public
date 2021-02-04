@@ -37,14 +37,7 @@ namespace GameStreamSearch.Repositories.AwsDynamoDbRepositories.Dto
 
         public Channel ToEntity()
         {
-            return new Channel
-            {
-                ChannelName = ChannelName,
-                StreamPlatform = StreamPlatform,
-                DateRegistered = DateRegistered,
-                AvatarUrl = AvatarUrl,
-                ChannelUrl = ChannelUrl,
-            };
+            return new Channel(ChannelName, StreamPlatform, DateRegistered, AvatarUrl, ChannelUrl);
         }
     }
 }
