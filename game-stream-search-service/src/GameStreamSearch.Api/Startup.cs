@@ -79,7 +79,7 @@ namespace GameStreamSearch.Api
             services.AddScoped<IStreamService>(x => x.GetRequiredService<ProviderAggregationService>());
             services.AddScoped<IChannelService>(x => x.GetRequiredService<ProviderAggregationService>());
 
-            services.AddScoped<UpsertChannelCommand>();
+            services.AddScoped<ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult>, RegisterOrUpdateChannelCommandHandler>();
             
             services.AddScoped<ITimeProvider, UtcTimeProvider>();
 

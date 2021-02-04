@@ -24,11 +24,11 @@ namespace GameStreamSearch.Application.Tests
             SetChannelServiceToReturnChannel(upsertChannelRequest.ChannelName);
             SetChannelRepositoryToReturnNothing();
 
-            var upsertChannelCommand = new UpsertChannelCommand(channelRepositoryMock.Object, channelServiceStub.Object);
+            var upsertChannelCommand = new RegisterOrUpdateChannelCommandHandler(channelRepositoryMock.Object, channelServiceStub.Object);
 
-            var result = await upsertChannelCommand.Invoke(upsertChannelRequest);
+            var result = await upsertChannelCommand.Handle(upsertChannelRequest);
 
-            Assert.AreEqual(result, UpsertChannelResult.ChannelAdded);
+            Assert.AreEqual(result, RegisterOrUpdateChannelCommandResult.ChannelAdded);
         }
 
         [Test]
@@ -39,11 +39,11 @@ namespace GameStreamSearch.Application.Tests
             SetChannelServiceToReturnChannel(upsertChannelRequest.ChannelName);
             SetChannelRepositoryToReturnAChannel(upsertChannelRequest.ChannelName);
 
-            var upsertChannelCommand = new UpsertChannelCommand(channelRepositoryMock.Object, channelServiceStub.Object);
+            var upsertChannelCommand = new RegisterOrUpdateChannelCommandHandler(channelRepositoryMock.Object, channelServiceStub.Object);
 
-            var result = await upsertChannelCommand.Invoke(upsertChannelRequest);
+            var result = await upsertChannelCommand.Handle(upsertChannelRequest);
 
-            Assert.AreEqual(result, UpsertChannelResult.ChannelUpdated);
+            Assert.AreEqual(result, RegisterOrUpdateChannelCommandResult.ChannelUpdated);
         }
 
         [Test]
@@ -54,11 +54,11 @@ namespace GameStreamSearch.Application.Tests
             SetChannelServiceToReturnNothing();
             SetChannelRepositoryToReturnAChannel(upsertChannelRequest.ChannelName);
 
-            var upsertChannelCommand = new UpsertChannelCommand(channelRepositoryMock.Object, channelServiceStub.Object);
+            var upsertChannelCommand = new RegisterOrUpdateChannelCommandHandler(channelRepositoryMock.Object, channelServiceStub.Object);
 
-            var result = await upsertChannelCommand.Invoke(upsertChannelRequest);
+            var result = await upsertChannelCommand.Handle(upsertChannelRequest);
 
-            Assert.AreEqual(result, UpsertChannelResult.ChannelNotFoundOnPlatform);
+            Assert.AreEqual(result, RegisterOrUpdateChannelCommandResult.ChannelNotFoundOnPlatform);
         }
 
         [Test]
@@ -69,16 +69,16 @@ namespace GameStreamSearch.Application.Tests
             SetChannelServiceToReturnAnError();
             SetChannelRepositoryToReturnAChannel(upsertChannelRequest.ChannelName);
 
-            var upsertChannelCommand = new UpsertChannelCommand(channelRepositoryMock.Object, channelServiceStub.Object);
+            var upsertChannelCommand = new RegisterOrUpdateChannelCommandHandler(channelRepositoryMock.Object, channelServiceStub.Object);
 
-            var result = await upsertChannelCommand.Invoke(upsertChannelRequest);
+            var result = await upsertChannelCommand.Handle(upsertChannelRequest);
 
-            Assert.AreEqual(result, UpsertChannelResult.PlatformServiceIsNotAvailable);
+            Assert.AreEqual(result, RegisterOrUpdateChannelCommandResult.PlatformServiceIsNotAvailable);
         }
 
-        private UpsertChannelRequest CreateUpsertRequest(string channelName)
+        private RegisterOrUpdateChannelCommand CreateUpsertRequest(string channelName)
         {
-            return new UpsertChannelRequest
+            return new RegisterOrUpdateChannelCommand
             {
                 ChannelName = channelName,
                 RegistrationDate = DateTime.Now,

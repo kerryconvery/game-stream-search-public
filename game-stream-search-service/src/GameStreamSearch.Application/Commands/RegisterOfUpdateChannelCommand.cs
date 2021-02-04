@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using GameStreamSearch.Application.Entities;
 using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Application.Services;
-using GameStreamSearch.Types;
 
 namespace GameStreamSearch.Application.Commands
 {
-    public enum UpsertChannelResult
+    public enum RegisterOrUpdateChannelCommandResult
     {
         ChannelNotFoundOnPlatform,
         ChannelAdded,
@@ -15,25 +14,25 @@ namespace GameStreamSearch.Application.Commands
         PlatformServiceIsNotAvailable,
     }
 
-    public class UpsertChannelRequest
+    public class RegisterOrUpdateChannelCommand
     {
-        public string ChannelName { get; set; }
-        public DateTime RegistrationDate { get; set; }
-        public StreamPlatformType StreamPlatform { get; set; }
+        public string ChannelName { get; init; }
+        public DateTime RegistrationDate { get; init; }
+        public StreamPlatformType StreamPlatform { get; init; }
     }
 
-    public class UpsertChannelCommand
+    public class RegisterOrUpdateChannelCommandHandler : ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult>
     {
         private readonly IChannelRepository channelRepository;
         private readonly IChannelService channelService;
 
-        public UpsertChannelCommand(IChannelRepository channelRepository, IChannelService channelService)
+        public RegisterOrUpdateChannelCommandHandler(IChannelRepository channelRepository, IChannelService channelService)
         {
             this.channelRepository = channelRepository;
             this.channelService = channelService;
         }
 
-        private async Task<UpsertChannelResult> UpsertChannel(Channel channel)
+        private async Task<RegisterOrUpdateChannelCommandResult> UpsertChannel(Channel channel)
         {
             var existingChannel = await channelRepository.Get(channel.StreamPlatform, channel.ChannelName);
 
@@ -41,27 +40,27 @@ namespace GameStreamSearch.Application.Commands
             {
                 await channelRepository.Update(channel);
 
-                return UpsertChannelResult.ChannelUpdated;
+                return RegisterOrUpdateChannelCommandResult.ChannelUpdated;
             }
 
             await channelRepository.Add(channel);
 
-            return UpsertChannelResult.ChannelAdded;
+            return RegisterOrUpdateChannelCommandResult.ChannelAdded;
         }
 
-        public async Task<UpsertChannelResult> Invoke(UpsertChannelRequest request)
+        public async Task<RegisterOrUpdateChannelCommandResult> Handle(RegisterOrUpdateChannelCommand request)
         {
             var streamChannelResult = await channelService.GetStreamerChannel(request.ChannelName, request.StreamPlatform);
 
             if (streamChannelResult.IsFailure)
             {
-                return UpsertChannelResult.PlatformServiceIsNotAvailable;
+                return RegisterOrUpdateChannelCommandResult.PlatformServiceIsNotAvailable;
             }
 
             return await streamChannelResult.Value
                 .Select(s => s.ToChannel(request.RegistrationDate))
                 .Select(c => UpsertChannel(c))
-                .GetOrElse(Task.FromResult(UpsertChannelResult.ChannelNotFoundOnPlatform));
+                .GetOrElse(Task.FromResult(RegisterOrUpdateChannelCommandResult.ChannelNotFoundOnPlatform));
         }
 
     }
