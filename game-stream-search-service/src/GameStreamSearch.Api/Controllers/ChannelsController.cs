@@ -21,12 +21,12 @@ namespace GameStreamSearch.Api.Controllers
     [Route("api")]
     public class ChannelsController : ControllerBase
     {
-        private readonly UpsertChannelCommand upsertChannelCommand;
+        private readonly ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand;
         private readonly IChannelRepository channelRepository;
         private readonly ITimeProvider timeProvider;
 
         public ChannelsController(
-            UpsertChannelCommand upsertChannelCommand,
+            ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand,
             IChannelRepository channelRepository,
             ITimeProvider timeProvider)
         {
@@ -72,26 +72,26 @@ namespace GameStreamSearch.Api.Controllers
 
         [HttpPut]
         [Route("channels/{platform}/{channelName}")]
-        public async Task<IActionResult> AddChannel([FromRoute] StreamPlatformType platform, string channelName)
+        public async Task<IActionResult> RegisterOrUpdateChannel([FromRoute] StreamPlatformType platform, string channelName)
         {
-            var request = new UpsertChannelRequest
+            var request = new RegisterOrUpdateChannelCommand
             {
                 ChannelName = channelName,
                 StreamPlatform = platform,
                 RegistrationDate = timeProvider.GetNow(),
             };
 
-            var commandResult = await upsertChannelCommand.Invoke(request);
+            var commandResult = await upsertChannelCommand.Handle(request);
 
             switch (commandResult)
             {
-                case UpsertChannelResult.ChannelNotFoundOnPlatform:
+                case RegisterOrUpdateChannelCommandResult.ChannelNotFoundOnPlatform:
                     return PresentChannelNotFoundOnPlatform(platform, channelName);
-                case UpsertChannelResult.ChannelAdded:
+                case RegisterOrUpdateChannelCommandResult.ChannelAdded:
                     return PresentChannelAdded(platform, channelName);
-                case UpsertChannelResult.ChannelUpdated:
+                case RegisterOrUpdateChannelCommandResult.ChannelUpdated:
                     return new NoContentResult();
-                case UpsertChannelResult.PlatformServiceIsNotAvailable:
+                case RegisterOrUpdateChannelCommandResult.PlatformServiceIsNotAvailable:
                     return PresentPlatformServiceIsUnavilable(platform);
                 default:
                     throw new ArgumentException($"Unsupported channel upsert result {commandResult.ToString()}");
