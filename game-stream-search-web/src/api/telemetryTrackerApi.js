@@ -1,4 +1,4 @@
-const trackStreamOpened = ({ streamTitle, streamerName, streamPlatformName, views }) => {
+const trackStreamOpened = ({ streamTitle, streamerName, platformName, views }) => {
 
 }
 
@@ -6,7 +6,7 @@ const trackStreamSearch = ({ gameName }) => {
 
 }
 
-const trackFeaturedChannelOpened = ({ channelName, streamPlatformDisplayName }) => {
+const trackFeaturedChannelOpened = ({ channelName, platformName }) => {
 
 }
 

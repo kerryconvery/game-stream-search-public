@@ -1,14 +1,9 @@
-﻿using System;
-using GameStreamSearch.Application.Entities;
-using GameStreamSearch.Application.Enums;
-
-namespace GameStreamSearch.Application.Dto
+﻿namespace GameStreamSearch.Application.Models
 {
     public class ChannelDto
     {
         public string ChannelName { get; init; }
-        public StreamPlatformType StreamPlatform { get; init; }
-        public string StreamPlatformDisplayName { get; init; }
+        public string PlatformName { get; init; }
         public string AvatarUrl { get; init; }
         public string ChannelUrl { get; init; }
 
@@ -17,8 +12,7 @@ namespace GameStreamSearch.Application.Dto
             return new ChannelDto
             {
                 ChannelName = channel.ChannelName,
-                StreamPlatform = channel.StreamPlatform,
-                StreamPlatformDisplayName = channel.StreamPlatform.GetFriendlyName(),
+                PlatformName = channel.StreamPlatformName,
                 AvatarUrl = channel.AvatarUrl,
                 ChannelUrl = channel.ChannelUrl,
             };

@@ -1,11 +1,10 @@
 ﻿using System;
-using GameStreamSearch.Application.Enums;
 
-namespace GameStreamSearch.Application.Entities
+namespace GameStreamSearch.Application.Models
 {
     public class Channel
     {
-        public Channel(string channelName, StreamPlatformType streamPlatform, DateTime dateRegistered, string avatarUrl, string channelUrl)
+        public Channel(string channelName, string streamPlatformName, DateTime dateRegistered, string avatarUrl, string channelUrl)
         {
             if (string.IsNullOrEmpty(channelName))
             {
@@ -13,7 +12,7 @@ namespace GameStreamSearch.Application.Entities
             }
 
             ChannelName = channelName;
-            StreamPlatform = streamPlatform;
+            StreamPlatformName = streamPlatformName;
             DateRegistered = dateRegistered;
 
             SetAvatarUrl(avatarUrl);
@@ -38,11 +37,11 @@ namespace GameStreamSearch.Application.Entities
                 throw new ArgumentException("Channel url cannot be empty or null");
             }
 
-            ChannelUrl = ChannelName;
+            ChannelUrl = channelUrl;
         }
 
         public string ChannelName { get; }
-        public StreamPlatformType StreamPlatform { get; }
+        public string StreamPlatformName { get; }
         public DateTime DateRegistered { get; }
         public string AvatarUrl { get; private set; }
         public string ChannelUrl { get; private set; }

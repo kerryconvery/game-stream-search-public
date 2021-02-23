@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GameStreamSearch.Application.Dto
+namespace GameStreamSearch.Application.Models
 {
     public class ChannelListDto
     {
-        public IEnumerable<ChannelDto> Items { get; init; }
+        public IEnumerable<ChannelDto> Channels { get; init; }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
-using GameStreamSearch.Application.Dto;
-using GameStreamSearch.Application.Enums;
 using GameStreamSearch.Types;
 
-namespace GameStreamSearch.Application.Services
+namespace GameStreamSearch.Application.Models
 {
     public interface IChannelService
     {
-        Task<MaybeResult<StreamerChannelDto, GetStreamerChannelErrorType>> GetStreamerChannel(string streamerName, StreamPlatformType streamingPlatform);
+        Task<MaybeResult<PlatformChannelDto, StreamProviderError>> GetStreamerChannel(string streamingPlatformName, string streamerName);
     };
 }
