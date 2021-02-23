@@ -11,32 +11,32 @@ import '@testing-library/jest-dom/extend-expect';
 
 describe('Can search for streams', () => {
   it('should display the searched for game stream and trigger the stream searched telemetry event', async () => {
-    const streams = {
-      items: [{
+    const initialStreams = {
+      streams: [{
         streamTitle: 'fake stream 1',
         streamThumbnailUrl: 'http://fake.stream1.thumbnail',
         streamUrl: 'fake.stream1.url',
         streamerName: 'fake steamer',
         streamerAvatarUrl: 'http://fake.channel1.url',
-        streamPlatformName: 'fake platform',
+        platformName: 'fake platform',
         isLive: true,
         views: 100
       }],
-      nextPageToken: null,
+      nextPageToken: "",
     }
 
     const foundStreams = {
-      items: [{
+      streams: [{
         streamTitle: 'fake stream 2',
         streamThumbnailUrl: 'http://fake.stream2.thumbnail',
         streamUrl: 'fake.stream2.url',
         streamerName: 'fake steamer',
         streamerAvatarUrl: 'http://fake.channel1.url',
-        streamPlatformName: 'fake platform',
+        platformName: 'fake platform',
         isLive: true,
         views: 100
       }],
-      nextPageToken: null,
+      nextPageToken: "",
     }
 
     nock('http://localhost:5000')
@@ -45,7 +45,7 @@ describe('Can search for streams', () => {
       'access-control-allow-credentials': 'true' 
     })
     .get('/api/streams?pageSize=10')
-    .reply(200, streams);
+    .reply(200, initialStreams);
 
     nock('http://localhost:5000')
       .defaultReplyHeaders({
@@ -81,7 +81,7 @@ describe('Can search for streams', () => {
         'access-control-allow-credentials': 'true' 
       })
       .get('/api/streams?pageSize=10')
-      .reply(200, { items: [] });
+      .reply(200, { streams: [] });
 
     renderApplication();
 
@@ -97,7 +97,7 @@ describe('Can search for streams', () => {
       'access-control-allow-credentials': 'true' ,
     })
     .get('/api/channels')
-    .reply(200, { items: [] });
+    .reply(200, { channels: [] });
   });
 
   const telemetryTrackerApiMock = autoMockObject(getTelemetryTrackerApi({}));

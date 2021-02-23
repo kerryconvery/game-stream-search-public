@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 using GameStreamSearch.Api.Contracts;
 using GameStreamSearch.Application;
 using GameStreamSearch.Application.Commands;
-using GameStreamSearch.Application.Dto;
-using GameStreamSearch.Application.Enums;
+using GameStreamSearch.Application.Models;
 using GameStreamSearch.Application.Providers;
+using GameStreamSearch.Application.Queries;
+using GameStreamSearch.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace GameStreamSearch.Api.Controllers
     public class GetChannelParams
     {
         public string ChannelName { get; init; }
-        public StreamPlatformType Platform { get; init; }
+        public string PlatformName { get; init; }
     }
 
     [ApiController]
@@ -22,99 +23,104 @@ namespace GameStreamSearch.Api.Controllers
     public class ChannelsController : ControllerBase
     {
         private readonly ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand;
-        private readonly IChannelRepository channelRepository;
+        private readonly IQueryHandler<GetAllChannelsQuery, ChannelListDto> getAllChannelsQueryHandler;
+        private readonly IQueryHandler<GetChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler;
         private readonly ITimeProvider timeProvider;
 
         public ChannelsController(
             ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand,
-            IChannelRepository channelRepository,
+            IQueryHandler<GetAllChannelsQuery, ChannelListDto> getAllChannelsQueryHandler,
+            IQueryHandler<GetChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler,
             ITimeProvider timeProvider)
         {
             this.upsertChannelCommand = upsertChannelCommand;
-            this.channelRepository = channelRepository;
+            this.getAllChannelsQueryHandler = getAllChannelsQueryHandler;
+            this.getChannelQueryHandler = getChannelQueryHandler;
             this.timeProvider = timeProvider;
         }
 
-        private IActionResult PresentChannelAdded(StreamPlatformType platform, string channelName)
+        [HttpPut]
+        [Route("channels/{platformName}/{channelName}")]
+        public async Task<IActionResult> RegisterOrUpdateChannel([FromRoute] string platformName, string channelName)
+        {
+            var command = new RegisterOrUpdateChannelCommand
+            {
+                ChannelName = channelName,
+                StreamPlatformName = platformName,
+                RegistrationDate = timeProvider.GetNow(),
+            };
+
+            var commandResult = await upsertChannelCommand.Handle(command);
+
+            switch (commandResult)
+            {
+                case RegisterOrUpdateChannelCommandResult.ChannelNotFoundOnPlatform:
+                    return PresentChannelNotFoundOnPlatform(platformName, channelName);
+                case RegisterOrUpdateChannelCommandResult.ChannelAdded:
+                    return PresentChannelAdded(platformName, channelName);
+                case RegisterOrUpdateChannelCommandResult.ChannelUpdated:
+                    return new NoContentResult();
+                case RegisterOrUpdateChannelCommandResult.PlatformServiceIsNotAvailable:
+                    return PresentPlatformServiceIsUnavilable(platformName);
+                default:
+                    throw new ArgumentException($"Unsupported channel upsert result {commandResult.ToString()}");
+            }
+        }
+
+        private IActionResult PresentChannelAdded(string platformName, string channelName)
         {
             var urlParams = new GetChannelParams
             {
                 ChannelName = channelName,
-                Platform = platform,
+                PlatformName = platformName,
             };
 
             return new CreatedResult(Url.Link(nameof(GetChannel), urlParams), null);
         }
 
-        private IActionResult PresentChannelNotFoundOnPlatform(StreamPlatformType platform, string channelName)
+        private IActionResult PresentChannelNotFoundOnPlatform(string platformName, string channelName)
         {
             var errorResponse = new ErrorResponseContract()
                 .AddError(new ErrorContract
                 {
                     ErrorCode = ErrorCodeType.ChannelNotFoundOnPlatform,
-                    ErrorMessage = $"Channel {channelName} not found on {platform.GetFriendlyName()}"
+                    ErrorMessage = $"Channel {channelName} not found on {platformName}"
                 });
 
             return new BadRequestObjectResult(errorResponse);
         }
 
-        private IActionResult PresentPlatformServiceIsUnavilable(StreamPlatformType platform)
+        private IActionResult PresentPlatformServiceIsUnavilable(string platformName)
         {
             var errorResponse = new ErrorResponseContract()
                 .AddError(new ErrorContract
                 {
                     ErrorCode = ErrorCodeType.PlatformServiceIsNotAvailable,
-                    ErrorMessage = $"The platform {platform.GetFriendlyName()} is not available at this time"
+                    ErrorMessage = $"The platform {platformName} is not available at this time"
                 });
 
             return StatusCode(StatusCodes.Status424FailedDependency, errorResponse);
-        }
-
-        [HttpPut]
-        [Route("channels/{platform}/{channelName}")]
-        public async Task<IActionResult> RegisterOrUpdateChannel([FromRoute] StreamPlatformType platform, string channelName)
-        {
-            var request = new RegisterOrUpdateChannelCommand
-            {
-                ChannelName = channelName,
-                StreamPlatform = platform,
-                RegistrationDate = timeProvider.GetNow(),
-            };
-
-            var commandResult = await upsertChannelCommand.Handle(request);
-
-            switch (commandResult)
-            {
-                case RegisterOrUpdateChannelCommandResult.ChannelNotFoundOnPlatform:
-                    return PresentChannelNotFoundOnPlatform(platform, channelName);
-                case RegisterOrUpdateChannelCommandResult.ChannelAdded:
-                    return PresentChannelAdded(platform, channelName);
-                case RegisterOrUpdateChannelCommandResult.ChannelUpdated:
-                    return new NoContentResult();
-                case RegisterOrUpdateChannelCommandResult.PlatformServiceIsNotAvailable:
-                    return PresentPlatformServiceIsUnavilable(platform);
-                default:
-                    throw new ArgumentException($"Unsupported channel upsert result {commandResult.ToString()}");
-            }
         }
 
         [HttpGet]
         [Route("channels")]
         public async Task<IActionResult> GetChannels()
         {
-            var channels = await channelRepository.SelectAllChannels();
+            var channels = await getAllChannelsQueryHandler.Execute(new GetAllChannelsQuery());
 
             return Ok(channels);
         }
 
         [HttpGet]
-        [Route("channels/{platform}/{channelName}", Name = "GetChannel")]
-        public async Task<IActionResult> GetChannel([FromRoute] StreamPlatformType platform, string channelName)
+        [Route("channels/{platformName}/{channelName}", Name = "GetChannel")]
+        public async Task<IActionResult> GetChannel([FromRoute] string platformName, string channelName)
         {
-            var getChannelResult = await channelRepository.Get(platform, channelName);
+            var getChannelQuery = new GetChannelQuery { platformName = platformName, channelName = channelName };
+
+            var getChannelResult = await getChannelQueryHandler.Execute(getChannelQuery);
 
             return getChannelResult
-                .Select<IActionResult>(v => new OkObjectResult(ChannelDto.FromEntity(v)))
+                .Select<IActionResult>(v => new OkObjectResult(v))
                 .GetOrElse(new NotFoundResult());
         }
     }

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TypeTests\" />
+    <Folder Include="StreamProviderTests\" />
+    <Folder Include="StreamProviderTests\Selectors\" />
+    <Folder Include="StreamProviderTests\Mappers\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Builders\" />
+    <Folder Include="DomainServiceTests\" />
+    <Folder Include="ModelTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameStreamSearch.Types\GameStreamSearch.Types.csproj" />
+    <ProjectReference Include="..\GameStreamSearch.StreamProviders\GameStreamSearch.StreamProviders.csproj" />
+    <ProjectReference Include="..\GameStreamSearch.Application\GameStreamSearch.Application.csproj" />
+  </ItemGroup>
+</Project>

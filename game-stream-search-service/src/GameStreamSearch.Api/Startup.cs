@@ -5,17 +5,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using GameStreamSearch.Application.Services;
+using GameStreamSearch.Application.Models;
 using GameStreamSearch.StreamProviders;
 using GameStreamSearch.Application.Providers;
 using Newtonsoft.Json.Converters;
-using GameStreamSearch.StreamProviders.Dto;
 using GameStreamSearch.Application;
 using GameStreamSearch.Repositories;
-using GameStreamSearch.Repositories.AwsDynamoDbRepositories.Dto;
-using GameStreamSearch.AwsDynamoDb;
-using GameStreamSearch.Repositories.AwsDynamoDbRepositories;
 using GameStreamSearch.Application.Commands;
+using GameStreamSearch.StreamProviders.Gateways;
+using GameStreamSearch.StreamProviders.Mappers;
+using GameStreamSearch.Repositories.Dto;
+using GameStreamSearch.Application.Services;
+using GameStreamSearch.Application.Queries;
+using GameStreamSearch.Types;
 
 namespace GameStreamSearch.Api
 {
@@ -63,27 +65,35 @@ namespace GameStreamSearch.Api
 
             services.AddScoped(service =>
             {
-                return new ProviderAggregationService()
+                return new StreamProviderService()
                     .RegisterStreamProvider(new TwitchStreamProvider(
-                            new TwitchKrakenGateway(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"])
+                            new TwitchKrakenGateway(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"]),
+                            new TwitchStreamMapper(),
+                            new TwitchChannelMapper()
                     ))
                     .RegisterStreamProvider(new YouTubeStreamProvider(
-                            Configuration["YouTube:WebUrl"],
-                            new YouTubeV3Gateway(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"])
+                            new YouTubeV3Gateway(Configuration["YouTube:ApiUrl"], Configuration["YouTube:ApiKey"]),
+                            new YouTubeStreamMapper(Configuration["YouTube:WebUrl"]),
+                            new YouTubeChannelMapper(Configuration["YouTube:WebUrl"])
                     ))
                     .RegisterStreamProvider(new DLiveStreamProvider(
-                            Configuration["DLive:WebUrl"],
-                            new DLiveGraphQLGateway(Configuration["DLive:Apiurl"])));
+                            new DLiveGraphQLGateway(Configuration["DLive:Apiurl"]),
+                            new DLiveStreamMapper(Configuration["DLive:WebUrl"]),
+                            new DLiveChannelMapper(Configuration["DLive:WebUrl"])
+                    ));
             });
 
-            services.AddScoped<IStreamService>(x => x.GetRequiredService<ProviderAggregationService>());
-            services.AddScoped<IChannelService>(x => x.GetRequiredService<ProviderAggregationService>());
+            services.AddScoped<IStreamService>(x => x.GetRequiredService<StreamProviderService>());
+            services.AddScoped<IChannelService>(x => x.GetRequiredService<StreamProviderService>());
 
             services.AddScoped<ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult>, RegisterOrUpdateChannelCommandHandler>();
-            
+            services.AddScoped<IQueryHandler<StreamsQuery, AggregatedStreamsDto>, GetStreamsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetAllChannelsQuery, ChannelListDto>, GetAllChannelsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetChannelQuery, Maybe<ChannelDto>>, GetChannelQueryHandler>();
+
             services.AddScoped<ITimeProvider, UtcTimeProvider>();
 
-            services.AddSingleton<IAwsDynamoDbGateway<DynamoDbChannelDto>, AwsDynamoDbGateway<DynamoDbChannelDto>>();
+            services.AddSingleton<AwsDynamoDbGateway<DynamoDbChannelDto>, AwsDynamoDbGateway<DynamoDbChannelDto>>();
             services.AddSingleton<IChannelRepository, ChannelRepository>();
         }
 
