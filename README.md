@@ -88,7 +88,7 @@ Onion Architecture + CQS
 ### Future Technical Improvements
 * Setup a CICD build pipeline
 * Change frontend hosting to AWS CloudFront
-* Telemtry and service monitoring
+* Service monitoring
 * Error logging frontend and backend
 * E2E UI Tests
 * Blue-Green deployment
