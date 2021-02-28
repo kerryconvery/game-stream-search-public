@@ -17,8 +17,7 @@ namespace GameStreamSearch.DataAccess
         {
             AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig
             {
-                //RegionEndpoint = RegionEndpoint.APSoutheast2,
-                ServiceURL = "http://localhost:8000"
+                RegionEndpoint = RegionEndpoint.APSoutheast2,
             };
 
             dynamoDbClient = new AmazonDynamoDBClient(clientConfig);
