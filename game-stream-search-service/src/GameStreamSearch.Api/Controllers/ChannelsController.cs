@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using GameStreamSearch.Api.Contracts;
 using GameStreamSearch.Application;
-using GameStreamSearch.Application.Commands;
-using GameStreamSearch.Application.Models;
-using GameStreamSearch.Application.Providers;
-using GameStreamSearch.Application.Queries;
+using GameStreamSearch.Application.Dto;
+using GameStreamSearch.Application.GetAllChannels;
+using GameStreamSearch.Application.GetASingleChannel;
+using GameStreamSearch.Application.RegisterOrUpdateChannel;
 using GameStreamSearch.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,19 +24,16 @@ namespace GameStreamSearch.Api.Controllers
     {
         private readonly ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand;
         private readonly IQueryHandler<GetAllChannelsQuery, ChannelListDto> getAllChannelsQueryHandler;
-        private readonly IQueryHandler<GetChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler;
-        private readonly ITimeProvider timeProvider;
+        private readonly IQueryHandler<GetASingleChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler;
 
         public ChannelsController(
             ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand,
             IQueryHandler<GetAllChannelsQuery, ChannelListDto> getAllChannelsQueryHandler,
-            IQueryHandler<GetChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler,
-            ITimeProvider timeProvider)
+            IQueryHandler<GetASingleChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler)
         {
             this.upsertChannelCommand = upsertChannelCommand;
             this.getAllChannelsQueryHandler = getAllChannelsQueryHandler;
             this.getChannelQueryHandler = getChannelQueryHandler;
-            this.timeProvider = timeProvider;
         }
 
         [HttpPut]
@@ -47,7 +44,6 @@ namespace GameStreamSearch.Api.Controllers
             {
                 ChannelName = channelName,
                 StreamPlatformName = platformName,
-                RegistrationDate = timeProvider.GetNow(),
             };
 
             var commandResult = await upsertChannelCommand.Handle(command);
@@ -115,7 +111,7 @@ namespace GameStreamSearch.Api.Controllers
         [Route("channels/{platformName}/{channelName}", Name = "GetChannel")]
         public async Task<IActionResult> GetChannel([FromRoute] string platformName, string channelName)
         {
-            var getChannelQuery = new GetChannelQuery { platformName = platformName, channelName = channelName };
+            var getChannelQuery = new GetASingleChannelQuery { platformName = platformName, channelName = channelName };
 
             var getChannelResult = await getChannelQueryHandler.Execute(getChannelQuery);
 

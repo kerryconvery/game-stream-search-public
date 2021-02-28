@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Flurl.Http;
-using GameStreamSearch.Application;
 using GameStreamSearch.Types;
 
 namespace GameStreamSearch.StreamProviders.Extensions

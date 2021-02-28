@@ -6,19 +6,23 @@
 
   <ItemGroup>
     <Folder Include="Dto\" />
-    <Folder Include="Entities\" />
     <Folder Include="Services\" />
-    <Folder Include="Providers\" />
-    <Folder Include="Commands\" />
-    <Folder Include="Queries\" />
-    <Folder Include="ValueObjects\" />
-    <Folder Include="Models\" />
+    <Folder Include="GetStreams\" />
+    <Folder Include="RegisterOrUpdateChannel\" />
+    <Folder Include="GetAllChannels\" />
+    <Folder Include="GetASingleChannel\" />
+    <Folder Include="GetStreams\Dto\" />
+    <Folder Include="StreamProvider\" />
+    <Folder Include="StreamProvider\Dto\" />
+    <Folder Include="Services\StreamPlatformService\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Base64Url" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GameStreamSearch.Domain\GameStreamSearch.Domain.csproj" />
     <ProjectReference Include="..\GameStreamSearch.Types\GameStreamSearch.Types.csproj" />
+    <ProjectReference Include="..\GameStreamSearch.DataAccess\GameStreamSearch.DataAccess.csproj" />
   </ItemGroup>
 </Project>

@@ -5,19 +5,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using GameStreamSearch.Application.Models;
-using GameStreamSearch.StreamProviders;
-using GameStreamSearch.Application.Providers;
-using Newtonsoft.Json.Converters;
 using GameStreamSearch.Application;
-using GameStreamSearch.Repositories;
-using GameStreamSearch.Application.Commands;
-using GameStreamSearch.StreamProviders.Gateways;
-using GameStreamSearch.StreamProviders.Mappers;
-using GameStreamSearch.Repositories.Dto;
-using GameStreamSearch.Application.Services;
-using GameStreamSearch.Application.Queries;
+using Newtonsoft.Json.Converters;
 using GameStreamSearch.Types;
+using GameStreamSearch.Application.Dto;
+using GameStreamSearch.DataAccess;
+using GameStreamSearch.DataAccess.Dto;
+using GameStreamSearch.Application.Services.StreamProvider;
+using GameStreamSearch.StreamProviders.Twitch.Gateways;
+using GameStreamSearch.StreamProviders.Twitch;
+using GameStreamSearch.StreamProviders.Twitch.Mappers;
+using GameStreamSearch.StreamProviders.YouTube;
+using GameStreamSearch.StreamProviders.YouTube.Mappers.V3;
+using GameStreamSearch.StreamProviders.YouTube.Gateways.V3;
+using GameStreamSearch.StreamProviders.DLive;
+using GameStreamSearch.StreamProviders.DLive.Gateways;
+using GameStreamSearch.StreamProviders.DLive.Mappers;
+using GameStreamSearch.Application.RegisterOrUpdateChannel;
+using GameStreamSearch.Application.GetAllChannels;
+using GameStreamSearch.Application.GetASingleChannel;
+using GameStreamSearch.Application.GetStreams;
+using GameStreamSearch.Application.GetStreams.Dto;
+using GameStreamSearch.Domain.Channel;
 
 namespace GameStreamSearch.Api
 {
@@ -65,7 +74,7 @@ namespace GameStreamSearch.Api
 
             services.AddScoped(service =>
             {
-                return new StreamProviderService()
+                return new StreamPlatformService()
                     .RegisterStreamProvider(new TwitchStreamProvider(
                             new TwitchKrakenGateway(Configuration["Twitch:ApiUrl"], Configuration["Twitch:ClientId"]),
                             new TwitchStreamMapper(),
@@ -83,18 +92,13 @@ namespace GameStreamSearch.Api
                     ));
             });
 
-            services.AddScoped<IStreamService>(x => x.GetRequiredService<StreamProviderService>());
-            services.AddScoped<IChannelService>(x => x.GetRequiredService<StreamProviderService>());
-
             services.AddScoped<ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult>, RegisterOrUpdateChannelCommandHandler>();
-            services.AddScoped<IQueryHandler<StreamsQuery, AggregatedStreamsDto>, GetStreamsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetStreamsQuery, AggregatedStreamsDto>, GetStreamsQueryHandler>();
             services.AddScoped<IQueryHandler<GetAllChannelsQuery, ChannelListDto>, GetAllChannelsQueryHandler>();
-            services.AddScoped<IQueryHandler<GetChannelQuery, Maybe<ChannelDto>>, GetChannelQueryHandler>();
+            services.AddScoped<IQueryHandler<GetASingleChannelQuery, Maybe<ChannelDto>>, GetASingleChannelQueryHandler>();
 
-            services.AddScoped<ITimeProvider, UtcTimeProvider>();
-
-            services.AddSingleton<AwsDynamoDbGateway<DynamoDbChannelDto>, AwsDynamoDbGateway<DynamoDbChannelDto>>();
-            services.AddSingleton<IChannelRepository, ChannelRepository>();
+            services.AddSingleton<AwsDynamoDbTable<ChannelTableDto>, AwsDynamoDbTable<ChannelTableDto>>();
+            services.AddSingleton<ChannelRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
