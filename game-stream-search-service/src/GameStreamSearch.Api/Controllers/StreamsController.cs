@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using GameStreamSearch.Application;
-using GameStreamSearch.Application.Models;
-using GameStreamSearch.Application.Queries;
+using GameStreamSearch.Application.GetStreams;
+using GameStreamSearch.Application.GetStreams.Dto;
+using GameStreamSearch.Application.Services.StreamProvider;
+using GameStreamSearch.Application.StreamProvider;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStreamSearch.Api.Controllers
@@ -10,10 +12,10 @@ namespace GameStreamSearch.Api.Controllers
     [Route("api")]
     public class StreamsController : ControllerBase
     {
-        private readonly IStreamService streamService;
-        private readonly IQueryHandler<StreamsQuery, AggregatedStreamsDto> streamsQueryHandler;
+        private readonly StreamPlatformService streamService;
+        private readonly IQueryHandler<GetStreamsQuery, AggregatedStreamsDto> streamsQueryHandler;
 
-        public StreamsController(IStreamService streamService, IQueryHandler<StreamsQuery, AggregatedStreamsDto> streamsQueryHandler)
+        public StreamsController(StreamPlatformService streamService, IQueryHandler<GetStreamsQuery, AggregatedStreamsDto> streamsQueryHandler)
         {
             this.streamService = streamService;
             this.streamsQueryHandler = streamsQueryHandler;
@@ -31,12 +33,12 @@ namespace GameStreamSearch.Api.Controllers
                 GameName = gameName
             };
 
-            var streamsQuery = new StreamsQuery
+            var streamsQuery = new GetStreamsQuery
             {
                 StreamPlatformNames = streamService.GetSupportingPlatforms(filterOptions),
                 PageSize = pageSize,
                 PageToken = pageToken,
-                FilterOptions = filterOptions,
+                Filters = new StreamFilters { GameName = filterOptions.GameName },
             };
 
             var streams = await streamsQueryHandler.Execute(streamsQuery);

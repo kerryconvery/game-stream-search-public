@@ -5,25 +5,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Base64Url" Version="2.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <ProjectReference Include="..\GameStreamSearch.Types\GameStreamSearch.Types.csproj" />
+    <ProjectReference Include="..\GameStreamSearch.Application\GameStreamSearch.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="DLive\" />
+    <Folder Include="Twitch\" />
+    <Folder Include="YouTube\" />
+    <Folder Include="DLive\Mappers\" />
+    <Folder Include="Twitch\Mappers\" />
+    <Folder Include="YouTube\Mappers\" />
+    <Folder Include="YouTube\Gateways\" />
+    <Folder Include="YouTube\Gateways\Dto\" />
+    <Folder Include="Twitch\Gateways\" />
+    <Folder Include="Twitch\Gateways\Dto\" />
+    <Folder Include="Twitch\Selectors\" />
+    <Folder Include="YouTube\Gateways\Dto\V3\" />
+    <Folder Include="DLive\Gateways\" />
+    <Folder Include="DLive\Gateways\Dto\" />
+    <Folder Include="Consts\" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Flurl" Version="3.0.1" />
     <PackageReference Include="Flurl.Http" Version="3.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GameStreamSearch.Application\GameStreamSearch.Application.csproj" />
-    <ProjectReference Include="..\GameStreamSearch.Types\GameStreamSearch.Types.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dto\" />
-    <Folder Include="Dto\DLive\" />
-    <Folder Include="Dto\Twitch\" />
-    <Folder Include="Dto\YouTube\" />
-    <Folder Include="Dto\Twitch\Kraken\" />
-    <Folder Include="Dto\YouTube\YouTubeV3\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="Gateways\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Selectors\" />
   </ItemGroup>
 </Project>
