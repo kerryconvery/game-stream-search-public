@@ -27,6 +27,7 @@ using GameStreamSearch.Application.GetASingleChannel;
 using GameStreamSearch.Application.GetStreams;
 using GameStreamSearch.Application.GetStreams.Dto;
 using GameStreamSearch.Domain.Channel;
+using Amazon.DynamoDBv2;
 
 namespace GameStreamSearch.Api
 {
@@ -97,6 +98,8 @@ namespace GameStreamSearch.Api
             services.AddScoped<IQueryHandler<GetAllChannelsQuery, ChannelListDto>, GetAllChannelsQueryHandler>();
             services.AddScoped<IQueryHandler<GetASingleChannelQuery, Maybe<ChannelDto>>, GetASingleChannelQueryHandler>();
 
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions("dynamodb"));
+            services.AddAWSService<IAmazonDynamoDB>();
             services.AddSingleton<AwsDynamoDbTable<ChannelTableDto>, AwsDynamoDbTable<ChannelTableDto>>();
             services.AddSingleton<ChannelRepository>();
         }
