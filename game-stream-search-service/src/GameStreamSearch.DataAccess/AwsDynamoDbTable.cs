@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using GameStreamSearch.Types;
@@ -13,15 +12,9 @@ namespace GameStreamSearch.DataAccess
         private DynamoDBContext dynamoDbContext;
         private AmazonDynamoDBClient dynamoDbClient;
 
-        public AwsDynamoDbTable()
+        public AwsDynamoDbTable(IAmazonDynamoDB dynamoDB)
         {
-            AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig
-            {
-                RegionEndpoint = RegionEndpoint.APSoutheast2,
-            };
-
-            dynamoDbClient = new AmazonDynamoDBClient(clientConfig);
-            dynamoDbContext = new DynamoDBContext(dynamoDbClient);
+            dynamoDbContext = new DynamoDBContext(dynamoDB);
         }
 
         public Task PutItem(T item)

@@ -13,9 +13,6 @@ describe('Live streams', () => {
 
     expect(response.status).toEqual(200);
     expect(response.data.streams.length).toEqual(3);
-    expect(response.data.streams[0].platformName).toEqual('Twitch');
-    expect(response.data.streams[1].platformName).toEqual('YouTube');
-    expect(response.data.streams[2].platformName).toEqual('DLive');
     expect(response.data.streams[0].views > response.data.streams[1].views).toBeTruthy();
     expect(response.data.streams[1].views > response.data.streams[2].views).toBeTruthy();
   });
