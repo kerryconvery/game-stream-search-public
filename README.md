@@ -67,14 +67,14 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 ### Service Architecture
 Onion Architecture + CQS
 
-![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Search-Architecture.png?raw=true)
+![alt text](https://github.com/kerryconvery/game-stream-search-public/blob/master/documentation/Game-Stream-Search-Architecture.png?raw=true)
 
 ### Service Class Diagram
-![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/Game-Stream-Service-Class-Diagram.png?raw=true)
+![alt text](https://github.com/kerryconvery/game-stream-search-public/blob/master/documentation/Game-Stream-Service-Class-Diagram.png?raw=true)
 
 ### Frontend Architecture
 
-![alt text](https://github.com/kerryconvery/game-stream-search/blob/master/documentation/React-Architecture.png?raw=true)
+![alt text](https://github.com/kerryconvery/game-stream-search-public/blob/master/documentation/React-Architecture.png?raw=true)
 
 
 ### Infrastructure
