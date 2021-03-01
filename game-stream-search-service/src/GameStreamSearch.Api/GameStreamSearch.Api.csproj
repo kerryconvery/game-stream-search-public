@@ -5,12 +5,12 @@
   </PropertyGroup>
 
 
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'GameStreamSearch.Api' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
     <DebugType></DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'GameStreamSearch.Api' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Production' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Local' " />
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Contracts\" />

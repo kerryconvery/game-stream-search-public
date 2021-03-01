@@ -9,19 +9,18 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchUrl": "api",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "GameStreamSearch.Api": {
+    "Production": {
       "commandName": "Project",
-      "launchBrowser": false,
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
+    "Local": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
       }
     }
   }

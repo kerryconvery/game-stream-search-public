@@ -9,5 +9,6 @@ RUN dotnet publish -c Release -o release
 # # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
+ARG ASPNETCORE_ENVIRONMENT
 COPY --from=build-env /app/release .
 ENTRYPOINT ["dotnet", "GameStreamSearch.Api.dll"]
