@@ -10,7 +10,6 @@ namespace GameStreamSearch.DataAccess
     public class AwsDynamoDbTable<T> : IDisposable
     {
         private DynamoDBContext dynamoDbContext;
-        private AmazonDynamoDBClient dynamoDbClient;
 
         public AwsDynamoDbTable(IAmazonDynamoDB dynamoDB)
         {
@@ -44,7 +43,6 @@ namespace GameStreamSearch.DataAccess
         public void Dispose()
         {
             dynamoDbContext.Dispose();
-            dynamoDbClient.Dispose();
         }
     }
 }

@@ -17,7 +17,7 @@ readonly EB_DEPLOYMENT_PACKAGE=eb-$APPLICATION_NAME-deploy-$2.zip
 if [ -n "$1" ]
 then
   echo "Build and tag the service image"
-  docker build -t $ECR_REPOSIOTRY_URL/$ECR_REPOSIOTRY_NAME:$2 ../game-stream-search-service/.
+  docker build --build-arg ASPNETCORE_ENVIRONMENT=Production -t $ECR_REPOSIOTRY_URL/$ECR_REPOSIOTRY_NAME:$2 ../game-stream-search-service/.
 
   echo "Log docker into ECR"
   aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPOSIOTRY_URL
