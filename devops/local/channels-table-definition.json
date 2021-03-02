@@ -1,0 +1,15 @@
+{
+  "TableName": "Channels",
+  "KeySchema": [
+    { "AttributeName": "StreamPlatformName", "KeyType": "HASH" },
+    { "AttributeName": "ChannelName", "KeyType": "RANGE" }
+  ],
+  "AttributeDefinitions": [
+    { "AttributeName": "StreamPlatformName", "AttributeType": "S" },
+    { "AttributeName": "ChannelName", "AttributeType": "S" }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  }
+}

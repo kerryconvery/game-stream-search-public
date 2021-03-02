@@ -27,7 +27,7 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 * `lerna run lint` - run the linter over the frontend code
 * `docker-compose up database` - run a local copy of dynamodb
 * `docker-compose up web` - run the web service and local dynamodb inside docker
-* `./devops/local/create-database-tables.sh` - create the database tables
+* `./devops/local/recreate-database-tables.sh` - create the database tables
 
 ### How to run the application with docker
 1. Clone to repository to your local machine
