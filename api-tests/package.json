@@ -1,12 +1,12 @@
 {
-  "name": "integration-tests",
+  "name": "api-tests",
   "version": "1.0.0",
   "description": "Game stream search integration tests",
   "main": "index.js",
   "author": "kerry convery",
   "license": "ISC",
   "scripts": {
-    "test:integration": "cross-env APP_ENV=local jest --color",
+    "test:api": "cross-env APP_ENV=local jest --color",
     "lint": "eslint ."
   },
   "devDependencies": {
