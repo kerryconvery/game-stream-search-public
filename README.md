@@ -94,5 +94,4 @@ Onion Architecture + CQS
 * Change frontend hosting to AWS CloudFront
 * Service monitoring
 * Error logging frontend and backend
-* E2E UI Tests
 * Blue-Green deployment
