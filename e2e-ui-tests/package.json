@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:ui": "cypress run"
+    "test:ui": "cypress run",
+    "cypress:open": "cypress open"
   },
   "author": "",
   "license": "ISC",
