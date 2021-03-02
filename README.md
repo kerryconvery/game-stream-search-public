@@ -22,7 +22,8 @@ http://app-stream-machine.s3-website-ap-southeast-2.amazonaws.com/
 * `lerna run start:service --stream` - Builds and starts the backend service inside a docker container
 * `lerna run stop:service --stream` - Stops the running service
 * `lerna run test --stream` - run all unit tests
-* `lerna run test:integration --stream` - run the integration tests (web service must be running first)
+* `lerna run test:api --stream` - run the api tests (web service must be running first)
+* `lerna run test:ui --stream` - run the api tests (web service and frontend must be running first)
 * `lerna run lint` - run the linter over the frontend code
 * `docker-compose up database` - run a local copy of dynamodb
 * `docker-compose up web` - run the web service and local dynamodb inside docker

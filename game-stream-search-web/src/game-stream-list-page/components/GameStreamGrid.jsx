@@ -72,7 +72,7 @@ const StreamTile = ({
   const classes = useStreamTileStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} data-test-id="stream-tile">
       <Link href={streamUrl} onClick={onStreamOpened} target='_blank'>
         <IconButton size="medium" className={classes.playButton}>
           <PlayCircleOutlineIcon className={classes.playButtonIcon} />

@@ -105,4 +105,5 @@ dist
 .DS_Store
 ./devops/Dockerrun.aws.json
 dynamodb
-.zip
+*.zip
+*.mp4
