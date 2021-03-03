@@ -61,12 +61,12 @@ namespace GameStreamSearch.StreamProviders.YouTube.Gateways.V3
             return response.Select(v => v.items);
         }
 
-        public async Task<MaybeResult<IEnumerable<YouTubeChannelDto>, StreamProviderError>> SearchChannelsByUsername(string username, int pageSize)
+        public async Task<MaybeResult<IEnumerable<YouTubeChannelDto>, StreamProviderError>> SearchChannelById(string channelId, int pageSize)
         {
             var response = await BuildRequest("/youtube/v3/channels")
                 .SetQueryParam("part", "id")
                 .SetQueryParam("part", "snippet")
-                .SetQueryParam("forUsername", username)
+                .SetQueryParam("id", channelId)
                 .SetQueryParam("maxResults", pageSize)
                 .GetAsync()
                 .GetOrError<YouTubeChannelsDto>();

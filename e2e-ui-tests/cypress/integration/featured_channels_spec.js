@@ -7,14 +7,13 @@ describe("Featured channels", () => {
       .find('[type="button"]')
       .first()
       .click();
+  
+    cy.get('[data-test-id="stream-platform"]')
+      .find("input")
+      .type("Twitch", {force:true})
 
     cy.get('#channel-name')
       .type("christopherodd");
-
-    cy.contains("Streaming platform")
-      .parent()
-      .find("input")
-      .type("Twitch", {force:true})
 
     cy.contains('Save')
       .parent()

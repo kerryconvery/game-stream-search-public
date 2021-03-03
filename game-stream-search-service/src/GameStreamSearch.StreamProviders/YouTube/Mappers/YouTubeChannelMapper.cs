@@ -27,7 +27,7 @@ namespace GameStreamSearch.StreamProviders.YouTube.Mappers.V3
                     {
                         ChannelName = channelSnippet.snippet.title,
                         AvatarUrl = channelSnippet.snippet.thumbnails.@default.url,
-                        ChannelUrl = $"{youTubeWebUrl}/user/{channelSnippet.snippet.title}",
+                        ChannelUrl = $"{youTubeWebUrl}/channel/{channelSnippet.id}",
                         StreamPlatformName = StreamPlatform.YouTube,
                     };
                 })

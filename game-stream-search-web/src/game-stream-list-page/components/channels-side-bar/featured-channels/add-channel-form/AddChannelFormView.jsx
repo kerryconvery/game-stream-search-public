@@ -13,6 +13,8 @@ import Button from '@material-ui/core/Button';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormTemplate, { SubmitButton } from '../../../../../shared-components/form/FormTemplate';
 
+const YouTube = 'YouTube';
+
 const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, onSave }) => {
   const onFormChange = field => (event) => {
     const values = {
@@ -28,20 +30,15 @@ const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, 
       title='Add Channel'
       formContent={
         <FormGroup>
-          <TextField
-            id='channel-name'
-            label='Channel name'
-            defaultValue={_get(formValues, 'channelName')}
-            autoFocus
-            onChange={onFormChange('channelName')}
-            helperText={_get(errors, 'channelName')}
-            error={!_isNil(_get(errors, 'channelName'))}
-          />
-          <FormControl margin='normal' error={!_isNil(_get(errors, 'streamPlatform'))}>
-            <InputLabel>Streaming platform</InputLabel>
-            <Select value={_get(formValues, 'streamPlatform')} onChange={onFormChange('streamPlatform')}>
+          <FormControl margin='dense' error={!_isNil(_get(errors, 'streamPlatform'))}>
+            <Select
+              data-test-id='stream-platform'
+              autoFocus
+              value={_get(formValues, 'streamPlatform')}
+              onChange={onFormChange('streamPlatform')}
+            >
               <MenuItem value='Twitch'>Twitch</MenuItem>
-              <MenuItem value='YouTube'>YouTube</MenuItem>
+              <MenuItem value='YouTube'>{YouTube}</MenuItem>
               <MenuItem value='DLive'>DLive</MenuItem>
             </Select>
             {!_isNil(_get(errors, 'streamPlatform')) &&
@@ -49,6 +46,16 @@ const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, 
                 {_get(errors, 'streamPlatform')}
               </FormHelperText>
             }
+          </FormControl>
+          <FormControl margin='dense'>
+            <TextField
+              id='channel-name'
+              label={ _get(formValues, 'streamPlatform', '') === YouTube ? 'Channel id' : 'Channel name'}
+              defaultValue={_get(formValues, 'channelName')}
+              onChange={onFormChange('channelName')}
+              helperText={_get(errors, 'channelName')}
+              error={!_isNil(_get(errors, 'channelName'))}
+            />
           </FormControl>
         </FormGroup>
       }
@@ -83,12 +90,13 @@ AddChannelFormView.defaultProps = {
   errors: {},
 }
 
-export const validateForm = ({ channelName }) => {
+export const validateForm = ({ streamPlatform, channelName }) => {
   const errors = {};
 
   if (_trim(channelName) === '')
   {
-    errors['channelName'] = 'Please enter a channel name';
+    errors['channelName'] = streamPlatform === YouTube ?
+      'Please enter a channel id' : 'Please enter a channel name';
   }
 
   return errors;

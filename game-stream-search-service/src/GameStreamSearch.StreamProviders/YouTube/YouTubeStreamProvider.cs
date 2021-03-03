@@ -50,7 +50,7 @@ namespace GameStreamSearch.StreamProviders.YouTube
 
         public async Task<MaybeResult<PlatformChannelDto, StreamProviderError>> GetStreamerChannel(string channelName)
         {
-            var channelsResults = await youTubeV3Api.SearchChannelsByUsername(channelName, 1);
+            var channelsResults = await youTubeV3Api.SearchChannelById(channelName, 1);
 
             return channelMapper.Map(channelsResults);
         }
