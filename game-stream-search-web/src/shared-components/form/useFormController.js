@@ -8,9 +8,9 @@ const createReducers = state => ({
     }
     return { ...state, formValues, }
   },
-  saving: () => ({ ...state, submitted: true, isSaving : true, }),
-  saveFailed: errors => ({ ...state, errors, isSaving: false }),
-  saveSuccess: () => ({ ...state, errors: {}, isSaving: false  })
+  setSaving: () => ({ ...state, submitted: true, isSaving : true, }),
+  setSaveFailed: errors => ({ ...state, errors, isSaving: false }),
+  setSaveSuccess: () => ({ ...state, errors: {}, isSaving: false  })
 })
 
 const initialState = {
@@ -19,15 +19,15 @@ const initialState = {
 }
 
 const useFormController = (onValidateForm, onSaveForm, onSaveSuccess, onSaveFailed) => {
-  const [ state, formChanged, saving, saveFailed, saveSuccess ] = useReducers(createReducers, initialState);
+  const [ state, formChanged, setSaving, setSaveFailed, setSaveSuccess ] = useReducers(createReducers, initialState);
 
   const handleSaveFailed = (formValues, errors) => {
-    saveFailed(errors);
+    setSaveFailed(errors);
     onSaveFailed(formValues, errors);
   }
 
   const onSave = async (formValues) => {
-    saving();
+    setSaving();
 
     const errors = onValidateForm(formValues);
 
@@ -45,7 +45,7 @@ const useFormController = (onValidateForm, onSaveForm, onSaveSuccess, onSaveFail
 
     onSaveSuccess(result, formValues);
 
-    saveSuccess();
+    setSaveSuccess();
   };
 
   const onChange = (formValues) => {
