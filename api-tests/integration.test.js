@@ -68,7 +68,7 @@ describe('Live streams', () => {
   });
 });
 
-describe('Channels', () => {
+describe.only('Channels', () => {
   it('should add a new channel and return 201 with a link to the new channel', async () => {
     const putResponse = await axios({
       url: `${baseUrl}/channels/twitch/christopherodd`,
@@ -88,6 +88,16 @@ describe('Channels', () => {
     });
 
     expect(response.status).toEqual(204);
+  });
+
+  it.only("should return a bad request when attempting to add a channel that doesn't existing on the selected platform", async () => {
+    const response = await axios({
+      url: `${baseUrl}/channels/youtube/<**not-a-real-channel**>`,
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(e => e.response)
+
+    expect(response.status).toEqual(400);
   });
 
   it('should return all channels', async () => {
