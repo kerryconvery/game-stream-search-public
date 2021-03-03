@@ -18,8 +18,13 @@ const initialState = {
   submitted: false,
 }
 
-const useFormController = (onValidateForm, onSaveForm, onSaveSuccess) => {
+const useFormController = (onValidateForm, onSaveForm, onSaveSuccess, onSaveFailed) => {
   const [ state, formChanged, saving, saveFailed, saveSuccess ] = useReducers(createReducers, initialState);
+
+  const handleSaveFailed = (formValues, errors) => {
+    saveFailed(errors);
+    onSaveFailed(formValues, errors);
+  }
 
   const onSave = async (formValues) => {
     saving();
@@ -27,13 +32,15 @@ const useFormController = (onValidateForm, onSaveForm, onSaveSuccess) => {
     const errors = onValidateForm(formValues);
 
     if (!_isEmpty(errors)) {
-      return saveFailed(errors);
+      handleSaveFailed(formValues, errors);
+      return;
     }
 
     const result = await onSaveForm(formValues);
     
     if (!result.success) {
-      return saveFailed(result.errors);
+      handleSaveFailed(formValues, result.errors)
+      return;
     }
 
     onSaveSuccess(result, formValues);

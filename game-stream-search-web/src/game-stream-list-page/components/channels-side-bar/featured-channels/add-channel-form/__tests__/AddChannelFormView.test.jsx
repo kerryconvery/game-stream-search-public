@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import AddChannelFormView, { validateForm } from '../AddChannelFormView';
+import AddChannelFormView, { validateForm, mapApiErrorsToFields } from '../AddChannelFormView';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('Add Channel Form', () => {
@@ -44,12 +44,39 @@ describe('Validate add channel form', () => {
   it('should return the channel name field name as channel id when the stream platform is YouTube', () => {
     const errors = validateForm({ streamPlatform: 'YouTube' });
 
-    expect(errors.channelName).toEqual("Please enter a channel id");
+    expect(errors.channelName.message).toEqual("Please enter a channel id");
+    expect(errors.channelName.code).toEqual("ChannelNameMissing");
   });
 
   it('should return the channel name field name as channel name when the stream platform is not YouTube', () => {
     const errors = validateForm({ streamPlatform: 'Twitch' });
 
-    expect(errors.channelName).toEqual("Please enter a channel name");
+    expect(errors.channelName.message).toEqual("Please enter a channel name");
+    expect(errors.channelName.code).toEqual("ChannelNameMissing");
   });
-})
+});
+
+describe('Map Api errors to form fields', () => {
+  it('should return an error message and error code from the API error', () => {
+    const errors = mapApiErrorsToFields([
+      { 
+        errorCode: 'ChannelNotFoundOnPlatform',
+        errorMessage: 'Test error message'
+      }
+    ]);
+
+    expect(errors.channelName.message).toEqual("Test error message");
+    expect(errors.channelName.code).toEqual("ChannelNotFoundOnPlatform");
+  });
+
+  it('should return an empty object when there are no known error types', () => {
+    const errors = mapApiErrorsToFields([
+      { 
+        errorCode: 'UnknownError',
+        errorMessage: 'Unknown error'
+      }
+    ]);
+
+    expect(errors).toEqual({});
+  });
+});
