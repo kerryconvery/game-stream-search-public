@@ -20,10 +20,18 @@ const trackFeaturedChannelOpened = ({ channelName, platformName }) => {
   });
 }
 
+const trackFeatureChannelNotFound = ({ channelName, platformName }) => {
+  gtag('event', 'feature_channel_not_found', {
+    channelName,
+    platformName,
+  })
+}
+
 export const getTelemetryTrackerApi = () => {
   return {
     trackStreamOpened,
     trackStreamSearch,
     trackFeaturedChannelOpened,
+    trackFeatureChannelNotFound,
   }
 }

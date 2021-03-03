@@ -43,7 +43,7 @@ const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, 
             </Select>
             {!_isNil(_get(errors, 'streamPlatform')) &&
               <FormHelperText>
-                {_get(errors, 'streamPlatform')}
+                {_get(errors, 'streamPlatform.message')}
               </FormHelperText>
             }
           </FormControl>
@@ -53,8 +53,8 @@ const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, 
               label={ _get(formValues, 'streamPlatform', '') === YouTube ? 'Channel id' : 'Channel name'}
               defaultValue={_get(formValues, 'channelName')}
               onChange={onFormChange('channelName')}
-              helperText={_get(errors, 'channelName')}
               error={!_isNil(_get(errors, 'channelName'))}
+              helperText={_get(errors, 'channelName.message')}
             />
           </FormControl>
         </FormGroup>
@@ -69,13 +69,18 @@ const AddChannelFormView = ({ formValues, errors, isSaving, onChange, onCancel, 
   )
 }
 
+const ErrorPropType = shape({
+  code: string.isRequired,
+  message: string.isRequired,
+});
+
 AddChannelFormView.propTypes = {
   formValues: shape({
     channelName: string,
     streamPlatform: string,
   }),
   errors: shape({
-    channelName: string,
+    channelName: ErrorPropType,
   }),
   isSaving: bool.isRequired,
   onChange: func.isRequired,
@@ -90,13 +95,22 @@ AddChannelFormView.defaultProps = {
   errors: {},
 }
 
+const makeFieldError = (errorCode, errorMessage) => (
+  {
+    code: errorCode,
+    message: errorMessage,
+  }
+)
+
 export const validateForm = ({ streamPlatform, channelName }) => {
   const errors = {};
 
   if (_trim(channelName) === '')
   {
-    errors['channelName'] = streamPlatform === YouTube ?
+    const errorMessage = streamPlatform === YouTube ?
       'Please enter a channel id' : 'Please enter a channel name';
+
+      errors['channelName'] = makeFieldError('ChannelNameMissing', errorMessage);
   }
 
   return errors;
@@ -107,11 +121,11 @@ export const mapApiErrorsToFields = (apiErrors) => {
 
   apiErrors.forEach(error => {
     if (error.errorCode === 'ChannelNotFoundOnPlatform') {
-      fieldErrors['channelName'] = error.errorMessage
+      fieldErrors['channelName'] = makeFieldError('ChannelNotFoundOnPlatform', error.errorMessage);
     }
 
     if (error.errorCode === 'PlatformServiceIsNotAvailable') {
-      fieldErrors['streamPlatform'] = error.errorMessage
+      fieldErrors['streamPlatform'] = makeFieldError('PlatformServiceIsNotAvailable', error.errorMessage);
     } 
   })
 
