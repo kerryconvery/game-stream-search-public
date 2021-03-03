@@ -90,6 +90,7 @@ exports[`Game stream grid should render stream tiles without loading tiles 1`] =
   >
     <div
       class="makeStyles-root-3"
+      data-test-id="stream-tile"
     >
       <a
         class="a-root-10"
@@ -170,6 +171,7 @@ exports[`Game stream grid should render stream tiles without loading tiles 1`] =
   >
     <div
       class="makeStyles-root-3"
+      data-test-id="stream-tile"
     >
       <a
         class="a-root-10"

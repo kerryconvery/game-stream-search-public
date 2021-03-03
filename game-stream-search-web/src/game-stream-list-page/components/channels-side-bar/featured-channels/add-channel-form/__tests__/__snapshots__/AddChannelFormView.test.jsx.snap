@@ -24,43 +24,15 @@ exports[`Add Channel Form should match the snapshot 1`] = `
       class="MuiFormGroup-root"
     >
       <div
-        class="MuiFormControl-root MuiTextField-root"
+        class="MuiFormControl-root MuiFormControl-marginDense"
       >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-focused Mui-focused"
-          data-shrink="true"
-          for="channel-name"
-          id="channel-name-label"
-        >
-          Channel name
-        </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-focused Mui-focused MuiInputBase-formControl MuiInput-formControl"
-        >
-          <input
-            aria-invalid="false"
-            class="MuiInputBase-input MuiInput-input"
-            id="channel-name"
-            type="text"
-            value=""
-          />
-        </div>
-      </div>
-      <div
-        class="MuiFormControl-root MuiFormControl-marginNormal"
-      >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-          data-shrink="true"
-        >
-          Streaming platform
-        </label>
-        <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-focused Mui-focused MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense"
+          data-test-id="stream-platform"
         >
           <div
             aria-haspopup="listbox"
-            class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+            class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
             role="button"
             tabindex="0"
           >
@@ -82,6 +54,33 @@ exports[`Add Channel Form should match the snapshot 1`] = `
               d="M7 10l5 5 5-5z"
             />
           </svg>
+        </div>
+      </div>
+      <div
+        class="MuiFormControl-root MuiFormControl-marginDense"
+      >
+        <div
+          class="MuiFormControl-root MuiTextField-root"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink="false"
+            for="channel-name"
+            id="channel-name-label"
+          >
+            Channel name
+          </label>
+          <div
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          >
+            <input
+              aria-invalid="false"
+              class="MuiInputBase-input MuiInput-input"
+              id="channel-name"
+              type="text"
+              value=""
+            />
+          </div>
         </div>
       </div>
     </div>

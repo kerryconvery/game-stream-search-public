@@ -18,6 +18,7 @@ namespace GameStreamSearch.UnitTests.StreamProviders.YouTube.Mappers
             var channels = new List<YouTubeChannelDto>
             {
                 new YouTubeChannelDto {
+                    id = "testchannelid",
                     snippet = new YouTubeChannelSnippetDto {
                         title = "testchannel",
                         thumbnails = new YouTubeChannelSnippetThumbnailsDto
@@ -39,7 +40,7 @@ namespace GameStreamSearch.UnitTests.StreamProviders.YouTube.Mappers
             Assert.AreEqual(channel.ChannelName, "testchannel");
             Assert.AreEqual(channel.AvatarUrl, "http://thumbnail.url");
             Assert.AreEqual(channel.StreamPlatformName, StreamPlatform.YouTube);
-            Assert.AreEqual(channel.ChannelUrl, "http://youtube.com/user/testchannel");
+            Assert.AreEqual(channel.ChannelUrl, "http://youtube.com/channel/testchannelid");
 
         }
     }
