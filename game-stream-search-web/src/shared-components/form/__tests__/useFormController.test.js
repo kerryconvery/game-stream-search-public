@@ -36,6 +36,20 @@ describe('useFormController', () => {
   });
 
   it('should call onSaveSuccess if there were no errors saving the form data', async () => {
+    const saveFormValues = jest.fn().mockReturnValue(new Promise(() => {}));
+
+    const formValues = { testValue: 'test value' }
+
+    const { result } = renderHook(() =>
+      useFormController(validateForm, saveFormValues, handleSaveSuccess, handleSaveFailed)
+    )
+
+    act(() => { result.current.onSave(formValues) });
+
+    expect(result.current.isSaving).toBeTruthy();
+  });
+
+  it('should call onSaveSuccess if there were no errors saving the form data', async () => {
     const saveFormValues = jest.fn().mockResolvedValue({ success: true })
 
     const formValues = { testValue: 'test value' }
