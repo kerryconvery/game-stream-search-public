@@ -35,7 +35,7 @@ describe('useFormController', () => {
     expect(result.current.formValues).toEqual(formValues);
   });
 
-  it('should call onSaveSuccess if there were no errors saving the form data', async () => {
+  it('should call return is saving as true while waiting for the save operation to finish', async () => {
     const saveFormValues = jest.fn().mockReturnValue(new Promise(() => {}));
 
     const formValues = { testValue: 'test value' }
