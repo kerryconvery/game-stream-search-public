@@ -5,16 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\" />
     <Folder Include="Services\" />
-    <Folder Include="GetStreams\" />
-    <Folder Include="RegisterOrUpdateChannel\" />
-    <Folder Include="GetAllChannels\" />
-    <Folder Include="GetASingleChannel\" />
-    <Folder Include="GetStreams\Dto\" />
     <Folder Include="StreamProvider\" />
     <Folder Include="StreamProvider\Dto\" />
     <Folder Include="Services\StreamPlatformService\" />
+    <Folder Include="Streams\" />
+    <Folder Include="Channels\" />
+    <Folder Include="Channels\Commands\" />
+    <Folder Include="Channels\Queries\" />
+    <Folder Include="Streams\Queries\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

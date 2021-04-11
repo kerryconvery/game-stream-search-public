@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GameStreamSearch.Application;
 using GameStreamSearch.Application.GetStreams;
-using GameStreamSearch.Application.GetStreams.Dto;
 using GameStreamSearch.Application.Services.StreamProvider;
 using GameStreamSearch.Application.StreamProvider;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +12,9 @@ namespace GameStreamSearch.Api.Controllers
     public class StreamsController : ControllerBase
     {
         private readonly StreamPlatformService streamService;
-        private readonly IQueryHandler<GetStreamsQuery, AggregatedStreamsDto> streamsQueryHandler;
+        private readonly IQueryHandler<GetStreamsQuery, GetStreamsResponse> streamsQueryHandler;
 
-        public StreamsController(StreamPlatformService streamService, IQueryHandler<GetStreamsQuery, AggregatedStreamsDto> streamsQueryHandler)
+        public StreamsController(StreamPlatformService streamService, IQueryHandler<GetStreamsQuery, GetStreamsResponse> streamsQueryHandler)
         {
             this.streamService = streamService;
             this.streamsQueryHandler = streamsQueryHandler;

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\" />
+    <Folder Include="DynamoDbTables\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.5.4.31" />

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using GameStreamSearch.Api.Contracts;
 using GameStreamSearch.Application;
-using GameStreamSearch.Application.Dto;
 using GameStreamSearch.Application.GetAllChannels;
 using GameStreamSearch.Application.GetASingleChannel;
 using GameStreamSearch.Application.RegisterOrUpdateChannel;
@@ -22,14 +21,14 @@ namespace GameStreamSearch.Api.Controllers
     [Route("api")]
     public class ChannelsController : ControllerBase
     {
-        private readonly ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand;
-        private readonly IQueryHandler<GetAllChannelsQuery, ChannelListDto> getAllChannelsQueryHandler;
-        private readonly IQueryHandler<GetASingleChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler;
+        private readonly ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelResponse> upsertChannelCommand;
+        private readonly IQueryHandler<GetAllChannelsQuery, GetAllChannelsResponse> getAllChannelsQueryHandler;
+        private readonly IQueryHandler<GetASingleChannelQuery, GetASingleChannelResponse> getChannelQueryHandler;
 
         public ChannelsController(
-            ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult> upsertChannelCommand,
-            IQueryHandler<GetAllChannelsQuery, ChannelListDto> getAllChannelsQueryHandler,
-            IQueryHandler<GetASingleChannelQuery, Maybe<ChannelDto>> getChannelQueryHandler)
+            ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelResponse> upsertChannelCommand,
+            IQueryHandler<GetAllChannelsQuery, GetAllChannelsResponse> getAllChannelsQueryHandler,
+            IQueryHandler<GetASingleChannelQuery, GetASingleChannelResponse> getChannelQueryHandler)
         {
             this.upsertChannelCommand = upsertChannelCommand;
             this.getAllChannelsQueryHandler = getAllChannelsQueryHandler;
@@ -46,20 +45,20 @@ namespace GameStreamSearch.Api.Controllers
                 StreamPlatformName = platformName,
             };
 
-            var commandResult = await upsertChannelCommand.Handle(command);
+            var commandResponse = await upsertChannelCommand.Handle(command);
 
-            switch (commandResult)
+            switch (commandResponse.Result)
             {
-                case RegisterOrUpdateChannelCommandResult.ChannelNotFoundOnPlatform:
+                case RegisterOrUpdateChannelResult.ChannelNotFoundOnPlatform:
                     return PresentChannelNotFoundOnPlatform(platformName, channelName);
-                case RegisterOrUpdateChannelCommandResult.ChannelAdded:
+                case RegisterOrUpdateChannelResult.ChannelAdded:
                     return PresentChannelAdded(platformName, channelName);
-                case RegisterOrUpdateChannelCommandResult.ChannelUpdated:
+                case RegisterOrUpdateChannelResult.ChannelUpdated:
                     return new NoContentResult();
-                case RegisterOrUpdateChannelCommandResult.PlatformServiceIsNotAvailable:
+                case RegisterOrUpdateChannelResult.PlatformServiceIsNotAvailable:
                     return PresentPlatformServiceIsUnavilable(platformName);
                 default:
-                    throw new ArgumentException($"Unsupported channel upsert result {commandResult.ToString()}");
+                    throw new ArgumentException($"Unsupported channel upsert result {commandResponse.Result}");
             }
         }
 
@@ -102,9 +101,9 @@ namespace GameStreamSearch.Api.Controllers
         [Route("channels")]
         public async Task<IActionResult> GetChannels()
         {
-            var channels = await getAllChannelsQueryHandler.Execute(new GetAllChannelsQuery());
+            var response = await getAllChannelsQueryHandler.Execute(new GetAllChannelsQuery());
 
-            return Ok(channels);
+            return Ok(response);
         }
 
         [HttpGet]
@@ -113,9 +112,9 @@ namespace GameStreamSearch.Api.Controllers
         {
             var getChannelQuery = new GetASingleChannelQuery { platformName = platformName, channelName = channelName };
 
-            var getChannelResult = await getChannelQueryHandler.Execute(getChannelQuery);
+            var getChannelResponse = await getChannelQueryHandler.Execute(getChannelQuery);
 
-            return getChannelResult
+            return getChannelResponse.channel
                 .Select<IActionResult>(v => new OkObjectResult(v))
                 .GetOrElse(new NotFoundResult());
         }

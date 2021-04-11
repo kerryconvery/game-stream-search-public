@@ -7,16 +7,16 @@ namespace GameStreamSearch.Domain.Channel
 {
     public class ChannelRepository
     {
-        private readonly AwsDynamoDbTable<ChannelTableDto> awsDynamoDbTable;
+        private readonly AwsDynamoDbTable<DynamoDbChannelTable> awsDynamoDbTable;
 
-        public ChannelRepository(AwsDynamoDbTable<ChannelTableDto> awsDynamoDbTable)
+        public ChannelRepository(AwsDynamoDbTable<DynamoDbChannelTable> awsDynamoDbTable)
         {
             this.awsDynamoDbTable = awsDynamoDbTable;
         }
 
         public Task Add(Channel channel)
         {
-            ChannelTableDto channelDto = FromChannel(channel);
+            DynamoDbChannelTable channelDto = FromChannel(channel);
 
             return awsDynamoDbTable.PutItem(channelDto);
         }
@@ -30,14 +30,14 @@ namespace GameStreamSearch.Domain.Channel
 
         public Task Update(Channel channel)
         {
-            ChannelTableDto channelDto = FromChannel(channel);
+            DynamoDbChannelTable channelDto = FromChannel(channel);
 
             return awsDynamoDbTable.PutItem(channelDto);
         }
 
-        private ChannelTableDto FromChannel(Channel channel)
+        private DynamoDbChannelTable FromChannel(Channel channel)
         {
-            return new ChannelTableDto
+            return new DynamoDbChannelTable
             {
                 ChannelName = channel.ChannelName,
                 StreamPlatformName = channel.StreamPlatformName,
