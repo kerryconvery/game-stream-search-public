@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using GameStreamSearch.Application;
 using Newtonsoft.Json.Converters;
 using GameStreamSearch.Types;
-using GameStreamSearch.Application.Dto;
 using GameStreamSearch.DataAccess;
 using GameStreamSearch.DataAccess.Dto;
 using GameStreamSearch.Application.Services.StreamProvider;
@@ -25,7 +24,6 @@ using GameStreamSearch.Application.RegisterOrUpdateChannel;
 using GameStreamSearch.Application.GetAllChannels;
 using GameStreamSearch.Application.GetASingleChannel;
 using GameStreamSearch.Application.GetStreams;
-using GameStreamSearch.Application.GetStreams.Dto;
 using GameStreamSearch.Domain.Channel;
 using Amazon.DynamoDBv2;
 
@@ -93,14 +91,14 @@ namespace GameStreamSearch.Api
                     ));
             });
 
-            services.AddScoped<ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelCommandResult>, RegisterOrUpdateChannelCommandHandler>();
-            services.AddScoped<IQueryHandler<GetStreamsQuery, AggregatedStreamsDto>, GetStreamsQueryHandler>();
-            services.AddScoped<IQueryHandler<GetAllChannelsQuery, ChannelListDto>, GetAllChannelsQueryHandler>();
-            services.AddScoped<IQueryHandler<GetASingleChannelQuery, Maybe<ChannelDto>>, GetASingleChannelQueryHandler>();
+            services.AddScoped<ICommandHandler<RegisterOrUpdateChannelCommand, RegisterOrUpdateChannelResponse>, RegisterOrUpdateChannelCommandHandler>();
+            services.AddScoped<IQueryHandler<GetStreamsQuery, GetStreamsResponse>, GetStreamsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetAllChannelsQuery, GetAllChannelsResponse>, GetAllChannelsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetASingleChannelQuery, GetASingleChannelResponse>, GetASingleChannelQueryHandler>();
 
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions("dynamodb"));
             services.AddAWSService<IAmazonDynamoDB>();
-            services.AddSingleton<AwsDynamoDbTable<ChannelTableDto>, AwsDynamoDbTable<ChannelTableDto>>();
+            services.AddSingleton<AwsDynamoDbTable<DynamoDbChannelTable>, AwsDynamoDbTable<DynamoDbChannelTable>>();
             services.AddSingleton<ChannelRepository>();
         }
 

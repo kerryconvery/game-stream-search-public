@@ -4,7 +4,7 @@ using Amazon.DynamoDBv2.DataModel;
 namespace GameStreamSearch.DataAccess.Dto
 {
     [DynamoDBTable("Channels")]
-    public class ChannelTableDto
+    public class DynamoDbChannelTable
     {
         [DynamoDBHashKey]
         public string StreamPlatformName { get; init; }
